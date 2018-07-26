@@ -1,37 +1,71 @@
 import React, { Component } from 'react'
-class App extends Component {   
-  render() {     
-    return (       
-      <div style={style}>
+import ReactTable from 'react-table'
+import 'react-table/react-table.css' 
+class App extends Component {
+   constructor(props) {
+     super(props)
+     this.state = {
+       users: [
+         {
+           firstname: "Garrosh",
+           lastname: "Hellscream",
+           age: 23
+         },
+         {
+           firstname: "Grommash",
+           lastname: "Hellscream",
+           age: 53
+         }
+       ]
+     }
+   }
+   render() {
+     const userColumns = [
+       {
+         Header: "Name",
+         columns: [
+           {
+             Header: "First Name",
+             id: "firstname",
+               accessor: d => d.firstname
+           },
+           {
+             Header: "Last Name",
+             id: "lastname",
+               accessor: d => d.lastname
+           }
+         ]
+       },
+       {
+         Header: "Age",
+         columns: [
+           {
+             Header: "Age",
+             id: "age",
+               accessor: d => d.age
+           }
+         ]
+       }
+     ]
+     return (
+       <div style={style}>
          <div>
            <h1>Export Demo</h1>
            <button>Export to Excel</button>
-           <table>
-             <tr>
-               <th>Firstname</th>
-               <th>Lastname</th>
-               <th>Age</th>
-             </tr>
-             <tr>
-               <td>Garrosh</td>
-               <td>Hellscream</td>
-               <td>23</td>
-             </tr>
-             <tr>
-               <td>Grommash</td>
-               <td>Hellscream</td>
-               <td>53</td>
-             </tr>
-           </table>
+           <ReactTable
+             style={{marginLeft:'-40%', marginRight:'-40%'}}
+             data={this.state.users}
+             columns={userColumns}
+           />
          </div>
        </div>
      )
    }
  }
 const style = {
-  display: 'flex',
-  justifyContent: 'center'
-}
+   display: 'flex',
+   justifyContent: 'center'
+ }
 export default App
 
 // import React, { Component } from 'react';
