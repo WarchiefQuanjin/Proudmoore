@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactTable from 'react-table' 
 import 'react-table/react-table.css' 
 import firebase from './config' 
+import XLSX from 'xlsx' 
 
 class App extends Component {
    constructor(props) {
@@ -9,6 +10,7 @@ class App extends Component {
      this.state = {
        users: []
      }
+     this.exportFile = this.exportFile.bind(this)
    }
    componentWillMount(){
      this.getUsers()
@@ -23,6 +25,17 @@ class App extends Component {
          users
        })
      })
+   }
+   exportFile() {
+     let users = [["First Name", "Last Name", "Age"]]
+     this.state.users.forEach((user) => {
+       let userArray = [user.firstname, user.lastname, user.age]
+       users.push(userArray)
+     })
+     const wb = XLSX.utils.book_new()
+     const wsAll = XLSX.utils.aoa_to_sheet(users)
+         XLSX.utils.book_append_sheet(wb, wsAll, "All Users")
+         XLSX.writeFile(wb, "export-demo.xlsx")
    }
    render() {
      const userColumns = [
@@ -56,7 +69,8 @@ class App extends Component {
        <div style={style}>
          <div>
            <h1>Export Demo</h1>
-           <button>Export to Excel</button>
+           <button
+             onClick={this.exportFile}>Export to Excel</button>
            <ReactTable
              style={{marginLeft:'-40%', marginRight:'-40%'}}
              data={this.state.users}
@@ -66,11 +80,11 @@ class App extends Component {
        </div>
      )
    }
- }
-const style = {
-  display: 'flex',
-  justifyContent: 'center'
 } 
+const style = {
+   display: 'flex',
+   justifyContent: 'center'
+ } 
 export default App
 
 // import React, { Component } from 'react';
