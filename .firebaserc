@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "proudmoore-45136"
+    "default": "proudmoore-e544b",
+    "proudmoore": "proudmoore-e544b"
   }
 }

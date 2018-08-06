@@ -74,13 +74,14 @@ class Socioeconomico extends Component {
             <div style={style}>
                 <br/>
                 <h1>Warsong</h1>
-                {/* <div>
+                <div>
+                    <button onClick={this.exportFile}>Export to Excel</button>
                     <ReactTable
                         style={{ marginLeft: '-40%', marginRight: '-40%' }}
                         data={this.state.users}
                         columns={userColumns}
                     />
-                </div> */}
+                </div>
             </div>
         )
     }
