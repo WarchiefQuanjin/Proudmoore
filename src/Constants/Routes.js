@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Typography from '@material-ui/core/Typography';
 /* import Status from '../Routes/Status.jsx'; */
 // import Info from '@material-ui/icons/Info';
