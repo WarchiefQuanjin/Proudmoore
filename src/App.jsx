@@ -78,10 +78,6 @@ const styles = theme => ({
       textDecoration: 'none',
       color: '#FFFFFF'
   },
-  unosquareLink: {
-      textDecoration: 'none',
-      color: "#8BC34A",
-  },
   spacer: {
       flex: '1 1 100%'
   },
@@ -197,7 +193,7 @@ class App extends Component {
               <div className={classes.routes}>
                 <Switch>
                   <Route path='/' exact={true} component={Inicio} />
-                  <Route path='/socioeconomico' exact={true} render={() => <Socioeconomico />} />
+                  <Route path='/socioeconomico' /* exact={true}  */render={(props) => <Socioeconomico {...props}/>} />
                   {/* <Route path='/transition' exact={true} render={() => <Transition ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} />
                   <Route path='/customimage' exact={true} render={() => <CustomImage ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} /> */}
                 </Switch>

@@ -5,6 +5,7 @@ import XLSX from 'xlsx'
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 import { 
     Parentesco, 
     ECivil, 
@@ -18,12 +19,16 @@ import {
     AtencionMedica,
     Pronostico
 } from '../Constants/Options';
+import TxtField from '../Components/TxtField';
 
 const styles = theme => ({
     root: {
         display: 'flex',
         justifyContent: 'center',
         paddingLeft: '40px'
+    },
+    button: {
+        margin: theme.spacing.unit,
     },
     container: {
         display: 'flex',
@@ -42,17 +47,33 @@ class Socioeconomico extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            users: [],
             fcantidad : 0
         }
-        this.exportFile = this.exportFile.bind(this)
+        /* this.exportFile = this.exportFile.bind(this) */
     }
 
     componentWillMount() {
-        this.getUsers()
+        console.log(this.props.location)
+        var user = this.props.location.user;
+        console.log(user != undefined)
+        if(user != undefined){
+            var data = [];
+            console.log('Warlords')
+            console.log(user.val)
+            for (var i = 0; i < Object.keys(user.val).length; i++) {
+                console.log("Lok'tar Ogar")
+                /* data.push(
+                    <div key={'atencionmedica' + i}>
+                        <this.txtField id={"AteMed" + i} nombre={"Hospital"} options={AtencionMedica} classes={classes} width={300} onChange={this.handleChange}/>
+                        {this.state["AteMed" + i] === 'Otros' && <this.txtField id={"AteMed" + i + 'Otros'} nombre={"Hospital"} classes={classes} width={300} onChange={this.handleChange}/> }
+                    </div>
+                ); */
+            }
+        }
+        /* this.getUsers() */
     }
 
-    getUsers() {
+    /* getUsers() {
         let users = []
         firebase.database().ref(`users/`).once('value', snapshot => {
             snapshot.forEach(snap => {
@@ -62,9 +83,37 @@ class Socioeconomico extends Component {
                 users
             })
         })
+    } */
+
+    saveForm = (event) => {
+        event.preventDefault();
+        /* console.log("Lok'tar Ogar");
+
+        console.log(this.state) */
+        /* this.state.map((e) => console.log(e)) */
+
+        /* console.log("------"); */
+        let casos = {};
+        /* Object.keys(this.state).map(i => {if(i!="users"){casos[i] = this.state[i]}}) */
+        Object.keys(this.state).map(i => casos[i] = this.state[i])
+        /* Object.keys(this.state).map(i => casos.push(i)) */
+        Object.keys(this.state).map(i => console.log(i)) 
+        /* console.log("------");
+        console.log(casos) */
+
+        /* Object.keys(this.state).map(i => console.log(this.state[i])) */
+
+        firebase.database().ref('casos').push(casos);
+
+        /* firebase.database().ref('casos/').push({
+          status: "false",
+          text: "Warsong"
+        }); */
+    
+        /* this.setState({ newTodo: "" }); */
     }
 
-    exportFile() {
+    /* exportFile() {
         let users = [["First Name", "Last Name", "Age"]]
         this.state.users.forEach((user) => {
             let userArray = [user.firstname, user.lastname, user.age]
@@ -74,10 +123,11 @@ class Socioeconomico extends Component {
         const wsAll = XLSX.utils.aoa_to_sheet(users)
         XLSX.utils.book_append_sheet(wb, wsAll, "All Users")
         XLSX.writeFile(wb, "export-demo.xlsx")
-    }
+    } */
 
     txtField = (props) => {
         var id = props.id ? props.id : props.nombre;
+        var term = props.term ? props.term : 'px';
 
         return (
             <TextField
@@ -86,16 +136,19 @@ class Socioeconomico extends Component {
                 select={props.options !== undefined}
                 placeholder={props.nombre}
                 className={props.classes.textField}
-                value={this.state[id] ? this.state[id] : ''}
                 margin="normal"
+                multiline={props.multiline && props.multiline}
                 onChange={(event) => props.onChange(id, event.target.value)}
-                style={{width: props.width+'px'}}
+                value={this.state[id] ? this.state[id] : ''}
+                style={props.width && {width: props.width + term}}
             >
-            {props.options && props.options.map((option, i) => (
-                <MenuItem key={i} value={option.value}>
-                    {option.label ? option.label : option.value}
-                </MenuItem>
-              ))}
+            {
+                props.options && props.options.map((option, i) => (
+                    <MenuItem key={i} value={option.value}>
+                        {option.label ? option.label : option.value}
+                    </MenuItem>
+                ))
+            }
             </TextField>  
         )
     }
@@ -115,7 +168,7 @@ class Socioeconomico extends Component {
                     <this.txtField id={"Fam" + i + "nom"} nombre={"Nombre"} classes={classes} width={160} onChange={this.handleChange}/>
                     <this.txtField id={"Fam" + i + "edad"} nombre={"Edad"} classes={classes} width={50} onChange={this.handleChange}/>
                     <this.txtField id={"Fam" + i + "parentesco"} nombre={"Parentesco"} classes={classes} width={100} options={Parentesco} onChange={this.handleChange}/>
-                    <this.txtField id={"Fam" + i + "ecivil"} nombre={"Estado Civil"} classes={classes} width={100} onChange={this.handleChange}/>
+                    <this.txtField id={"Fam" + i + "ecivil"} nombre={"Estado Civil"} classes={classes} width={100} options={ECivil} onChange={this.handleChange}/>
                     <this.txtField id={"Fam" + i + "ocupacion"} nombre={"Ocupacion"} classes={classes} width={150} onChange={this.handleChange}/>
                     <this.txtField id={"Fam" + i + "empleo"} nombre={"Empleo"} classes={classes} width={100} options={Empleo} onChange={this.handleChange}/>
                     <this.txtField id={"Fam" + i + "escolaridad"} nombre={"Escolaridad"} classes={classes} width={150} options={Escolaridad} onChange={this.handleChange}/>
@@ -159,6 +212,14 @@ class Socioeconomico extends Component {
         return (
             <div className={classes.root}>
                 <div style={{marginBottom: '70px'}}>
+
+                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>FORMATO</h1>
+                    <div className={classes.container}>
+                        <TxtField nombre="Fecha" type={'date'} onChange={this.handleChange} state={this.state}/>
+                        <TxtField nombre="Apoyo" onChange={this.handleChange} state={this.state}/>
+                        <this.txtField nombre="No. De Caso" id="Numero" classes={classes} onChange={this.handleChange}/>
+                    </div>
+
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>DATOS GENERALES</h1>
                     <div className={classes.container}>
                         <this.txtField nombre="Nombre del caso" classes={classes} id="Caso" onChange={this.handleChange}/>
@@ -176,37 +237,18 @@ class Socioeconomico extends Component {
                         <this.txtField nombre="Ocupacion" classes={classes} onChange={this.handleChange}/>
                         <this.txtField nombre="Estado" classes={classes} onChange={this.handleChange}/>
                         <this.txtField nombre="Parroquia" classes={classes} onChange={this.handleChange}/>
-                        <this.txtField nombre="Estado" classes={classes} onChange={this.handleChange}/>
+                        <this.txtField nombre="Decanato" classes={classes} onChange={this.handleChange}/>
                         <this.txtField nombre="Persona Entrevistada" classes={classes} id ="Persona" onChange={this.handleChange}/>
-                        <this.txtField nombre="Parentesco" classes={classes} onChange={this.handleChange}/>
+                        <this.txtField nombre="Parentesco" classes={classes} options={Parentesco} onChange={this.handleChange}/>
                     </div>
 
                     <br/>
 
                     <div className={classes.container}>
                         <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>COMPOSICION FAMILIAR</h1>
-                        <TextField
-                            id={"Cantidad" }
-                            label={"Cantidad" }
-                            placeholder={"Cantidad"}
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ fcantidad: e.target.value })} 
-                            style={{width: '80px'}}
-                        />
-
+                        <this.txtField nombre={"Cantidad"} id={"fcantidad"} classes={classes} width={80} onChange={this.handleChange}/>
                         {this.cfamiliar(classes)}
-
-                        <TextField
-                            id={"ObservacionesCF" }
-                            label={"Observaciones" }
-                            placeholder={"Observaciones"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ observacionesCF: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
+                        <this.txtField id={"ObservacionesCF"} nombre={"Observaciones"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
                     </div>
 
                     <br/>
@@ -230,18 +272,8 @@ class Socioeconomico extends Component {
                                 className={classes.textField}
                                 value={parseFloat(this.state['IngresoO'] ? this.state['IngresoO'] : 0) + parseFloat(this.state['IngresoF'] ? this.state['IngresoF'] : 0)}
                                 margin="normal"
-                            /> 
-
-                            <TextField
-                                id={"ObservacionesDE" }
-                                label={"Observaciones" }
-                                placeholder={"Observaciones"}
-                                multiline
-                                className={classes.textField}
-                                margin="normal"
-                                onChange={(e) => this.setState({ observacionesDE: e.target.value })} 
-                                style={{width: '80%'}}
                             />
+                            <this.txtField id={"ObservacionesDE"} nombre={"Observaciones"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
                         </div>
 
                         {/* EGRESOS MENSUALES */}
@@ -282,9 +314,7 @@ class Socioeconomico extends Component {
                                 style={{width: '80%'}}
                             /> 
                         </div>
-
                     </div>
-
 
                     {/* ALIMENTACION */}
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>ALIMENTACION</h1>
@@ -299,19 +329,9 @@ class Socioeconomico extends Component {
                         <this.txtField nombre="Refresco" classes={classes} options={Alimentacion} onChange={this.handleChange}/>
                         <this.txtField nombre="Carne" classes={classes} options={Alimentacion} onChange={this.handleChange}/>
                         <this.txtField nombre="Pollo" classes={classes} options={Alimentacion} onChange={this.handleChange}/>
-                        <this.txtField nombre="Pescado/Mariscos" classes={classes} options={Alimentacion} onChange={this.handleChange}/>
+                        <this.txtField nombre="Pescado o Mariscos" id="Mar" classes={classes} options={Alimentacion} onChange={this.handleChange}/>
                         <this.txtField nombre="Tipos de Apoyo" classes={classes} onChange={this.handleChange}/>
-
-                        <TextField
-                            id={"ObservacionesA" }
-                            label={"Observaciones" }
-                            placeholder={"Observaciones"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ observacionesA: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
+                        <this.txtField id={"ObservacionesA"} nombre={"Observaciones"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
                     </div>
 
                     {/* VIVIENDA */}
@@ -333,30 +353,12 @@ class Socioeconomico extends Component {
                         <div style={{width: '100%'}}>
                             <br/>
                             <hr style={{height: '2px', backgroundColor: '#172fdc'}}/>   
-                            <TextField
-                                id={"CantidadV" }
-                                label={"Cantidad Vehiculos" }
-                                placeholder={"Cantidad Vehiculos"}
-                                className={classes.textField}
-                                margin="normal"
-                                onChange={(e) => this.setState({ vcantidad: e.target.value })} 
-                                style={{width: '150px'}}
-                            />
+                            <this.txtField id={"vcantidad"} nombre={"Cantidad Vehiculos"} classes={classes} width={150} term={"px"} onChange={this.handleChange}/>
                             {this.cvehiculos(classes)}
                             <br/>
                             <hr style={{height: '2px', backgroundColor: '#172fdc'}}/> 
-                        </div> 
-
-                        <TextField
-                            id={"ObservacionesA" }
-                            label={"Observaciones" }
-                            placeholder={"Observaciones"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ observacionesA: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
+                        </div>
+                        <this.txtField id={"ObservacionesV"} nombre={"Observaciones"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
                     </div>
 
                     {/* SALUD */}
@@ -365,127 +367,33 @@ class Socioeconomico extends Component {
                         <div style={{width: '100%'}}>
                             <br/>
                             <hr style={{height: '2px', backgroundColor: '#172fdc'}}/>   
-                            <TextField
-                                id={"CantidadAM" }
-                                label={"Cantidad Atencion Medica" }
-                                placeholder={"Cantidad Atencion Medica"}
-                                className={classes.textField}
-                                margin="normal"
-                                onChange={(e) => this.setState({ mcantidad: e.target.value })} 
-                                style={{width: '250px'}}
-                            />
+                            <this.txtField id={"mcantidad"} nombre={"Cantidad Atencion Medica"} classes={classes} width={250} term={"px"} onChange={this.handleChange}/>
                             {this.cmedica(classes)}
                             <br/>
                             <hr style={{height: '2px', backgroundColor: '#172fdc'}}/> 
                         </div> 
-
-                        <TextField
-                            id={"ObservacionesA" }
-                            label={"Observaciones" }
-                            placeholder={"Observaciones"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ observacionesA: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
-
+                        <this.txtField id={"ObservacionesS"} nombre={"Observaciones"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
                         <h3 style={{backgroundColor: '#acb8f3', color:'white'}}>ESTADO ACTUAL DE SALUD</h3>
-
-                        <TextField
-                            id={"CasoES" }
-                            label={"Caso" }
-                            placeholder={"Caso"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ casoES: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
-
-                        <TextField
-                            id={"FamiliaES" }
-                            label={"Familia" }
-                            placeholder={"Familia"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ familiaES: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
+                        <this.txtField id={"CasoES"} nombre={"Caso"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
+                        <this.txtField id={"FamiliaES"} nombre={"Familia"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
                     </div>
 
-                    {/* SALUD */}
+                    {/* OTROS */}
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>OTROS</h1>
                     <div className={classes.container}>
-
-                        <TextField
-                            id={"ReferenciasC" }
-                            label={"Referencias Con Colaterales" }
-                            placeholder={"Referencias Con Colaterales"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ referenciasC: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
-
-                        <TextField
-                            id={"HistoriaS" }
-                            label={"Historia Social" }
-                            placeholder={"Historia Social"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ historiaS: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
-
-                        <TextField
-                            id={"DiagnosticoSE" }
-                            label={"Diagnostico Socio-Economico" }
-                            placeholder={"Diagnostico Socio-Economico"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ diagnosticoSE: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
-
+                        <this.txtField id={"ReferenciasC"} nombre={"Referencias Con Colaterales"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
+                        <this.txtField id={"HistoriaS"} nombre={"Historia Social"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
+                        <this.txtField id={"DiagnosticoSE"} nombre={"Diagnostico Socio-Economico"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
                         <this.txtField nombre="Pronostico" classes={classes} options={Pronostico} onChange={this.handleChange}/>
+                        <this.txtField id={"PlanI"} nombre={"Plan de Intervencion"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
+                        <this.txtField nombre={"Presupuesto"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
+                        <this.txtField id={"NotasSE"} nombre={"Notas de seguimiento y/o Evolucion"} multiline={true} classes={classes} width={80} term={"%"} onChange={this.handleChange}/>
+                    </div>
 
-                        <TextField
-                            id={"PlanI" }
-                            label={"Plan de Intervencion" }
-                            placeholder={"Plan de Intervencion"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ planI: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
-
-                        <TextField
-                            id={"Presupuesto" }
-                            label={"Presupuesto" }
-                            placeholder={"Presupuesto"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ presupuesto: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
-
-                        <TextField
-                            id={"NotasSE" }
-                            label={"Notas de seguimiento y/o Evolucion" }
-                            placeholder={"Notas de seguimiento y/o Evolucion"}
-                            multiline
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.setState({ notasSE: e.target.value })} 
-                            style={{width: '80%'}}
-                        />
+                    <div className={classes.container}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.saveForm(event)}> 
+                            Guardar
+                        </Button>
                     </div>
 
                 </div>
