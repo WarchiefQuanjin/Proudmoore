@@ -49,50 +49,62 @@ class Socioeconomico extends Component {
         this.state = {
             fcantidad : 0
         }
-        /* this.exportFile = this.exportFile.bind(this) */
     }
 
-    componentWillMount() {
-        console.log(this.props.location)
+    componentDidMount() {
         var user = this.props.location.user;
-        console.log(user != undefined)
+        
         if(user != undefined){
-            var data = [];
-            console.log('Warlords')
-            console.log(user.val)
             for (var i = 0; i < Object.keys(user.val).length; i++) {
-                console.log("Lok'tar Ogar")
-                /* data.push(
-                    <div key={'atencionmedica' + i}>
-                        <this.txtField id={"AteMed" + i} nombre={"Hospital"} options={AtencionMedica} classes={classes} width={300} onChange={this.handleChange}/>
-                        {this.state["AteMed" + i] === 'Otros' && <this.txtField id={"AteMed" + i + 'Otros'} nombre={"Hospital"} classes={classes} width={300} onChange={this.handleChange}/> }
-                    </div>
-                ); */
+                this.setState({[Object.keys(user.val)[i]]: Object.values(user.val)[i]});
             }
         }
-        /* this.getUsers() */
     }
 
-    /* getUsers() {
-        let users = []
-        firebase.database().ref(`users/`).once('value', snapshot => {
-            snapshot.forEach(snap => {
-                users.push(snap.val())
-            })
-            this.setState({
-                users
-            })
-        })
-    } */
-
-    saveForm = (event) => {
+    print = (event) => {
         event.preventDefault();
-        /* console.log("Lok'tar Ogar");
 
-        console.log(this.state) */
-        /* this.state.map((e) => console.log(e)) */
+        const gridName="Warsong";
 
-        /* console.log("------"); */
+        const tableHeader = '<div style="display:flex">'+
+        '<img src="https://igx.4sqi.net/img/general/width960/82417073_V22Qrk5dPbOj3XmuXQi0gksLG4bHRXVJ-Y3JZNgNnXo.png" alt="W3Schools.com" style="width:100px;height:100px;">'+
+        '<h2 style="width:600px; height:150px; text-align:center">CASOS EMERGENTES<br>ESTUDIO SOCIOECONOMICO</h2>'+
+        '<h2 style="width:100px; height:100px;"></h2>'+
+        '</div>';
+
+
+
+        const documentToPrint = window.open('about:blank', 'Print', 'location=0,height=1500,width=800');
+        documentToPrint.document
+            .write('<link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.min.css" />');
+        documentToPrint.document.title = gridName;
+        documentToPrint.document.write('<body onload="window.print();">');
+        /* documentToPrint.document.write(`<h1>${gridName}</h1>`); */
+        documentToPrint.document.write(tableHeader);
+        documentToPrint.document.write('</body>');
+        documentToPrint.document.close();
+        /* var user = this.props.location.user;
+        var itemsRef = firebase.database().ref('casos');
+        let casos = {};
+
+        Object.keys(this.state).map(i => casos[i] = this.state[i])
+
+        itemsRef.child(user.key).update(casos); */
+    }
+
+    modify = (event) => {
+        event.preventDefault();
+        var user = this.props.location.user;
+        var itemsRef = firebase.database().ref('casos');
+        let casos = {};
+
+        Object.keys(this.state).map(i => casos[i] = this.state[i])
+
+        itemsRef.child(user.key).update(casos);
+    }
+
+    save = (event) => {
+        event.preventDefault();
         let casos = {};
         /* Object.keys(this.state).map(i => {if(i!="users"){casos[i] = this.state[i]}}) */
         Object.keys(this.state).map(i => casos[i] = this.state[i])
@@ -104,26 +116,7 @@ class Socioeconomico extends Component {
         /* Object.keys(this.state).map(i => console.log(this.state[i])) */
 
         firebase.database().ref('casos').push(casos);
-
-        /* firebase.database().ref('casos/').push({
-          status: "false",
-          text: "Warsong"
-        }); */
-    
-        /* this.setState({ newTodo: "" }); */
     }
-
-    /* exportFile() {
-        let users = [["First Name", "Last Name", "Age"]]
-        this.state.users.forEach((user) => {
-            let userArray = [user.firstname, user.lastname, user.age]
-            users.push(userArray)
-        })
-        const wb = XLSX.utils.book_new()
-        const wsAll = XLSX.utils.aoa_to_sheet(users)
-        XLSX.utils.book_append_sheet(wb, wsAll, "All Users")
-        XLSX.writeFile(wb, "export-demo.xlsx")
-    } */
 
     txtField = (props) => {
         var id = props.id ? props.id : props.nombre;
@@ -208,6 +201,7 @@ class Socioeconomico extends Component {
     
     render() {
         const { classes } = this.props;
+        const modifying = this.props.location.modifying;
 
         return (
             <div className={classes.root}>
@@ -218,6 +212,10 @@ class Socioeconomico extends Component {
                         <TxtField nombre="Fecha" type={'date'} onChange={this.handleChange} state={this.state}/>
                         <TxtField nombre="Apoyo" onChange={this.handleChange} state={this.state}/>
                         <this.txtField nombre="No. De Caso" id="Numero" classes={classes} onChange={this.handleChange}/>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.print(event)}> 
+                        {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.save(event)}>  */}
+                            Imprimir
+                        </Button>
                     </div>
 
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>DATOS GENERALES</h1>
@@ -391,7 +389,8 @@ class Socioeconomico extends Component {
                     </div>
 
                     <div className={classes.container}>
-                        <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.saveForm(event)}> 
+                        <Button variant="contained" color="primary" className={classes.button} onClick={(event) => modifying == 1 ? this.modify(event) : this.save(event)}> 
+                        {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.save(event)}>  */}
                             Guardar
                         </Button>
                     </div>

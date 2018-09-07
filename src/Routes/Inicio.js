@@ -61,7 +61,7 @@ class Socioeconomico extends Component {
                 user.key = snap.key;
 
                 users.push(user)
-                user ={}
+                user = {}
                 /* users.push(snap.val()) */
             })
             this.setState({
@@ -71,9 +71,9 @@ class Socioeconomico extends Component {
     }
 
     exportFile() {
-        let users = [["First Name", "Last Name", "Age"]]
+        let users = [["Caso", "Apoyo", "Domicilio"]]
         this.state.users.forEach((user) => {
-            let userArray = [user.firstname, user.lastname, user.age]
+            let userArray = [user.val.Caso, user.val.Apoyo, user.val.Domicilio]
             users.push(userArray)
         })
         const wb = XLSX.utils.book_new()
@@ -145,10 +145,6 @@ class Socioeconomico extends Component {
         /* const users = this.state.users; */
         return (
             <div style={style}>
-                {/* <br/>
-                <h1>Warsong</h1>
-                <br/>
-                <br/> */}
                 <div>
                     <button onClick={this.exportFile}>Export to Excel</button>
                     {/* <ReactTable
@@ -160,6 +156,7 @@ class Socioeconomico extends Component {
                     <Table className={classes.table}>
                         <TableHead>
                         <TableRow>
+                            <TableCell></TableCell>
                             <TableCell>Caso</TableCell>
                             <TableCell numeric>Telefono</TableCell>
                             <TableCell numeric>Celular</TableCell>
@@ -171,7 +168,8 @@ class Socioeconomico extends Component {
                             <TableRow key={row.key}>
                                 <Link to={{ 
                                     pathname: '/socioeconomico', 
-                                    user: this.state.users[i]
+                                    user: this.state.users[i],
+                                    modifying: 1
                                 }}>
                                     <Button variant="contained" color="primary" className={classes.button} /* onClick={(event) => this.saveForm(event)} */> 
                                         Editar
@@ -188,13 +186,6 @@ class Socioeconomico extends Component {
                         </TableBody>
                     </Table>
                 </div>
-                
-                {/* <Link to={{ 
-                    pathname: '/socioeconomico', 
-                    users
-                }}>My route</Link> */}
-
-                {/* <Link to={"/socioeconomico" } params={{ data: this.state.users }}>Warsong</Link> */}
 
             </div>
         )
