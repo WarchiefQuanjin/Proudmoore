@@ -27,7 +27,7 @@ class TxtField extends Component {
         return (
             <TextField
                 id={id}
-                label={props.type == 'date' ? ' ' : props.nombre}
+                label={props.type === 'date' ? ' ' : props.nombre}
                 select={props.options !== undefined}
                 placeholder={props.nombre}
                 className={props.classes.textField}

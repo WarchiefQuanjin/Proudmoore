@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import firebase from '../config'
 import Button from '@material-ui/core/Button';
@@ -86,72 +85,10 @@ class Socioeconomico extends Component {
         const { classes } = this.props;
         const data = this.state.users;
 
-        const userColumns = [
-            {
-                Header: "Name",
-                columns: [
-                    {
-                        Header: "Caso",
-                        id: "Caso",
-                        accessor: d => d.Caso
-                    },
-                    {
-                        Header: "Domicilio",
-                        id: "Domicilio",
-                        accessor: d => d.Domicilio
-                    }
-                ]
-            },
-            {
-                Header: "Celular",
-                columns: [
-                    {
-                        Header: "Celular",
-                        id: "Celular",
-                        accessor: d => d.Celular
-                    }
-                ]
-            }
-        ]
-
-        /* const userColumns = [
-            {
-                Header: "Name",
-                columns: [
-                    {
-                        Header: "First Name",
-                        id: "firstname",
-                        accessor: d => d.firstname
-                    },
-                    {
-                        Header: "Last Name",
-                        id: "lastname",
-                        accessor: d => d.lastname
-                    }
-                ]
-            },
-            {
-                Header: "Age",
-                columns: [
-                    {
-                        Header: "Age",
-                        id: "age",
-                        accessor: d => d.age
-                    }
-                ]
-            }
-        ] */
-
-        /* const users = this.state.users; */
         return (
             <div style={style}>
                 <div>
                     <button onClick={this.exportFile}>Export to Excel</button>
-                    {/* <ReactTable
-                        style={{ marginLeft: '-40%', marginRight: '-40%' }}
-                        data={this.state.users}
-                        columns={userColumns}
-                    /> */}
 
                     <Table className={classes.table}>
                         <TableHead>

@@ -1,93 +1,154 @@
 
 const Parentesco = [
-    { value: 'Padre' },
-    { value: 'Madre'},
-    { value: 'Hijo' },
-    { value: 'Hija' },
-    { value: 'Abuelo' },
-    { value: 'Abuela' },
-    { value: 'Tio' },
-    { value: 'Tia' },
-    { value: 'Sobrino' },
-    { value: 'Sobrina' },
-    { value: 'Primo' },
-    { value: 'Prima' },
-    { value: 'Ninguno' }
+    { value: 'PADRE' },
+    { value: 'MADRE'},
+    { value: 'HIJO' },
+    { value: 'HIJA' },
+    { value: 'ABUELO' },
+    { value: 'ABUELA' },
+    { value: 'TIO' },
+    { value: 'TIA' },
+    { value: 'SOBRINO' },
+    { value: 'SOBRINA' },
+    { value: 'ESPOSO' },
+    { value: 'ESPOSA' },
+    { value: 'PRIMO' },
+    { value: 'PRIMA' },
+    { value: 'NINGUNO' }
 ];
 
 const ECivil = [
-    { value: 'Casado' },
-    { value: 'Soltero'},
-    { value: 'Union Libre' },
-    { value: 'Viudo' }
+    { value: 'CASADO' },
+    { value: 'SOLTERO'},
+    { value: 'UNION LIBRE' },
+    { value: 'VIUDO' }
 ];
 
 const Escolaridad = [
-    { value: 'Primaria' },
-    { value: 'Secundaria'},
-    { value: 'Preparatoria' },
-    { value: 'Licenciatura' },
-    { value: 'Ninguna' },
-    { value: 'Otros' }
+    { value: 'PRIMARIA' },
+    { value: 'SECUNDARIA'},
+    { value: 'PREPARATORIA' },
+    { value: 'LICENCIATURA' },
+    { value: 'NINGUNA' },
+    { value: 'OTROS' }
 ];
 
 const Empleo = [
-    { value: 'Fijo' },
-    { value: 'Sub Empleo'},
-    { value: 'Temporal' }
+    { value: 'FIJO' },
+    { value: 'SUB EMPLEO'},
+    { value: 'TEMPORAL' },
+    { VALUE: 'NINGUNO'}
 ];
 
 const Alimentacion = [
-    { value: 'Diario' },
+    { value: 'DIARIO' },
     { value: 'C/3 DIA'},
     { value: 'C/8 DIA' },
     { value: 'C/15 DIA' },
-    { value: 'A veces' },
-    { value: 'Nunca' }
+    { value: 'A VECES' },
+    { value: 'NUNCA' }
 ];
 
 const CondicionVivienda = [
-    { value: 'Propia' },
-    { value: 'En Pago'},
-    { value: 'Renta' },
-    { value: 'Prestada' }
+    { value: 'PROPIA' },
+    { value: 'EN PAGO'},
+    { value: 'RENTA' },
+    { value: 'PRESTADA' }
 ];
 
 const Zona = [
-    { value: 'Urbana' },
-    { value: 'Sub Urbana'},
-    { value: 'Rural' }
+    { value: 'URBANA' },
+    { value: 'SUB URBANA'},
+    { value: 'RURAL' }
 ];
 
 const Caracteristicas = [
-    { value: 'Piso' },
-    { value: 'Muro'},
-    { value: 'Techo' }
+    { value: 'PISO' },
+    { value: 'MURO'},
+    { value: 'TECHO' }
 ];
 
 const Menaje = [
-    { value: 'Equipado' },
-    { value: 'Basico'},
-    { value: 'Austero' }
+    { value: 'EQUIPADO' },
+    { value: 'BASICO'},
+    { value: 'AUSTERO' }
 ];
 
 const AtencionMedica = [
     { value: 'IMSS' },
     { value: 'ISSSTE'},
-    { value: 'Seguro Popular' },
-    { value: 'Hospital Civil' },
-    { value: 'Cruz Roja' },
-    { value: 'Cruz Verde' },
-    { value: 'Centro de salud' },
-    { value: 'Medico Particular' },
-    { value: 'Teleton' },
-    { value: 'Hospital general de occidente' },
-    { value: 'Otros' }
+    { value: 'SEGURO POPULAR' },
+    { value: 'HOSPITAL CIVIL' },
+    { value: 'CRUZ ROJA' },
+    { value: 'CRUZ VERDE' },
+    { value: 'CENTRO DE SALUD' },
+    { value: 'MEDICO PARTICULAR' },
+    { value: 'TELETON' },
+    { value: 'HOSPITAL GENERAL DE OCCIDENTE' },
+    { value: 'OTROS' }
 ];
 
 const Pronostico = [
-    { value: 'Favorable' },
-    { value: 'No Favorable'}
+    { value: 'FAVORABLE' },
+    { value: 'NO FAVORABLE'}
+];
+
+const Piso = [
+    { value: 'CEMENTO' },
+    { value: 'TIERRA'},
+    { value: 'MOSAICO' },
+    { value: 'VITROPISO' },
+    { value: 'MADERA' }
+];
+
+const Muro = [
+    { value: 'LONA' },
+    { value: 'ADOBE'},
+    { value: 'LAMINA' },
+    { value: 'LADRILLO' },
+    { value: 'MADERA' },
+    { value: 'BLOCK' },
+    { value: 'OTROS' }
+];
+
+const Techo = [
+    { value: 'LAMINA' },
+    { value: 'BOVEDA'},
+    { value: 'LAMINA' },
+    { value: 'MADERA' },
+    { value: 'LONA' },
+    { value: 'OTROS' }
+];
+
+const Vivienda = [
+    { value: '0' },
+    { value: '1'},
+    { value: '2' },
+    { value: '3' },
+];
+
+const Bano = [
+    { value: 'FOSA' },
+    { value: '1'},
+    { value: '2' },
+    { value: '3' },
+];
+
+const Dormitorios = [
+    { value: '0' },
+    { value: '1'},
+    { value: '2' },
+    { value: '3' },
+    { value: '4' },
+    { value: '5' }
+];
+
+const TrabajadoraS = [
+    { value: 'DANIELA' },
+    { value: 'ELIZABETH'},
+    { value: 'GABRIELA' },
+    { value: 'ROSARIO' },
+    { value: 'OTRO' }
 ];
 
 export { 
@@ -101,5 +162,9 @@ export {
     Caracteristicas, 
     Menaje, 
     AtencionMedica,
-    Pronostico
+    Pronostico,
+    Vivienda,
+    Bano,
+    Dormitorios,
+    TrabajadoraS
 };
