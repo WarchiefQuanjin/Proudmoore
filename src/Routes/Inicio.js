@@ -113,10 +113,10 @@ class Socioeconomico extends Component {
                                     </Button>
                                 </Link>
                                 <TableCell component="th" scope="row">
-                                    {row.val.Caso}
+                                    {row.val.DGCaso}
                                 </TableCell>
-                                <TableCell numeric>{row.val.Telefono}</TableCell>
-                                <TableCell numeric>{row.val.Celular}</TableCell>
+                                <TableCell numeric>{row.val.DGTelefono}</TableCell>
+                                <TableCell numeric>{row.val.DGCelular}</TableCell>
                             </TableRow>
                             );
                         })}

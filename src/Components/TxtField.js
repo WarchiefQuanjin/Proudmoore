@@ -10,23 +10,24 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         marginTop: '2px',
         marginBottom: '2px',
-        width: 200,
+        width: 200
+    },
+    font: {
+        fontSize: '14px',
+        height: 'inherit',
+        width: 'auto',
+        overflow: 'hidden'
     }
 });
 
 class TxtField extends Component {
-    /* console.log("-------")
-    console.log(props.nombre)
-    console.log(props) */
-    
     render() {
         var props = this.props;
-        var id = props.id ? props.id : props.nombre;
         var term = props.term ? props.term : 'px';
 
         return (
             <TextField
-                id={id}
+                id={props.id}
                 label={props.type === 'date' ? ' ' : props.nombre}
                 select={props.options !== undefined}
                 placeholder={props.nombre}
@@ -34,11 +35,14 @@ class TxtField extends Component {
                 margin="normal"
                 type={props.type ? props.type : 'string'}
                 multiline={props.multiline && props.multiline}
-                onChange={(event) => props.onChange(id, event.target.value)}
-                
-                /* value={this.state[id] ? this.state[id] : ''} */
-                value={props.state[id] ? props.state[id] : ''}
-
+                onChange={(event) => props.onChange(props.id, event.target.value)}
+                required
+                InputProps={{
+                    classes: {
+                      input: props.classes.font,
+                    },
+                }}
+                value={props.state[props.id] ? props.state[props.id] : ''}
                 style={props.width && {width: props.width + term}}
             >
             {

@@ -12,8 +12,11 @@ const Parentesco = [
     { value: 'SOBRINA' },
     { value: 'ESPOSO' },
     { value: 'ESPOSA' },
-    { value: 'PRIMO' },
+    { value: 'HERMANO' },
+    { value: 'HERMANA' },
     { value: 'PRIMA' },
+    { value: 'PRIMA' },
+    { value: 'OTROS' },
     { value: 'NINGUNO' }
 ];
 
@@ -37,7 +40,7 @@ const Empleo = [
     { value: 'FIJO' },
     { value: 'SUB EMPLEO'},
     { value: 'TEMPORAL' },
-    { VALUE: 'NINGUNO'}
+    { value: 'NINGUNO' }
 ];
 
 const Alimentacion = [
@@ -60,12 +63,6 @@ const Zona = [
     { value: 'URBANA' },
     { value: 'SUB URBANA'},
     { value: 'RURAL' }
-];
-
-const Caracteristicas = [
-    { value: 'PISO' },
-    { value: 'MURO'},
-    { value: 'TECHO' }
 ];
 
 const Menaje = [
@@ -158,13 +155,15 @@ export {
     Empleo, 
     Alimentacion, 
     CondicionVivienda, 
-    Zona, 
-    Caracteristicas, 
+    Zona,
     Menaje, 
     AtencionMedica,
     Pronostico,
     Vivienda,
     Bano,
     Dormitorios,
-    TrabajadoraS
+    TrabajadoraS,
+    Piso,
+    Techo,
+    Muro
 };
