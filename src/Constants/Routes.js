@@ -15,7 +15,7 @@ const routes = [
     {
         path: '/',
         exact: true,
-        title: () => <Typography style={style} noWrap type='title' noWrap>Inicio</Typography>,
+        title: () => <Typography style={style} noWrap type='title'>Inicio</Typography>,
         main: () => <Inicio />,
         linkTo: '/',
         // icon: () => <Info style = {{ color : '#689F38'}} />,
@@ -24,7 +24,7 @@ const routes = [
     {
         path : '/socioeconomico',
         exact: true,
-        title: () => <Typography style={style} noWrap type='title' noWrap>Socioeconomico</Typography>,
+        title: () => <Typography style={style} noWrap type='title'>Socioeconomico</Typography>,
         main: () => <Socioeconomico />,
         linkTo: 'socioeconomico',
         // icon: () => <ColorLens style = {{ color : '#689F38'}} />,

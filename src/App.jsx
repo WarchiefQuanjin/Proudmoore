@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import 'react-table/react-table.css'
 import Inicio from './Routes/Inicio.js';
 import Socioeconomico from './Routes/Socioeconomico.js'
 import Divider from '@material-ui/core/Divider';
@@ -15,6 +14,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
+import MenuIcon from '@material-ui/icons/Menu';
 
 const drawerWidth = 240;
 const primary = '#8BC34A';
@@ -165,7 +165,7 @@ class App extends Component {
             <AppBar className={classes.appBar}>
               <Toolbar>
                 <IconButton color='default' aria-label='open drawer' onClick={this.handleDrawerToggle} className={classes.navIconHide}>
-                 {/*  <MenuIcon color="contrast" /> */}
+                  <MenuIcon />
                 </IconButton>
                 {Routes.map((route, index) => (
                   <Route key={index} path={route.path} exact={route.exact} component={route.title} />
@@ -174,7 +174,7 @@ class App extends Component {
               </Toolbar>
             </AppBar>
             <Hidden mdUp>
-              <Drawer type='temporary' open={this.state.mobileOpen} classes={{ paper: classes.drawerPaper }} onRequestClose={this.handleDrawerToggle} ModalProps={{
+              <Drawer type='temporary' open={this.state.mobileOpen} classes={{ paper: classes.drawerPaper }} onClose={this.handleDrawerToggle} ModalProps={{
                 keepMounted: true // Better open performance on mobile.
               }}>
                 {drawer}
@@ -206,32 +206,4 @@ class App extends Component {
   }
 }
 
-/* const style = {
-  display: 'flex',
-  justifyContent: 'center'
-} */
-
-// export default App
 export default withStyles(styles)(App);
-
-// import React, { Component } from 'react';
-// import logo from './logo.svg';
-// import './App.css';
-
-// class App extends Component {
-//   render() {
-//     return (
-//       <div className="App">
-//         <header className="App-header">
-//           <img src={logo} className="App-logo" alt="logo" />
-//           <h1 className="App-title">Welcome to React</h1>
-//         </header>
-//         <p className="App-intro">
-//           To get started, edit <code>src/App.js</code> and save to reload.
-//         </p>
-//       </div>
-//     );
-//   }
-// }
-
-// export default App;

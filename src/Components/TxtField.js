@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import 'react-table/react-table.css'
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -36,7 +35,7 @@ class TxtField extends Component {
                 type={props.type ? props.type : 'string'}
                 multiline={props.multiline && props.multiline}
                 onChange={(event) => props.onChange(props.id, event.target.value)}
-                required
+                required={props.required}
                 InputProps={{
                     classes: {
                       input: props.classes.font,
