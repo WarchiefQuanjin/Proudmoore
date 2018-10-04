@@ -1,40 +1,10 @@
 
-const Parentesco = [
-    { value: 'PADRE' },
-    { value: 'MADRE'},
-    { value: 'HIJO' },
-    { value: 'HIJA' },
-    { value: 'ABUELO' },
-    { value: 'ABUELA' },
-    { value: 'TIO' },
-    { value: 'TIA' },
-    { value: 'SOBRINO' },
-    { value: 'SOBRINA' },
-    { value: 'ESPOSO' },
-    { value: 'ESPOSA' },
-    { value: 'HERMANO' },
-    { value: 'HERMANA' },
-    { value: 'PRIMA' },
-    { value: 'PRIMA' },
-    { value: 'OTROS' },
-    { value: 'NINGUNO' }
-];
-
 const ECivil = [
     { value: 'CASADO' },
     { value: 'SOLTERO'},
     { value: 'UNION LIBRE' },
     { value: 'DIVORCIADO' },
     { value: 'VIUDO' }
-];
-
-const Escolaridad = [
-    { value: 'PRIMARIA' },
-    { value: 'SECUNDARIA'},
-    { value: 'PREPARATORIA' },
-    { value: 'LICENCIATURA' },
-    { value: 'NINGUNA' },
-    { value: 'OTROS' }
 ];
 
 const Empleo = [
@@ -358,9 +328,7 @@ const Excel = [[
 ]];
 
 export { 
-    Parentesco, 
     ECivil, 
-    Escolaridad, 
     Empleo, 
     Alimentacion, 
     CondicionVivienda, 

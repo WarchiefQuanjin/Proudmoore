@@ -62,14 +62,7 @@ const styles = theme => ({
       width: '100%',
       height: '100%',
       marginTop: 66,
-      overflowY: 'scroll'/* ,
-      [theme.breakpoints.up('sm')]: {
-          height: 'calc(100% - 64px)',
-          marginTop: 70
-      },
-      [theme.breakpoints.up('md')]: {
-          width: `calc(100% - ${drawerWidth}px)`
-      } */
+      overflowY: 'scroll'
   },
   routes: {
       minHeight: 'calc(100% - 75px)'

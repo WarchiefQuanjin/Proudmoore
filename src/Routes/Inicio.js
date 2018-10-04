@@ -72,38 +72,41 @@ class Socioeconomico extends Component {
         months.forEach((month, i) => {
             let data = JSON.parse(JSON.stringify(Excel))
             let id = 1;
-            this.state.data.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(this.state.year) ).filter((caso) => new Date(caso.val.FMFecha).getMonth() === i ).forEach((caso) => {
-                const val = caso.val;
-                const clasificacion = val.DGEdad <= 17 ? "INFANTIL" :
-                    val.DGEdad >= 60 ? "GERIATRICO" : "DIVERSO";
 
-                let apoyo = [];
-                for(var i = 0; i < val.apcantidad; i++){
-                    apoyo.push(val["FMApoyo" + i]);
-                }
-                
-                let casosArray = [id, val.FMFecha, val.FMNumero, val.DGCaso, val.DGCalle, val.DGColonia, 
-                    val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, val.DGParroquia, 
-                    val.DGDecanato, val.DGVicaria, apoyo.includes("ORIENTACION") ? 1 : '', apoyo.includes("DESPENSA") ? 1 : '',
-                    apoyo.includes("ALIMENTO") ? 1 : '', apoyo.includes("LECHE") ? 1 : '', apoyo.includes("PAÑALES") ? 1 : '',
-                    apoyo.includes("MEDICAMENTO") ? 1 : '', apoyo.includes("ESTUDIOS MEDICOS") ? 1 : '', apoyo.includes("IMPLEMENTOS MEDICOS") ? 1 : '',
-                    apoyo.includes("T.M.OFTALMOLOGICO") ? 1 : '', apoyo.includes("T.M. ONCOLOGICO") ? 1 : '', apoyo.includes("T.M. DIALISIS") ? 1 : '',
-                    apoyo.includes("T.M. HEMODIALISIS") ? 1 : '', apoyo.includes("T.M. OXIGENO") ? 1 : '', apoyo.includes("AUDITIVO") ? 1 : '',
-                    apoyo.includes("PROTESIS EXTERNAS") ? 1 : '', apoyo.includes("SILLAS DE RUEDAS") ? 1 : '', apoyo.includes("ANDADERAS") ? 1 : '',
-                    apoyo.includes("MULETAS") ? 1 : '', apoyo.includes("CAMA DE HOSPITAL") ? 1 : '', apoyo.includes("COLCHON ORTOPEDICO") ? 1 : '',
-                    apoyo.includes("AUXILIAR DE BAÑO") ? 1 : '', apoyo.includes("ASPIRADOR DE SECRECIONES") ? 1 : '', apoyo.includes("BASTON") ? 1 : '',
-                    apoyo.includes("CORSET") ? 1 : '', apoyo.includes("I. ORTOPEDICO") ? 1 : '', apoyo.includes("ENSERES DOMESTICOS") ? 1 : '',
-                    apoyo.includes("RENTA") ? 1 : '', apoyo.includes("TRANSPORTE") ? 1 : '', apoyo.includes("PEQUEÑO COMERCIO") ? 1 : '',
-                    apoyo.includes("DOCUMENTOS DE EMPLEO") ? 1 : '', apoyo.includes("FUNERAL") ? 1 : '', apoyo.includes("ROPA") ? 1 : '',
-                    apoyo.includes("ZAPATOS O TENIS") ? 1 : '', apoyo.includes("KIT DE LIMPIEZA") ? 1 : '', apoyo.includes("COBIJAS") ? 1 : '',
-                    apoyo.includes("CENAS NAVIDEÑAS") ? 1 : '', apoyo.includes("SEGUIMIENTO") ? 1 : '', apoyo.includes("RENOVO CANALIZACION") ? 1 : '',
-                    apoyo.includes("DERIVACION") ? 1 : '', apoyo.includes("OTROS") ? 1 : '', val.OTPresupuesto, val.OTDHospital, val.OTFArzobispado,
-                    val.OTFCabildo, val.OTFOlga, val.OTDonante, val.OTABeneficiado, val.OTProveedor, val.OTProcedencia === 'OTROS' ? val.OTProcedenciaOt : val.OTProcedencia,
-                    apoyo.length, val.SLHemodialisis, '', '', '', '', val.FMTrabajadora
-                ]
+            this.state.data.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(this.state.year, 10) )
+                .filter((caso) => new Date(caso.val.FMFecha).getMonth() === i )
+                .forEach((caso) => {
+                    const val = caso.val;
+                    const clasificacion = val.DGEdad <= 17 ? "INFANTIL" :
+                        val.DGEdad >= 60 ? "GERIATRICO" : "DIVERSO";
 
-                id++;
-                data.push(casosArray)
+                    let apoyo = [];
+                    for(var i = 0; i < val.apcantidad; i++){
+                        apoyo.push(val["FMApoyo" + i]);
+                    }
+                    
+                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGCaso, val.DGCalle, val.DGColonia, 
+                        val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, val.DGParroquia, 
+                        val.DGDecanato, val.DGVicaria, apoyo.includes("ORIENTACION") ? 1 : '', apoyo.includes("DESPENSA") ? 1 : '',
+                        apoyo.includes("ALIMENTO") ? 1 : '', apoyo.includes("LECHE") ? 1 : '', apoyo.includes("PAÑALES") ? 1 : '',
+                        apoyo.includes("MEDICAMENTO") ? 1 : '', apoyo.includes("ESTUDIOS MEDICOS") ? 1 : '', apoyo.includes("IMPLEMENTOS MEDICOS") ? 1 : '',
+                        apoyo.includes("T.M.OFTALMOLOGICO") ? 1 : '', apoyo.includes("T.M. ONCOLOGICO") ? 1 : '', apoyo.includes("T.M. DIALISIS") ? 1 : '',
+                        apoyo.includes("T.M. HEMODIALISIS") ? 1 : '', apoyo.includes("T.M. OXIGENO") ? 1 : '', apoyo.includes("AUDITIVO") ? 1 : '',
+                        apoyo.includes("PROTESIS EXTERNAS") ? 1 : '', apoyo.includes("SILLAS DE RUEDAS") ? 1 : '', apoyo.includes("ANDADERAS") ? 1 : '',
+                        apoyo.includes("MULETAS") ? 1 : '', apoyo.includes("CAMA DE HOSPITAL") ? 1 : '', apoyo.includes("COLCHON ORTOPEDICO") ? 1 : '',
+                        apoyo.includes("AUXILIAR DE BAÑO") ? 1 : '', apoyo.includes("ASPIRADOR DE SECRECIONES") ? 1 : '', apoyo.includes("BASTON") ? 1 : '',
+                        apoyo.includes("CORSET") ? 1 : '', apoyo.includes("I. ORTOPEDICO") ? 1 : '', apoyo.includes("ENSERES DOMESTICOS") ? 1 : '',
+                        apoyo.includes("RENTA") ? 1 : '', apoyo.includes("TRANSPORTE") ? 1 : '', apoyo.includes("PEQUEÑO COMERCIO") ? 1 : '',
+                        apoyo.includes("DOCUMENTOS DE EMPLEO") ? 1 : '', apoyo.includes("FUNERAL") ? 1 : '', apoyo.includes("ROPA") ? 1 : '',
+                        apoyo.includes("ZAPATOS O TENIS") ? 1 : '', apoyo.includes("KIT DE LIMPIEZA") ? 1 : '', apoyo.includes("COBIJAS") ? 1 : '',
+                        apoyo.includes("CENAS NAVIDEÑAS") ? 1 : '', apoyo.includes("SEGUIMIENTO") ? 1 : '', apoyo.includes("RENOVO CANALIZACION") ? 1 : '',
+                        apoyo.includes("DERIVACION") ? 1 : '', apoyo.includes("OTROS") ? 1 : '', val.OTPresupuesto, val.OTDHospital, val.OTFArzobispado,
+                        val.OTFCabildo, val.OTFOlga, val.OTDonante, val.OTABeneficiado, val.OTProveedor, val.OTProcedencia === 'OTROS' ? val.OTProcedenciaOt : val.OTProcedencia,
+                        apoyo.length, val.SLHemodialisis, '', '', '', '', val.FMTrabajadora
+                    ]
+
+                    id++;
+                    data.push(casosArray)
             })
             
             const wsAll = XLSX.utils.aoa_to_sheet(data)
@@ -143,7 +146,7 @@ class Socioeconomico extends Component {
                         onChange={(event) => this.handleChange(event.target.value)}
                     />
                 </div>
-                <div style={{paddingTop: "50px"}}>
+                <div style={{paddingTop: "90px"}}>
                     <Table className={classes.table}>
                         <TableHead>
                         <TableRow>
@@ -151,6 +154,7 @@ class Socioeconomico extends Component {
                             <TableCell>Caso</TableCell>
                             <TableCell numeric>Telefono</TableCell>
                             <TableCell numeric>Celular</TableCell>
+                            <TableCell >Fecha</TableCell>
                         </TableRow>
                         </TableHead>
                         <TableBody>
@@ -173,6 +177,7 @@ class Socioeconomico extends Component {
                                 </TableCell>
                                 <TableCell numeric>{row.val.DGTelefono}</TableCell>
                                 <TableCell numeric>{row.val.DGCelular}</TableCell>
+                                <TableCell >{row.val.FMFecha}</TableCell>
                             </TableRow>
                             );
                         })}
