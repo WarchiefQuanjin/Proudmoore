@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 // import Info from '@material-ui/icons/Info';
 import Inicio from '../Routes/Inicio.js';
 import Socioeconomico from '../Routes/Socioeconomico.js';
+import Transporte from '../Routes/Transporte.js';
 // import ColorLens from '@material-ui/icons/DeleteRounded';
 
 const style = {
@@ -29,6 +30,15 @@ const routes = [
         linkTo: 'socioeconomico',
         // icon: () => <ColorLens style = {{ color : '#689F38'}} />,
         iconText: 'Estudio Socioeconomico'
+    },
+    {
+        path : '/transporte',
+        exact: true,
+        title: () => <Typography style={style} noWrap type='title'>Transporte</Typography>,
+        main: () => <Transporte />,
+        linkTo: 'transporte',
+        // icon: () => <ColorLens style = {{ color : '#689F38'}} />,
+        iconText: 'Transporte'
     }/* ,
     {
         path : '/transition',

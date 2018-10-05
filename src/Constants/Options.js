@@ -327,6 +327,15 @@ const Excel = [[
     "AÑO DE APADRINAMIENTO", "TRABAJADORA SOCIAL"
 ]];
 
+const Frecuencia = [
+    { value: '1' },
+    { value: '2'},
+    { value: '3' },
+    { value: '4' },
+    { value: '5' },
+    { value: '6+' }
+];
+
 export { 
     ECivil, 
     Empleo, 
@@ -346,5 +355,6 @@ export {
     Apoyos,
     Procedencia,
     Excel,
-    Sexo
+    Sexo,
+    Frecuencia
 };

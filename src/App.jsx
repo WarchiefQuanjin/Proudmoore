@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Inicio from './Routes/Inicio.js';
 import Socioeconomico from './Routes/Socioeconomico.js'
+import Transporte from './Routes/Transporte.js'
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -187,6 +188,7 @@ class App extends Component {
                 <Switch>
                   <Route path='/' exact={true} component={Inicio} />
                   <Route path='/socioeconomico' /* exact={true}  */render={(props) => <Socioeconomico {...props}/>} />
+                  <Route path='/transporte' /* exact={true}  */render={(props) => <Transporte {...props}/>} />
                   {/* <Route path='/transition' exact={true} render={() => <Transition ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} />
                   <Route path='/customimage' exact={true} render={() => <CustomImage ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} /> */}
                 </Switch>

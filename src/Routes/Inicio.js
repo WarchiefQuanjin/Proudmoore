@@ -11,6 +11,9 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Excel } from '../Constants/Options';
 import TextField from '@material-ui/core/TextField';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import AppBar from '@material-ui/core/AppBar';
 
 const styles = theme => ({
     root: {
@@ -38,7 +41,8 @@ class Socioeconomico extends Component {
         super(props)
         this.state = {
             data: [],
-            year: new Date().getFullYear()
+            year: new Date().getFullYear(),
+            value: 0
         }
     }
 
@@ -126,13 +130,26 @@ class Socioeconomico extends Component {
         })
     }
 
+    handleTabChange = (event, value) => {
+        this.setState({ value });
+    };
+
     render() {
         const { classes } = this.props;
         const data = this.state.data;
+        const value = this.state.value;
 
         return (
-            <div style={{margin: '20px'}}>
-                <div style={{position: "absolute"}}>
+            <div >
+                <AppBar position="static">
+                    <Tabs value={value} onChange={this.handleTabChange}>
+                        <Tab label="Socioeconomico" />
+                        <Tab label="Transporte" />
+                        <Tab label="Entrevista" />
+                    </Tabs>
+                </AppBar>
+
+                <div style={{marginTop: '20px'}}>
                     <Button variant="contained" color="primary" className={classes.button} onClick={() => this.exportFile()}> 
                         Exportar a excel
                     </Button>
@@ -146,6 +163,8 @@ class Socioeconomico extends Component {
                         onChange={(event) => this.handleChange(event.target.value)}
                     />
                 </div>
+
+                {value === 0 &&
                 <div style={{paddingTop: "90px"}}>
                     <Table className={classes.table}>
                         <TableHead>
@@ -184,6 +203,7 @@ class Socioeconomico extends Component {
                         </TableBody>
                     </Table>
                 </div>
+                }
             </div>
         )
     }
