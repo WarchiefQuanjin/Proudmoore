@@ -1,30 +1,19 @@
 import React, { Component } from 'react'
 import firebase from '../config'
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { 
     ECivil, 
-    Empleo, 
-    Alimentacion, 
-    CondicionVivienda, 
-    Zona,
-    Menaje, 
-    AtencionMedica,
-    Apoyos,
-    Pronostico,
-    Vivienda,
-    Bano,
-    Dormitorios,
     TrabajadoraS,
-    Piso,
-    Techo,
-    Muro,
-    Procedencia,
     Frecuencia,
-    Sexo
+    Escolaridad,
+    Sexo,
+    Procedencia,
+    Estados,
+    Decanatos
 } from '../Constants/Options';
 import TxtField from '../Components/TxtField';
+import Autocomplete from '../Components/Autocomplete';
 import Snackbar from '@material-ui/core/Snackbar';
 import Fade from '@material-ui/core/Fade';
 
@@ -79,18 +68,56 @@ class Transporte extends Component {
         }
     }
 
-    tablaFamilia = (props) => {
-        var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">COMPOSICION FAMILIAR</p>'
+    tablaFormato = (props) => {
+        var fcantidad = '<div style="display: flex">'+
+        '<div style="width: 50%; text-align:right">'+
+            '<p style="width: 100px; display: contents">FECHA DE APLICACION </p><input value="'+props.FMFecha+'"/><br>'+
+            '<p style="width: 100px; display: contents">DERIVADO POR </p><input value="'+props.FMDerivado+'"/><br>'+
+            '<p style="width: 100px; display: contents">TRABAJADORA SOCIAL </p><input value="'+props.FMTrabajadora+'"/>'+
+        '</div>'+
+        '<div style="width: 50%; text-align:right">'+
+            '<p style="width: 100px; display: contents">NO. DE CASO </p><input value="'+props.FMNumero+'"/><br>'+
+            '<p style="width: 100px; display: contents">FRECUENCIA </p><input value="'+props.FMFrecuencia+'"/>'+
+        '</div></div>';
+
+        return fcantidad;
+    }
+
+    tablaDatosGenerales = (props) => {
+        var escolaridad = props.CFEscolaridad ? props.CFEscolaridad : '';
+        var colonia = props.DGColonia ? props.DGColonia : '';
+        var estado = props.DGEstado ? props.DGEstado : '';
+        var domicilio = props.DGDomicilio ? props.DGDomicilio : '';
+        var municipio = props.DGMunicipio ? props.DGMunicipio : '';
+        var pais = props.DGPais ? props.DGPais : '';
+
+        console.log(escolaridad + ', '+ colonia + ', '+ estado)
+
+        var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">DATOS GENERALES</p>'+
+            '<div style="display:flex">'+
+            '<div style="width: 50%; text-align:right">'+
+                '<p style="display: contents">NOMBRE </p><textarea rows="'+this.resizeTextArea(props.CFNom, 1)+'" style="width: 50%;">'+props.CFNom+'</textarea><br>'+
+                '<p style="width: 100px; display: contents">ESTADO CIVIL </p><input style="width: 50%;" value="'+props.CFECivil+'"/><br>'+
+                '<p style="width: 100px; display: contents">ESCOLARIDAD </p><input style="width: 50%;" value="'+escolaridad+'"/><br>'+
+                '<p style="width: 100px; display: contents">COLONIA </p><input style="width: 50%;" value="'+colonia+'"/><br>'+
+                '<p style="width: 100px; display: contents">ESTADO </p><input value="'+estado+'"/><br>'+
+            '</div>'+
+            '<div style="width: 50%; text-align:right">'+
+                '<p style="width: 100px; display: contents">EDAD </p><input style="width: 50%;" value="'+props.CFEdad+'"/><br>'+
+                '<p style="width: 100px; display: contents">OCUPACION </p><input value="'+props.CFOcupacion+'"/><br>'+
+                '<p style="display: contents">CALLE </p><textarea rows="'+this.resizeTextArea(domicilio, 1)+'" style="width: 50%;">'+domicilio+'</textarea><br>'+
+                '<p style="width: 100px; display: contents">MUNICIPIO </p><input style="width: 50%;" value="'+municipio+'"/><br>'+
+                '<p style="width: 100px; display: contents">PAIS </p><input style="width: 50%;" value="'+pais+'"/><br>'+
+            '</div>'+
+        '</div><br>'
         
         if(parseInt(props.gcantidad, 10) > 0) {
             fcantidad += '<table style="width: 100%; align: left; font-size: 12px">'+
             '<tr>'+
                 '<th>NOMBRE</th>'+
                 '<th>EDAD</th>'+
-                '<th>PARENTESCO</th>'+
                 '<th>ESTADO CIVIL</th>'+
                 '<th>OCUPACION</th>'+
-                '<th>EMPLEO</th>'+
                 '<th>ESCOLARIDAD</th>'+
             '</tr>';
 
@@ -98,141 +125,61 @@ class Transporte extends Component {
                 fcantidad += '<tr>'+
                     '<td>'+props['CFFam'+i+'nom']+'</td>'+
                     '<td>'+props['CFFam'+i+'edad']+'</td>'+
-                    '<td>'+props['CFFam'+i+'parentesco']+'</td>'+
                     '<td>'+props['CFFam'+i+'ecivil']+'</td>'+
                     '<td>'+props['CFFam'+i+'ocupacion']+'</td>'+
-                    '<td>'+props['CFFam'+i+'empleo']+'</td>'+
                     '<td>'+props['CFFam'+i+'escolaridad']+'</td>'+
                 '</tr>'
             }
 
-            fcantidad += '</table>'
+            fcantidad += '</table><br>'
         }
-        
-        fcantidad += '<div style="margin-top: 25px">'+
-            '<p style="width: 100%">OBSERVACIONES </p>'+
-            '<textarea rows="'+this.resizeTextArea(props.CFObservaciones, 2)+'" style="width: 100%; margin-top: -15px" >'+props.CFObservaciones+'</textarea>'+
-        '</div>'
         
         return fcantidad;
     }
 
-    tablaVivienda = (props) => {
-        var vcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">VIVIENDA</p>'+
-        '<div style="display: flex">'+
-            '<div style="width: 50%">'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">CONDICION </p><input style="width: 30%;" value="'+props.VVCondicion+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">PISO </p><input style="width: 30%;" value="'+props.VVPiso+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TECHO </p><input style="width: 30%;" value="'+props.VVTecho+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">DORMITORIOS </p><input style="width: 30%;" value="'+props.VVDormitorios+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">SALA </p><input style="width: 30%;" value="'+props.VVSala+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">BAÑOS </p><input style="width: 30%;" value="'+props.VVBanos+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">ORGANIZACION E HIGIENE </p><input style="width: 30%;" value="'+props.VVOrgEHig+'"/><br>'+
-            '</div>'+
-            '<div style="width: 50%">'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">ZONA </p><input style="width: 30%;" value="'+props.VVZona+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">MURO </p><input style="width: 30%;" value="'+props.VVMuro+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">MENAJE </p><input style="width: 30%;" value="'+props.VVMenaje+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">COCINA </p><input style="width: 30%;" value="'+props.VVCocina+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">COMEDOR </p><input style="width: 30%;" value="'+props.VVComedor+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">OTROS </p><input style="width: 30%;" value="'+props.VVOtros+'"/><br>'+
-            '</div>'+
-        '</div>'+
-        '<p style="width: 100%;text-align: center;">VEHICULOS</p>'+
-        '<table style="width: 100%; align: left; font-size: 12px; margin-bottom: 15px">'+
-        '<tr>'+
-            '<th>MARCA</th>'+
-            '<th>MODELO</th>'+
-        '</tr>';
-
-        for(var i = 0; i < props.vcantidad; i++){
-            vcantidad += '<tr>'+
-                '<td>'+props['VV'+i+'mar']+'</td>'+
-                '<td>'+props['VV'+i+'mod']+'</td>'+
-            '</tr>'
-        }
-
-        vcantidad += '</table>'+
-        '<p style="margin-bottom: 0px">OBSERVACIONES</p><textarea rows="'+this.resizeTextArea(props.VVObservaciones, 2)+'" style="width: 100%" >'+props.VVObservaciones+'</textarea>';
-
-        return vcantidad;
-    }
-
-    tablaOtros = (props) => {
-        var procedencia = props.OTProcedencia === 'OTROS' ? props.OTProcedenciaOt : props.OTProcedencia;
-        var otros = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">OTROS</p>'+
-        '<p style="width: 50%">REFERENCIA CON COLATERALES  </p><textarea rows="'+this.resizeTextArea(props.OTReferenciasC, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTReferenciasC+'</textarea>'+
-        '<p style="width: 50%">HISTORIA SOCIAL </p><textarea rows="'+this.resizeTextArea(props.OTHistoriaS, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTHistoriaS+'</textarea>'+
-        '<p style="width: 50%">DIAGNOSTICO SOCIO-ECONOMICO </p><textarea rows="'+this.resizeTextArea(props.OTDiagnosticoSE, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTDiagnosticoSE+'</textarea>'+
-        '<div style="display: inline-flex; margin: 10px 0px">'+
-            '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">PRONOSTICO </p><input style="margin-right: 10px" value="'+props.OTPronostico+'"/><br>'+
-        '</div>'+
-        '<p style="width: 50%">PROVEEDOR</p><textarea rows="'+this.resizeTextArea(props.OTProveedor, 2)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+props.OTProveedor+'</textarea>'+ 
-        '<p style="width: 50%">PROCEDENCIA</p><textarea rows="'+this.resizeTextArea(procedencia, 2)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+procedencia+'</textarea>'+ 
-        '<p style="width: 50%">PLAN DE INTERVENCION </p><textarea rows="'+this.resizeTextArea(props.OTPlanI, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTPlanI+'</textarea>'+
-
-        '<div style="display: flex; margin: 10px 0px">'+
-            '<div style="width: 50%; text-align: right">'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">CANTIDAD AUTORIZADA</p><input style="margin-right: 10px" value="'+props.OTPresupuesto+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONATIVO HOSPITAL</p><input style="margin-right: 10px" value="'+props.OTDHospital+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO ARZOBISPADO</p><input style="margin-right: 10px" value="'+props.OTFArzobispado+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO CABILDO</p><input style="margin-right: 10px" value="'+props.OTFCabildo+'"/><br>'+
-            '</div>'+
-            '<div style="width: 50%; text-align: right">'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO OLGA</p><input style="margin-right: 10px" value="'+props.OTFOlga+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONANTE</p><input style="margin-right: 10px" value="'+props.OTDonante+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">APORTACION BENEFICIADO</p><input value="'+props.OTABeneficiado+'"/><br>'+
-            '</div>'+
-        '</div>'+
-        '<p style="width: 50%">NOTAS DE SEGUIMIENTO </p><textarea rows="'+this.resizeTextArea(props.OTNotasSE, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTNotasSE+'</textarea>';
-    
-        return otros;
-    }
-
-    tablaSalud = (props) => {
-        var mcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">SALUD</p>'+
-        '<table style="width: 100%; align: left; font-size: 12px">'+
-        '<tr>'+
-            '<th>HOSPITAL</th>'+
-            '<th>NOTA</th>'+
-        '</tr>';
-
-        for(var i = 0; i < props.mcantidad; i++){
-            mcantidad += '<tr>'+
-                '<td>'+props['SLAteMed'+i]+'</td>';
-
-            mcantidad += props['SLAteMed' + i + 'OTROS'] !== undefined ? '<td>' + props['SLAteMed' + i + 'OTROS']+'</td>' : '';
-
-            mcantidad += '</tr>';
-        }
-
-        mcantidad += '</table>'+
-            '<p style="width: 170px; display: inline-flex">CANTIDAD DE HEMODIALISIS</p><input style="width: 50px;" value="'+props.SLHemodialisis+'"/><br>'+
-            '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.SLObservaciones, 2)+'" style="width: 100%; margin-top: -15px" >'+props.SLObservaciones+'</textarea>'+
-            '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px;">ESTADO ACTUAL DE SALUD</p>'+
-            '<p style="width: 50%">CASO </p><textarea rows="'+this.resizeTextArea(props.SLCaso, 2)+'" style="width: 100%; margin-top: -15px" >'+props.SLCaso+'</textarea>'+
-            '<p style="width: 50%">FAMILIA </p><textarea rows="'+this.resizeTextArea(props.SLFamilia, 2)+'" style="width: 100%; margin-top: -15px" >'+props.SLFamilia+'</textarea>';
-
-        return mcantidad;
-    }
-
-    tablaFormato = (props) => {
-        let apoyos = '';
-
-        for(var i = 0; i < props.apcantidad; i++){
-            apoyos += props['FMApoyo'+i]
-            apoyos += i !== props.apcantidad - 1 ? ', ' : '';
-        }
-
-        var fcantidad = '<div style="display: flex">'+
-        '<div style="width: 50%; text-align:right">'+
-            '<p style="width: 100px; display: contents">FECHA DE APLICACION </p><input value="'+props.FMFecha+'"/><br>'+
-            '<p style="width: 100px; display: contents">Trabajadora Social </p><input value="'+props.FMTrabajadora+'"/>'+
-        '</div>'+
-        '<div style="width: 50%; text-align:right">'+
-            '<p style="width: 100px; display: contents">NO. DE CASO </p><input value="'+props.FMNumero+'"/><br>'+
-            '<p style="display: contents">APOYOS </p><textarea rows="'+this.resizeTextArea(apoyos, 1)+'" style="width: 50%;">'+apoyos+'</textarea>'+
+    tablaIdentificacion = (props) => {
+        var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">IDENTIFICACION</p>'+
+        '<div style="display: flex"><div>'+
+            '<p style="width: 100px; display: contents">TIPO DE IDENTIFICACION </p><input value="'+props.IDTipo+'"/><br>'+
+            '<p style="width: 100px; display: contents">ORIGINARIO DE </p><input value="'+props.IDOriginario+'"/><br>'+
+            '<p style="width: 100px; display: contents">TIEMPO QUE TIENE EN LA CIUDAD </p><input value="'+props.IDTiempo+'"/><br>'+
+            '<p style="width: 100px; display: contents">LUGAR DONDE SE HOSPEDA </p><input value="'+props.IDHospeda+'"/>'+
         '</div></div>';
+
+        return fcantidad;
+    }
+
+    tablaSolicitud = (props) => {
+        var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">SOLICITUD</p>'+
+        '<div style="display: flex"><div>'+
+            '<p style="width: 100px; display: contents">DESTINO AL QUE SOLICITA APOYO </p><input value="'+props.SDDestino+'"/><br>'+
+            '<p style="display: contents">MOTIVO DE SOLICITUD </p><textarea rows="'+this.resizeTextArea(props.SDMotivo, 1)+'" style="width: 50%;">'+props.SDMotivo+'</textarea><br>'+
+        '</div></div>';
+
+        return fcantidad;
+    }
+
+    tablaApoyo = (props) => {
+        var cantidad = props.APCantidad ? props.APCantidad : '';
+        var aportacion = props.APAportacion ? props.APAportacion : '';
+        var folioC = props.APFolioC ? props.APFolioC : '';
+
+        var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">APOYO</p>'+
+        '<div style="display: flex"><div>'+
+            '<p style="width: 100px; display: contents">DESTINO</p><input value="'+props.APDestino+'"/><br>'+
+            '<p style="width: 100px; display: contents">NUMERO DE BOLETOS</p><input value="'+props.APBoletos+'"/><br>'+
+            '<p style="width: 100px; display: contents">CANTIDAD AUTORIZADA</p><input value="'+cantidad+'"/><br>'+
+            '<p style="width: 100px; display: contents">APORTACION DEL SOLICITANTE</p><input value="'+aportacion+'"/><br>'+
+            '<p style="width: 100px; display: contents">FOLIO DE TRABAJO SOCIAL</p><input value="'+props.APFolioTS+'"/><br>'+
+            '<p style="width: 100px; display: contents">FOLIO DE CAJA</p><input value="'+folioC+'"/>'+
+        '</div></div>';
+
+        return fcantidad;
+    }
+
+    tablaObservaciones = (props) => {
+        var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">OBSERVACIONES</p>'+
+        '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.OBObservaciones, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OBObservaciones+'</textarea>';
 
         return fcantidad;
     }
@@ -248,91 +195,9 @@ class Transporte extends Component {
 
         const tableHeader = '<div style="display:flex">'+
             '<img src="https://igx.4sqi.net/img/general/width960/82417073_V22Qrk5dPbOj3XmuXQi0gksLG4bHRXVJ-Y3JZNgNnXo.png" alt="W3Schools.com" style="width:100px;height:100px;">'+
-            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>ESTUDIO SOCIOECONOMICO</h2>'+
+            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>AREA DE TRANSPORTE</h2>'+
             '<h2 style="width:100px; height:100px;"></h2>'+
         '</div>';
-
-        const datosg = '<p style="width: 100%; text-align: center; background-color: #4a76c5; color: white; margin-top: 30px; -webkit-print-color-adjust: exact">DATOS GENERALES</p>'+
-        '<div style="display:flex">'+
-            '<div style="width: 50%; text-align:right">'+
-                '<p style="display: contents">NOMBRE DEL CASO </p><textarea rows="'+this.resizeTextArea(props.DGCaso, 1)+'" style="width: 60%;">'+props.DGCaso+'</textarea><br>'+
-                '<p style="display: contents">CALLE </p><textarea rows="'+this.resizeTextArea(props.DGCalle, 1)+'" style="width: 50%;">'+props.DGCalle+'</textarea><br>'+
-                '<p style="width: 100px; display: contents">COLONIA </p><input style="width: 50%;" value="'+props.DGColonia+'"/><br>'+
-                '<p style="width: 100px; display: contents">MUNICIPIO </p><input style="width: 50%;" value="'+props.DGMunicipio+'"/><br>'+
-                '<p style="width: 100px; display: contents">TELEFONO </p><input style="width: 50%;" value="'+props.DGTelefono+'"/><br>'+
-                '<p style="width: 100px; display: contents">TEL. RECADOS </p><input style="width: 50%;" value="'+props.DGTelefonoR+'"/><br>'+
-                '<p style="width: 100px; display: contents">OCUPACION </p><input style="width: 50%;" value="'+props.DGOcupacion+'"/><br>'+
-                '<p style="display: contents">PARROQUIA </p><textarea rows="'+this.resizeTextArea(props.DGParroquia, 1)+'" style="width: 50%;">'+props.DGParroquia+'</textarea><br>'+
-                '<p style="display: contents">VICARIA </p><textarea rows="'+this.resizeTextArea(props.DGVicaria, 1)+'" style="width: 80%;">'+props.DGVicaria+'</textarea><br>'+
-                '<p style="width: 100px; display: contents">PARENTESCO </p><input style="width: 50%;" value="'+props.DGParentesco+'"/>'+
-            '</div>'+
-            '<div style="width: 50%; text-align:right">'+
-                '<p style="width: 100px; display: contents">EDAD</p><input style="width: 20%;" value="'+props.DGEdad+'"/><br>'+
-                '<p style="display: contents">CRUCE DE CALLES</p><textarea rows="'+this.resizeTextArea(props.DGCruce, 1)+'" style="width: 70%;">'+props.DGCruce+'</textarea><br>'+
-                '<p style="width: 100px; display: contents">C.P. </p><input value="'+props.DGCP+'"/><br>'+
-                '<p style="width: 100px; display: contents">ESTADO </p><input value="'+props.DGEstado+'"/><br>'+
-                '<p style="width: 100px; display: contents">CEL </p><input value="'+props.DGCelular+'"/><br>'+
-                '<p style="width: 100px; display: contents">ESTADO CIVIL </p><input style="width: 50%;" style="width: 60%;" value="'+props.DGECivil+'"/><br>'+
-                '<p style="width: 100px; display: contents">ESCOLARIDAD </p><input style="width: 50%;" value="'+props.DGEscolaridad+'"/><br>'+
-                '<p style="display: contents">DECANATO </p><textarea rows="'+this.resizeTextArea(props.DGDecanato, 1)+'" style="width: 70%;">'+props.DGDecanato+'</textarea><br>'+
-                '<p style="display: contents">PERSONA ENTREVISTADA </p><textarea rows="'+this.resizeTextArea(props.DGPersona, 1)+'" style="width: 50%;">'+props.DGPersona+'</textarea>'+
-            '</div>'+
-        '</div>';
-
-        const ingresoT = parseFloat(props.DEIngresoF ? props.DEIngresoF : 0) + parseFloat(props.DEIngresoO ? props.DEIngresoO : 0);
-        const egresoT = parseFloat(props.DEAlimentacion ? props.DEAlimentacion : 0) + parseFloat(props.DEVivienda ? props.DEVivienda : 0) + 
-            parseFloat(props.DEServicios ? props.DEServicios : 0) + parseFloat(props.DETelefono ? props.DETelefono : 0) + 
-            parseFloat(props.DETransporte ? props.DETransporte : 0) + parseFloat(props.DEEducacion ? props.DEEducacion : 0) + 
-            parseFloat(props.DESalud ? props.DESalud : 0) + parseFloat(props.DEVestido ? props.DEVestido : 0) + 
-            parseFloat(props.DERecreacion ? props.DERecreacion : 0) + parseFloat(props.DEDeudas ? props.DEDeudas : 0) + 
-            parseFloat(props.DEOtros ? props.DEOtros : 0);
-        const diferencia = ingresoT - egresoT;
-        const economicos = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">DATOS ECONOMICOS</p><div style="display: flex">'+
-            '<div style="width: 50%">'+
-                '<p style="width: 100%;text-align: center;">INGRESOS MENSUALES</p>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">INGRESO FAMILIAR </p><input style="width: 20%;" value="'+props.DEIngresoF+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">OTROS INGRESOS </p><input style="width: 20%;" value="'+props.DEIngresoO+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TOTAL DE INGRESOS </p><input style="width: 20%;" value="'+ingresoT+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">DIFERENCIA </p><input style="width: 20%;" value="'+diferencia+'"/><br>'+
-                '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.DEObservaciones, 2)+'" style="width: 95%; margin-top: -15px" >'+props.DEObservaciones+'</textarea>'+
-            '</div>'+
-            '<div style="width: 50%">'+
-                '<p style="width: 100%;text-align: center;">EGRESOS MENSUALES</p>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">ALIMENTACION </p><input style="width: 20%;" value="'+props.DEAlimentacion+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">VIVIENDA </p><input style="width: 20%;" value="'+props.DEVivienda+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">SERVICIOS BASICOS </p><input style="width: 20%;" value="'+props.DEServicios+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TELEFONO </p><input style="width: 20%;" value="'+props.DETelefono+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TRANSPORTE </p><input style="width: 20%;" value="'+props.DETransporte+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">EDUCACION </p><input style="width: 20%;" value="'+props.DEEducacion+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">SALUD </p><input style="width: 20%;" value="'+props.DESalud+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">VESTIDO </p><input style="width: 20%;" value="'+props.DEVestido+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">RECREACION </p><input style="width: 20%;" value="'+props.DERecreacion+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">DEUDAS </p><input style="width: 20%;" value="'+props.DEDeudas+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">OTROS </p><input style="width: 20%;" value="'+props.DEOtros+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TOTAL DE EGRESOS </p><input style="width: 20%;" value="'+egresoT+'"/><br>'+
-            '</div>'+
-        '</div>';
-
-        const alimentacion = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">ALIMENTACION</p>'+
-        '<div style="display: flex">'+
-            '<div style="width: 50%">'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">CEREALES </p><input style="width: 20%;" value="'+props.ALCereales+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">PASTAS </p><input style="width: 20%;" value="'+props.ALPastas+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TORTILLA </p><input style="width: 20%;" value="'+props.ALTortilla+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">LECHE </p><input style="width: 20%;" value="'+props.ALLeche+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">CARNE </p><input style="width: 20%;" value="'+props.ALCarne+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">PESCADO/MARISCOS </p><input style="width: 20%;" value="'+props.ALMar+'"/><br>'+
-            '</div>'+
-            '<div style="width: 50%">'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">LEGUMINOSAS </p><input style="width: 20%;" value="'+props.ALLeguminosas+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">FRUTA </p><input style="width: 20%;" value="'+props.ALFruta+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">HUEVO </p><input style="width: 20%;" value="'+props.ALHuevo+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">REFRESCO </p><input style="width: 20%;" value="'+props.ALRefresco+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">POLLO </p><input style="width: 20%;" value="'+props.ALPollo+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TIPOS DE APOYO </p><input style="width: 20%;" value="'+props.ALTiposA+'"/><br>'+
-            '</div>'+
-        '</div>'+
-        '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.ALObservaciones, 2)+'" style="width: 100%; margin-top: -15px" >'+props.ALObservaciones+'</textarea>';
 
         const firmas = '<div style="padding-top: 80px; display: flex">'+
             '<div style="width: 33%; text-align: center">'+
@@ -356,13 +221,11 @@ class Transporte extends Component {
         documentToPrint.document.write('<body style="font-size: 12px; overflow-y: scroll; height: 100%" onload="window.print();">');
         documentToPrint.document.write(tableHeader);
         documentToPrint.document.write(this.tablaFormato(props));
-        documentToPrint.document.write(datosg);
-        documentToPrint.document.write(this.tablaFamilia(props));
-        documentToPrint.document.write(economicos);
-        documentToPrint.document.write(alimentacion);
-        documentToPrint.document.write(this.tablaVivienda(props));
-        documentToPrint.document.write(this.tablaSalud(props));
-        documentToPrint.document.write(this.tablaOtros(props));
+        documentToPrint.document.write(this.tablaDatosGenerales(props));
+        documentToPrint.document.write(this.tablaIdentificacion(props));
+        documentToPrint.document.write(this.tablaSolicitud(props));
+        documentToPrint.document.write(this.tablaApoyo(props));
+        documentToPrint.document.write(this.tablaObservaciones(props));
         documentToPrint.document.write(firmas);
         documentToPrint.document.write('</body>');
         documentToPrint.document.close();
@@ -432,22 +295,131 @@ class Transporte extends Component {
 
     checkFields = () => {
         const Fields = [ 'FMFecha', 'FMNumero', 'FMDerivado', 'FMFrecuencia', 'FMTrabajadora', 'IDTipo', 
-        'IDOriginario', 'IDTiempo', 'IDHospeda', 'SDDestino', 'SDMotivo', 'APDestino', 'APBoletos', 'APFolioTS' ];
+            'IDOriginario', 'IDTiempo', 'IDHospeda', 'SDDestino', 'SDMotivo', 'APDestino', 'APBoletos', 'APFolioTS', 
+            'DGNom', 'DGEdad', 'DGECivil', 'DGOcupacion', 'DGParroquia', 'DGDecanato', 'DGVicaria' ];
         
         let missingFields = false;
         
         for (var j = 0; j < Fields.length; j++){
             if( !Object.keys(this.state.caso).includes(Fields[j]) || this.state.caso[Fields[j]] === undefined){
                 missingFields = true;
+                console.log(Fields[j])
                 this.setState({ open: true, message: 'Todos los campos deben contener informacion'});
             };
         }
         return missingFields;
     }
 
+    cProcedencia = () => (
+        <div>
+            <TxtField id={"APProcedencia"} nombre={"Procedencia"} width={180} options={Procedencia} onChange={this.handleChange} state={this.state.caso}/>
+            {this.state.caso["APProcedencia"] === 'OTROS' && <TxtField id={"APProcedenciaOt"} nombre={"Procedencia"} width={180} onChange={this.handleChange} state={this.state.caso}/> }
+        </div>
+    )
+
     handleChange = (id, value) => {
         let caso = this.state.caso
         caso[id] = value
+
+        if(id === 'DGDecanato'){
+            let vicaria = ''
+
+            switch(value) {
+                case "DULCE NOMBRE DE JESÚS":
+                case "LA PAZ":
+                case "SAGRARIO METROPOLITANO":
+                case "ZAPOPAN ESTADIO":
+                    vicaria = "EL SANTUARIO DE GUADALUPE"
+                    break;
+                case "GETSEMANÍ DE LA CRUZ":
+                case "LOURDES":
+                case "MIRAVALLE":
+                case "POLANCO":
+                    vicaria = "NUESTRA SEÑORA DE LOURDES"
+                    break;
+                case "JESUCRISTO OBRERO":
+                case "TESISTÁN":
+                case "ZAPOPAN":
+                    vicaria = "NUESTRA SEÑORA DE ZAPOPAN"
+                    break;
+                case "ATEMAJAC":
+                case "LA VISITACIÓN":
+                case "NUESTRA SEÑORA DEL REFUGIO":
+                    vicaria = "NUESTRA SEÑORA DEL ROSARIO, ATEMAJAC"
+                    break;
+                case "ANALCO":
+                case "LA LUZ":
+                case "SAN FELIPE":
+                    vicaria = "SAN JOSÉ DE ANALCO"
+                    break;
+                case "SAN JOSÉ DEL CASTILLO":
+                case "SAN PEDRITO":
+                case "SAN PEDRO":
+                case "TONALÁ":
+                case "ZAPOTLANEJO":
+                    vicaria = "SAN PEDRO"
+                    break;
+                case "HUENTITÁN":
+                case "SAN ILDEFONSO":
+                case "SANTA CECILIA":
+                case "TALPITA":
+                    vicaria = "SANTA CECILIA"
+                    break;
+                case "JESUCRISTO REY DEL UNIVERSO":
+                case "SANTA ANA TEPETITLÁN":
+                case "TOLUQUILLA":
+                    vicaria = "NUESTRA SEÑORA DEL ROSARIO, TOLUQUILLA"
+                    break;
+                case "SAN ANDRÉS":
+                case "TETLÁN":
+                case "ZALATITÁN":
+                    vicaria = "SAN ANDRÉS"
+                    break;
+                case "GUADALUPE CHAPALITA":
+                case "LA SANTA CRUZ":
+                case "SAN JUAN BAUTISTA":
+                case "SANTA ROSA DE LIMA":
+                    vicaria = "SANTOS MARTIRES MEXICANOS"
+                    break;
+                case "SAN ISIDRO":
+                case "SAN PIO DE PIETRELCINA":
+                case "TLAJOMULCO":
+                    vicaria = "SAN ANTONIO TLAJOMULCO"
+                    break;
+                case "AHUALULCO":
+                case "AMECA":
+                case "COCULA":
+                case "MAGDALENA":
+                    vicaria = "EL SEÑOR GRANDE, AMECA"
+                    break;
+                case "LA BARCA":
+                case "OCOTLÁN":
+                case "PONCITLÁN":
+                    vicaria = "EL SEÑOR DE LA MISERICORDIA , OCOTLÁN"
+                    break;
+                case "CHAPALA":
+                case "JOCOTEPEC":
+                    vicaria = "SAN FRANCISCO DE ASÍS, CHAPALA"
+                    break;
+                case "IXTLAHUACÁN DEL RÍO":
+                case "JUCHIPILA":
+                case "NOCHISTLÁN":
+                    vicaria = "SAN FRANCISCO, NOCHISTLÁN"
+                    break;
+                case "TEMASTIÁN":
+                case "EL TEÚL":
+                    vicaria = "EL SEÑOR DE LOS RAYOS, TEMASTIÁN"
+                    break;
+                case "OTROS/FORANEO":
+                    vicaria = "ZONA FORÁNEA, OTRAS DIOCESIS"
+                    break;
+                default:
+                    vicaria = ""
+            }
+
+            caso['DGVicaria'] = vicaria;
+        }
+
         this.setState({objectState: caso})
     }
 
@@ -516,12 +488,25 @@ class Transporte extends Component {
                     <div className={classes.container}>
                         <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>DATOS GENERALES</h1>
                         <TxtField nombre={"Cantidad"} id={"gcantidad"} width={80} onChange={this.handleChange} state={this.state.caso}/>
-                        {this.cGenerales()}
+                        <div>
+                            <TxtField id={"DGNom"} nombre={"Nombre"} width={160} required onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField id={"DGEdad"} nombre={"Edad"} width={50} required onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField id={"DGSexo"} nombre="Sexo" required options={Sexo} onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField id={"DGECivil"} nombre={"Estado Civil"} width={120} required options={ECivil} onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField id={"DGOcupacion"} nombre={"Ocupacion"} width={150} required onChange={this.handleChange} state={this.state.caso}/>
+                            <Autocomplete id={"DGEscolaridad"} nombre={"Escolaridad"} options={Escolaridad} onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre={"Parroquia"} id={"DGParroquia"} required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
+                            <Autocomplete nombre={"Decanato"} id={"DGDecanato"} required multiline={true} options={Decanatos} onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre={"Vicaria"} id={"DGVicaria"} required multiline onChange={this.handleChange} state={this.state.caso}/>
+                            <hr style={{borderColor: 'black'}}></hr>
+                            {this.cGenerales()}
+                        </div>
                         <div>
                             <TxtField id={"DGDomicilio"} nombre={"Domicilio"}  onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGColonia"} nombre={"Colonia"} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGMunicipio"} nombre={"Municipio"} onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField id={"DGEstado"} nombre={"Estado"} onChange={this.handleChange} state={this.state.caso}/>
+                            {/* <TxtField id={"DGEstado"} nombre={"Estado"} onChange={this.handleChange} state={this.state.caso}/> */}
+                            <Autocomplete nombre={"Estado"} id={"DGEstado"} required options={Estados} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGPais"} nombre={"Pais"} onChange={this.handleChange} state={this.state.caso}/>
                         </div>
                     </div>
@@ -552,6 +537,8 @@ class Transporte extends Component {
                         <TxtField nombre={"Numero de boletos"} id="APBoletos" options={Frecuencia} required width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Cantidad Autorizada"} id="APCantidad" width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Aportacion del solicitante"} id="APAportacion" width={300} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre={"Proveedor"} id={"APProveedor"} onChange={this.handleChange} state={this.state.caso}/>
+                        {this.cProcedencia()}
                         <TxtField nombre={"Folio de trabajo social"} id="APFolioTS" required width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Folio de caja"} id="APFolioC" width={300} onChange={this.handleChange} state={this.state.caso}/>
                     </div>

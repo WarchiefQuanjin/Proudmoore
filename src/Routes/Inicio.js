@@ -36,7 +36,7 @@ const styles = theme => ({
     }
   });
 
-class Socioeconomico extends Component {
+class Inicio extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -47,10 +47,11 @@ class Socioeconomico extends Component {
     }
 
     componentWillMount() {
-        this.getData()
+        this.getSocioeconomicoData()
+        this.getTransporteData()
     }
 
-    getData() {
+    getSocioeconomicoData() {
         let data = []
         let info = {};
 
@@ -68,7 +69,51 @@ class Socioeconomico extends Component {
         })
     }
 
-    exportFile() {
+    getTransporteData() {
+        let transporteData = []
+        let info = {};
+
+        firebase.database().ref(`transporte/`).once('value', snapshot => {
+            snapshot.forEach(snap => {
+                info.val = snap.val();
+                info.key = snap.key;
+
+                transporteData.push(info)
+                info = {}
+            })
+            this.setState({
+                transporteData
+            })
+        })
+    }
+
+    /* getEntrevistaData() {
+        let data = []
+        let info = {};
+
+        firebase.database().ref(`casos/`).once('value', snapshot => {
+            snapshot.forEach(snap => {
+                info.val = snap.val();
+                info.key = snap.key;
+
+                data.push(info)
+                info = {}
+            })
+            this.setState({
+                data
+            })
+        })
+    } */
+
+    exportFileControl = (option) => {
+        option === 0 ? this.exportFileSocio() : this.exportFileTran();
+    }
+
+    exportFileTran = () => {
+        console.log('transporte')
+    }
+
+    exportFileSocio() {
         const wb = XLSX.utils.book_new()
         const months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 
             'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
@@ -112,6 +157,46 @@ class Socioeconomico extends Component {
                     id++;
                     data.push(casosArray)
             })
+
+            //////////////////////////////////////
+
+            this.state.transporteData.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(this.state.year, 10) )
+                .filter((caso) => new Date(caso.val.FMFecha).getMonth() === i )
+                .forEach((caso) => {
+                    const val = caso.val;
+                    const clasificacion = val.DGEdad <= 17 ? "INFANTIL" :
+                        val.DGEdad >= 60 ? "GERIATRICO" : "DIVERSO";
+
+                    let apoyo = [];
+                    for(var i = 0; i < val.apcantidad; i++){
+                        apoyo.push(val["FMApoyo" + i]);
+                    }
+                    
+                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGNom, val.DGDomicilio, val.DGColonia, 
+                        val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, 'FORANEA', 
+                        'OTROS/FORANEO', 'ZONA FORÁNEA, OTRAS DIOCESIS', '', '',
+                        '', '', '',
+                        '', '', '',
+                        '', '', '',
+                        '', '', '',
+                        '', '', '',
+                        '', '', '',
+                        '', '', '',
+                        '', '', '',
+                        '', 1, '',
+                        '', '', '',
+                        '', '', '',
+                        '', '', '',
+                        '', '', val.OTPresupuesto, val.OTDHospital, val.OTFArzobispado,
+                        val.OTFCabildo, val.OTFOlga, val.OTDonante, val.OTABeneficiado, val.OTProveedor, val.OTProcedencia === 'OTROS' ? val.OTProcedenciaOt : val.OTProcedencia,
+                        1, val.SLHemodialisis, '', '', '', '', val.FMTrabajadora
+                    ]
+
+                    id++;
+                    data.push(casosArray)
+            })
+
+            //////////////////////////////////////
             
             const wsAll = XLSX.utils.aoa_to_sheet(data)
             
@@ -119,6 +204,94 @@ class Socioeconomico extends Component {
         })
 
         XLSX.writeFile(wb, "export-demo.xlsx")
+    }
+
+    transporteTable = (data, classes) => {
+        return (
+            <div style={{paddingTop: "90px"}}>
+                <Table className={classes.table}>
+                    <TableHead>
+                    <TableRow>
+                        <TableCell></TableCell>
+                        <TableCell>Numero</TableCell>
+                        <TableCell>Caso</TableCell>
+                        <TableCell>Fecha</TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {data.map((row, i) => {
+                        return (
+                        <TableRow key={row.key}>
+                            <TableCell>
+                                <Link to={{ 
+                                    pathname: '/transporte', 
+                                    user: data[i],
+                                    modifying: 1
+                                }}>
+                                    <Button variant="contained" color="primary" className={classes.button}> 
+                                        Editar
+                                    </Button>
+                                </Link>
+                            </TableCell>
+                            <TableCell>{row.val.FMNumero}</TableCell>
+                            <TableCell component="th" scope="row">
+                                {row.val.CFNom}
+                            </TableCell>
+                            <TableCell>{row.val.FMFecha}</TableCell>
+                        </TableRow>
+                        );
+                    })}
+                    </TableBody>
+                </Table>
+            </div>
+        )
+    }
+
+    socioeconomicoTable = (data, classes) => {
+        return (
+            <div style={{paddingTop: "90px"}}>
+                <Table className={classes.table}>
+                    <TableHead>
+                    <TableRow>
+                        <TableCell></TableCell>
+                        <TableCell>Caso</TableCell>
+                        <TableCell numeric>Telefono</TableCell>
+                        <TableCell numeric>Celular</TableCell>
+                        <TableCell >Fecha</TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {data.map((row, i) => {
+                        return (
+                        <TableRow key={row.key}>
+                            <TableCell>
+                                <Link to={{ 
+                                    pathname: '/socioeconomico', 
+                                    user: data[i],
+                                    modifying: 1
+                                }}>
+                                    <Button variant="contained" color="primary" className={classes.button}> 
+                                        Editar
+                                    </Button>
+                                </Link>
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                                {row.val.DGCaso}
+                            </TableCell>
+                            <TableCell numeric>{row.val.DGTelefono}</TableCell>
+                            <TableCell numeric>{row.val.DGCelular}</TableCell>
+                            <TableCell >{row.val.FMFecha}</TableCell>
+                        </TableRow>
+                        );
+                    })}
+                    </TableBody>
+                </Table>
+            </div>
+        )
+    }
+
+    entrevistaTable = (data, classes) => {
+        return (null)
     }
 
     handleChange = (value) => {
@@ -137,6 +310,8 @@ class Socioeconomico extends Component {
     render() {
         const { classes } = this.props;
         const data = this.state.data;
+        const transporteData = this.state.transporteData;
+        const entrevistaData = this.state.transporteData;
         const value = this.state.value;
 
         return (
@@ -150,7 +325,7 @@ class Socioeconomico extends Component {
                 </AppBar>
 
                 <div style={{marginTop: '20px'}}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.exportFile()}> 
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.exportFileControl(value)/* () => this.exportFile() */}> 
                         Exportar a excel
                     </Button>
                     <TextField
@@ -164,49 +339,13 @@ class Socioeconomico extends Component {
                     />
                 </div>
 
-                {value === 0 &&
-                <div style={{paddingTop: "90px"}}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                        <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell>Caso</TableCell>
-                            <TableCell numeric>Telefono</TableCell>
-                            <TableCell numeric>Celular</TableCell>
-                            <TableCell >Fecha</TableCell>
-                        </TableRow>
-                        </TableHead>
-                        <TableBody>
-                        {data.map((row, i) => {
-                            return (
-                            <TableRow key={row.key}>
-                                <TableCell>
-                                    <Link to={{ 
-                                        pathname: '/socioeconomico', 
-                                        user: this.state.data[i],
-                                        modifying: 1
-                                    }}>
-                                        <Button variant="contained" color="primary" className={classes.button}> 
-                                            Editar
-                                        </Button>
-                                    </Link>
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                    {row.val.DGCaso}
-                                </TableCell>
-                                <TableCell numeric>{row.val.DGTelefono}</TableCell>
-                                <TableCell numeric>{row.val.DGCelular}</TableCell>
-                                <TableCell >{row.val.FMFecha}</TableCell>
-                            </TableRow>
-                            );
-                        })}
-                        </TableBody>
-                    </Table>
-                </div>
-                }
+                {value === 0 && this.socioeconomicoTable(data, classes)}
+                {value === 1 && this.transporteTable(transporteData, classes)}
+                {value === 2 && this.entrevistaTable(entrevistaData, classes)}
+
             </div>
         )
     }
 }
 
-export default withStyles(styles)(Socioeconomico);
+export default withStyles(styles)(Inicio);

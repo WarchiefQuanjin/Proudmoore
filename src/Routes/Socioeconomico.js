@@ -21,11 +21,16 @@ import {
     Techo,
     Muro,
     Procedencia,
-    Sexo
+    Sexo,
+    Escolaridad,
+    Parentesco,
+    Estados,
+    Decanatos
 } from '../Constants/Options';
 import TxtField from '../Components/TxtField';
 import Snackbar from '@material-ui/core/Snackbar';
 import Fade from '@material-ui/core/Fade';
+import Autocomplete from '../Components/Autocomplete';
 
 const styles = theme => ({
     root: {
@@ -133,7 +138,7 @@ class Socioeconomico extends Component {
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">DORMITORIOS </p><input style="width: 30%;" value="'+props.VVDormitorios+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">SALA </p><input style="width: 30%;" value="'+props.VVSala+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">BAÑOS </p><input style="width: 30%;" value="'+props.VVBanos+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">ORGANIZACION E HIGIENE </p><input style="width: 30%;" value="'+props.VVOrgEHig+'"/><br>'+
+                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">ORGANIZACION E HIGIENE </p><input style="width: 30%;" value="'+(props.VVOrgEHig ? props.VVOrgEHig : '')+'"/><br>'+
             '</div>'+
             '<div style="width: 50%">'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">ZONA </p><input style="width: 30%;" value="'+props.VVZona+'"/><br>'+
@@ -141,7 +146,7 @@ class Socioeconomico extends Component {
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">MENAJE </p><input style="width: 30%;" value="'+props.VVMenaje+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">COCINA </p><input style="width: 30%;" value="'+props.VVCocina+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">COMEDOR </p><input style="width: 30%;" value="'+props.VVComedor+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">OTROS </p><input style="width: 30%;" value="'+props.VVOtros+'"/><br>'+
+                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">OTROS </p><input style="width: 30%;" value="'+(props.VVOtros ? props.VVOtros : '')+'"/><br>'+
             '</div>'+
         '</div>'+
         '<p style="width: 100%;text-align: center;">VEHICULOS</p>'+
@@ -167,30 +172,30 @@ class Socioeconomico extends Component {
     tablaOtros = (props) => {
         var procedencia = props.OTProcedencia === 'OTROS' ? props.OTProcedenciaOt : props.OTProcedencia;
         var otros = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">OTROS</p>'+
-        '<p style="width: 50%">REFERENCIA CON COLATERALES  </p><textarea rows="'+this.resizeTextArea(props.OTReferenciasC, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTReferenciasC+'</textarea>'+
-        '<p style="width: 50%">HISTORIA SOCIAL </p><textarea rows="'+this.resizeTextArea(props.OTHistoriaS, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTHistoriaS+'</textarea>'+
-        '<p style="width: 50%">DIAGNOSTICO SOCIO-ECONOMICO </p><textarea rows="'+this.resizeTextArea(props.OTDiagnosticoSE, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTDiagnosticoSE+'</textarea>'+
+        '<p style="width: 50%">REFERENCIA CON COLATERALES  </p><textarea rows="'+(props.OTReferenciasC ? this.resizeTextArea(props.OTReferenciasC, 2) : 1)+'" style="width: 100%; margin-top: -15px" >'+(props.OTReferenciasC ? props.OTReferenciasC : '')+'</textarea>'+
+        '<p style="width: 50%">HISTORIA SOCIAL </p><textarea rows="'+(props.OTHistoriaS ? this.resizeTextArea(props.OTHistoriaS, 2) : 1)+'" style="width: 100%; margin-top: -15px" >'+(props.OTHistoriaS ? props.OTHistoriaS : '')+'</textarea>'+
+        '<p style="width: 50%">DIAGNOSTICO SOCIO-ECONOMICO </p><textarea rows="'+(props.OTDiagnosticoSE ? this.resizeTextArea(props.OTDiagnosticoSE, 2) : 1)+'" style="width: 100%; margin-top: -15px" >'+(props.OTDiagnosticoSE ? props.OTDiagnosticoSE : '')+'</textarea>'+
         '<div style="display: inline-flex; margin: 10px 0px">'+
             '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">PRONOSTICO </p><input style="margin-right: 10px" value="'+props.OTPronostico+'"/><br>'+
         '</div>'+
-        '<p style="width: 50%">PROVEEDOR</p><textarea rows="'+this.resizeTextArea(props.OTProveedor, 2)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+props.OTProveedor+'</textarea>'+ 
-        '<p style="width: 50%">PROCEDENCIA</p><textarea rows="'+this.resizeTextArea(procedencia, 2)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+procedencia+'</textarea>'+ 
+        '<p style="width: 50%">PROVEEDOR</p><textarea rows="'+(props.OTProveedor ? this.resizeTextArea(props.OTProveedor, 2) : 1)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+(props.OTProveedor ? props.OTProveedor : '')+'</textarea>'+ 
+        '<p style="width: 50%">PROCEDENCIA</p><textarea rows="'+(procedencia ? this.resizeTextArea(procedencia, 2) : 1)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+(procedencia ? procedencia : '')+'</textarea>'+ 
         '<p style="width: 50%">PLAN DE INTERVENCION </p><textarea rows="'+this.resizeTextArea(props.OTPlanI, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTPlanI+'</textarea>'+
 
         '<div style="display: flex; margin: 10px 0px">'+
             '<div style="width: 50%; text-align: right">'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">CANTIDAD AUTORIZADA</p><input style="margin-right: 10px" value="'+props.OTPresupuesto+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONATIVO HOSPITAL</p><input style="margin-right: 10px" value="'+props.OTDHospital+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO ARZOBISPADO</p><input style="margin-right: 10px" value="'+props.OTFArzobispado+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO CABILDO</p><input style="margin-right: 10px" value="'+props.OTFCabildo+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONATIVO HOSPITAL</p><input style="margin-right: 10px" value="'+(props.OTDHospital ? props.OTDHospital : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO ARZOBISPADO</p><input style="margin-right: 10px" value="'+(props.OTFArzobispado ? props.OTFArzobispado : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO CABILDO</p><input style="margin-right: 10px" value="'+(props.OTFCabildo ? props.OTFCabildo : '')+'"/><br>'+
             '</div>'+
             '<div style="width: 50%; text-align: right">'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO OLGA</p><input style="margin-right: 10px" value="'+props.OTFOlga+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONANTE</p><input style="margin-right: 10px" value="'+props.OTDonante+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">APORTACION BENEFICIADO</p><input value="'+props.OTABeneficiado+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO OLGA</p><input style="margin-right: 10px" value="'+(props.OTFOlga ? props.OTFOlga : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONANTE</p><input style="margin-right: 10px" value="'+(props.OTDonante ? props.OTDonante : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">APORTACION BENEFICIADO</p><input value="'+(props.OTABeneficiado ? props.OTABeneficiado : '')+'"/><br>'+
             '</div>'+
         '</div>'+
-        '<p style="width: 50%">NOTAS DE SEGUIMIENTO </p><textarea rows="'+this.resizeTextArea(props.OTNotasSE, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTNotasSE+'</textarea>';
+        '<p style="width: 50%">NOTAS DE SEGUIMIENTO </p><textarea rows="'+(props.OTNotasSE ? this.resizeTextArea(props.OTNotasSE, 2) : 1)+'" style="width: 100%; margin-top: -15px" >'+(props.OTNotasSE ? props.OTNotasSE : '')+'</textarea>';
     
         return otros;
     }
@@ -265,8 +270,8 @@ class Socioeconomico extends Component {
                 '<p style="display: contents">CALLE </p><textarea rows="'+this.resizeTextArea(props.DGCalle, 1)+'" style="width: 50%;">'+props.DGCalle+'</textarea><br>'+
                 '<p style="width: 100px; display: contents">COLONIA </p><input style="width: 50%;" value="'+props.DGColonia+'"/><br>'+
                 '<p style="width: 100px; display: contents">MUNICIPIO </p><input style="width: 50%;" value="'+props.DGMunicipio+'"/><br>'+
-                '<p style="width: 100px; display: contents">TELEFONO </p><input style="width: 50%;" value="'+props.DGTelefono+'"/><br>'+
-                '<p style="width: 100px; display: contents">TEL. RECADOS </p><input style="width: 50%;" value="'+props.DGTelefonoR+'"/><br>'+
+                '<p style="width: 100px; display: contents">TELEFONO </p><input style="width: 50%;" value="'+(props.DGTelefono ? props.DGTelefono : '')+'"/><br>'+
+                '<p style="width: 100px; display: contents">TEL. RECADOS </p><input style="width: 50%;" value="'+(props.DGTelefonoR ? props.DGTelefonoR : '')+'"/><br>'+
                 '<p style="width: 100px; display: contents">OCUPACION </p><input style="width: 50%;" value="'+props.DGOcupacion+'"/><br>'+
                 '<p style="display: contents">PARROQUIA </p><textarea rows="'+this.resizeTextArea(props.DGParroquia, 1)+'" style="width: 50%;">'+props.DGParroquia+'</textarea><br>'+
                 '<p style="display: contents">VICARIA </p><textarea rows="'+this.resizeTextArea(props.DGVicaria, 1)+'" style="width: 80%;">'+props.DGVicaria+'</textarea><br>'+
@@ -277,9 +282,9 @@ class Socioeconomico extends Component {
                 '<p style="display: contents">CRUCE DE CALLES</p><textarea rows="'+this.resizeTextArea(props.DGCruce, 1)+'" style="width: 70%;">'+props.DGCruce+'</textarea><br>'+
                 '<p style="width: 100px; display: contents">C.P. </p><input value="'+props.DGCP+'"/><br>'+
                 '<p style="width: 100px; display: contents">ESTADO </p><input value="'+props.DGEstado+'"/><br>'+
-                '<p style="width: 100px; display: contents">CEL </p><input value="'+props.DGCelular+'"/><br>'+
+                '<p style="width: 100px; display: contents">CEL </p><input value="'+(props.DGCelular ? props.DGCelular : '')+'"/><br>'+
                 '<p style="width: 100px; display: contents">ESTADO CIVIL </p><input style="width: 50%;" style="width: 60%;" value="'+props.DGECivil+'"/><br>'+
-                '<p style="width: 100px; display: contents">ESCOLARIDAD </p><input style="width: 50%;" value="'+props.DGEscolaridad+'"/><br>'+
+                '<p style="width: 100px; display: contents">ESCOLARIDAD </p><input style="width: 50%;" value="'+(props.DGEscolaridad ? props.DGEscolaridad : '')+'"/><br>'+
                 '<p style="display: contents">DECANATO </p><textarea rows="'+this.resizeTextArea(props.DGDecanato, 1)+'" style="width: 70%;">'+props.DGDecanato+'</textarea><br>'+
                 '<p style="display: contents">PERSONA ENTREVISTADA </p><textarea rows="'+this.resizeTextArea(props.DGPersona, 1)+'" style="width: 50%;">'+props.DGPersona+'</textarea>'+
             '</div>'+
@@ -335,7 +340,7 @@ class Socioeconomico extends Component {
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">HUEVO </p><input style="width: 20%;" value="'+props.ALHuevo+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">REFRESCO </p><input style="width: 20%;" value="'+props.ALRefresco+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">POLLO </p><input style="width: 20%;" value="'+props.ALPollo+'"/><br>'+
-                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TIPOS DE APOYO </p><input style="width: 20%;" value="'+props.ALTiposA+'"/><br>'+
+                '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TIPOS DE APOYO </p><input style="width: 20%;" value="'+(props.ALTiposA ? props.ALTiposA : '')+'"/><br>'+
             '</div>'+
         '</div>'+
         '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.ALObservaciones, 2)+'" style="width: 100%; margin-top: -15px" >'+props.ALObservaciones+'</textarea>';
@@ -442,17 +447,17 @@ class Socioeconomico extends Component {
             'DEAlimentacion', 'DEDeudas', 'DEEducacion', 'DEIngresoF', 'DEIngresoO', 'DEObservaciones', 'DEOtros', 
             'DERecreacion', 'DESalud', 'DEServicios', 'DETelefono', 'DETransporte', 'DEVestido', 'DEVivienda', 
             'DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 
-            'DGEscolaridad', 'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 
-            'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTDiagnosticoSE', 'OTHistoriaS', 
-            'OTPlanI', 'OTPresupuesto', 'OTPronostico', 'SLCaso', 'SLFamilia', 'SLObservaciones', 
-            'VVBanos', 'VVCocina', 'VVComedor', 'VVCondicion', 'VVDormitorios', 'VVMenaje', 'VVMuro', 
-            'VVObservaciones', 'VVPiso', 'VVSala', 'VVTecho', 'VVZona' ];
+            'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 
+            'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTPlanI', 'OTPresupuesto', 'OTPronostico', 
+            'SLCaso', 'SLFamilia', 'SLObservaciones', 'VVBanos', 'VVCocina', 'VVComedor', 'VVCondicion', 
+            'VVDormitorios', 'VVMenaje', 'VVMuro', 'VVObservaciones', 'VVPiso', 'VVSala', 'VVTecho', 'VVZona' ];
         
         let missingFields = false;
         
         for (var j = 0; j < Fields.length; j++){
             if( !Object.keys(this.state.caso).includes(Fields[j]) || this.state.caso[Fields[j]] === undefined){
                 missingFields = true;
+                console.log(Fields[j])
                 this.setState({ open: true, message: 'Todos los campos deben contener informacion'});
             };
         }
@@ -462,6 +467,106 @@ class Socioeconomico extends Component {
     handleChange = (id, value) => {
         let caso = this.state.caso
         caso[id] = value
+        
+        if(id === 'DGDecanato'){
+            let vicaria = ''
+
+            switch(value) {
+                case "DULCE NOMBRE DE JESÚS":
+                case "LA PAZ":
+                case "SAGRARIO METROPOLITANO":
+                case "ZAPOPAN ESTADIO":
+                    vicaria = "EL SANTUARIO DE GUADALUPE"
+                    break;
+                case "GETSEMANÍ DE LA CRUZ":
+                case "LOURDES":
+                case "MIRAVALLE":
+                case "POLANCO":
+                    vicaria = "NUESTRA SEÑORA DE LOURDES"
+                    break;
+                case "JESUCRISTO OBRERO":
+                case "TESISTÁN":
+                case "ZAPOPAN":
+                    vicaria = "NUESTRA SEÑORA DE ZAPOPAN"
+                    break;
+                case "ATEMAJAC":
+                case "LA VISITACIÓN":
+                case "NUESTRA SEÑORA DEL REFUGIO":
+                    vicaria = "NUESTRA SEÑORA DEL ROSARIO, ATEMAJAC"
+                    break;
+                case "ANALCO":
+                case "LA LUZ":
+                case "SAN FELIPE":
+                    vicaria = "SAN JOSÉ DE ANALCO"
+                    break;
+                case "SAN JOSÉ DEL CASTILLO":
+                case "SAN PEDRITO":
+                case "SAN PEDRO":
+                case "TONALÁ":
+                case "ZAPOTLANEJO":
+                    vicaria = "SAN PEDRO"
+                    break;
+                case "HUENTITÁN":
+                case "SAN ILDEFONSO":
+                case "SANTA CECILIA":
+                case "TALPITA":
+                    vicaria = "SANTA CECILIA"
+                    break;
+                case "JESUCRISTO REY DEL UNIVERSO":
+                case "SANTA ANA TEPETITLÁN":
+                case "TOLUQUILLA":
+                    vicaria = "NUESTRA SEÑORA DEL ROSARIO, TOLUQUILLA"
+                    break;
+                case "SAN ANDRÉS":
+                case "TETLÁN":
+                case "ZALATITÁN":
+                    vicaria = "SAN ANDRÉS"
+                    break;
+                case "GUADALUPE CHAPALITA":
+                case "LA SANTA CRUZ":
+                case "SAN JUAN BAUTISTA":
+                case "SANTA ROSA DE LIMA":
+                    vicaria = "SANTOS MARTIRES MEXICANOS"
+                    break;
+                case "SAN ISIDRO":
+                case "SAN PIO DE PIETRELCINA":
+                case "TLAJOMULCO":
+                    vicaria = "SAN ANTONIO TLAJOMULCO"
+                    break;
+                case "AHUALULCO":
+                case "AMECA":
+                case "COCULA":
+                case "MAGDALENA":
+                    vicaria = "EL SEÑOR GRANDE, AMECA"
+                    break;
+                case "LA BARCA":
+                case "OCOTLÁN":
+                case "PONCITLÁN":
+                    vicaria = "EL SEÑOR DE LA MISERICORDIA , OCOTLÁN"
+                    break;
+                case "CHAPALA":
+                case "JOCOTEPEC":
+                    vicaria = "SAN FRANCISCO DE ASÍS, CHAPALA"
+                    break;
+                case "IXTLAHUACÁN DEL RÍO":
+                case "JUCHIPILA":
+                case "NOCHISTLÁN":
+                    vicaria = "SAN FRANCISCO, NOCHISTLÁN"
+                    break;
+                case "TEMASTIÁN":
+                case "EL TEÚL":
+                    vicaria = "EL SEÑOR DE LOS RAYOS, TEMASTIÁN"
+                    break;
+                case "OTROS/FORANEO":
+                    vicaria = "ZONA FORÁNEA, OTRAS DIOCESIS"
+                    break;
+                default:
+                    vicaria = ""
+            }
+
+            caso['DGVicaria'] = vicaria;
+        }
+
         this.setState({objectState: caso})
     }
 
@@ -473,11 +578,11 @@ class Socioeconomico extends Component {
                 <div key={'familia' + i}>
                     <TxtField id={"CFFam" + i + "nom"} nombre={"Nombre"} width={160} onChange={this.handleChange} state={this.state.caso}/>
                     <TxtField id={"CFFam" + i + "edad"} nombre={"Edad"} width={50} onChange={this.handleChange} state={this.state.caso}/>
-                    <TxtField id={"CFFam" + i + "parentesco"} nombre={"Parentesco"} width={100} onChange={this.handleChange} state={this.state.caso}/>
+                    <Autocomplete id={"CFFam" + i + "parentesco"} nombre={"Parentesco"} options={Parentesco} onChange={this.handleChange} state={this.state.caso}/>
                     <TxtField id={"CFFam" + i + "ecivil"} nombre={"Estado Civil"} width={100} options={ECivil} onChange={this.handleChange} state={this.state.caso}/>
                     <TxtField id={"CFFam" + i + "ocupacion"} nombre={"Ocupacion"} width={150} onChange={this.handleChange} state={this.state.caso}/>
                     <TxtField id={"CFFam" + i + "empleo"} nombre={"Empleo"} width={100} options={Empleo} onChange={this.handleChange} state={this.state.caso}/>
-                    <TxtField id={"CFFam" + i + "escolaridad"} nombre={"Escolaridad"} width={150} onChange={this.handleChange} state={this.state.caso}/>
+                    <Autocomplete id={"CFFam" + i + "escolaridad"} nombre={"Escolaridad"} options={Escolaridad} onChange={this.handleChange} state={this.state.caso}/>
                 </div>
             );
         }
@@ -594,18 +699,21 @@ class Socioeconomico extends Component {
                         <TxtField nombre="Colonia" id="DGColonia" required onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Codigo postal" id="DGCP" required onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Municipio" id="DGMunicipio" required onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Estado" id="DGEstado" required onChange={this.handleChange} state={this.state.caso}/>
+                        {/* <TxtField nombre="Estado" id="DGEstado" required onChange={this.handleChange} state={this.state.caso}/> */}
+                        <Autocomplete nombre={"Estado"} id={"DGEstado"} required options={Estados} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Telefono" id="DGTelefono" onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Celular" id="DGCelular" onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Telefono recados" id="DGTelefonoR" onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Estado civil" id="DGECivil" required options={ECivil} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Ocupacion" id="DGOcupacion" required onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Escolaridad" id="DGEscolaridad" required onChange={this.handleChange} state={this.state.caso}/>
+                        <Autocomplete id={"DGEscolaridad"} nombre={"Escolaridad"} options={Escolaridad} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Parroquia" id="DGParroquia" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Decanato" id="DGDecanato" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Vicaria" id="DGVicaria" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
+                        {/* <TxtField nombre="Decanato" id="DGDecanato" required multiline={true} onChange={this.handleChange} state={this.state.caso}/> */}
+                        <Autocomplete nombre={"Decanato"} id={"DGDecanato"} required multiline={true} options={Decanatos} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Vicaria" id="DGVicaria" required multiline onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Persona Entrevistada" id="DGPersona" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Parentesco" id="DGParentesco" required onChange={this.handleChange} state={this.state.caso}/>
+                        {/* <TxtField nombre="Parentesco" id="DGParentesco" required onChange={this.handleChange} state={this.state.caso}/> */}
+                        <Autocomplete nombre={"Parentesco"} id={"DGParentesco"} required options={Parentesco} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
 
                     <br/>
