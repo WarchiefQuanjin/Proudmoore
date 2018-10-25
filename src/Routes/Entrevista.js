@@ -39,7 +39,7 @@ const styles = theme => ({
     }
 });
 
-class Transporte extends Component {
+class Entrevista extends Component {
     constructor(props) {
         super(props)
 
@@ -568,4 +568,4 @@ class Transporte extends Component {
     }
 }
 
-export default withStyles(styles)(Transporte);
+export default withStyles(styles)(Entrevista);

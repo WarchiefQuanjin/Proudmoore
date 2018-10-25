@@ -1,11 +1,11 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-/* import Status from '../Routes/Status.jsx'; */
 // import Info from '@material-ui/icons/Info';
 import Inicio from '../Routes/Inicio.js';
+import Entrevista from '../Routes/Entrevista.js';
+import Graficas from '../Routes/Graficas.js';
 import Socioeconomico from '../Routes/Socioeconomico.js';
 import Transporte from '../Routes/Transporte.js';
-// import ColorLens from '@material-ui/icons/DeleteRounded';
 
 const style = {
     overflow: 'visible',
@@ -39,25 +39,26 @@ const routes = [
         linkTo: 'transporte',
         // icon: () => <ColorLens style = {{ color : '#689F38'}} />,
         iconText: 'Transporte'
-    }/* ,
-    {
-        path : '/transition',
-        exact: true,
-        title: () => <Typography style={style} noWrap type='title' noWrap>Transition</Typography>,
-        main: () => <Transition />,
-        linkTo: 'transition',
-        icon: () => <CompareArrows style = {{ color : '#689F38'}} />,
-        iconText: 'Transition'
     },
     {
-        path : '/customimage',
+        path : '/entrevista',
         exact: true,
-        title: () => <Typography style={style} noWrap type='title' noWrap>Custom Image</Typography>,
-        main: () => <CustomImage />,
-        linkTo: 'customimage',
-        icon: () => <CropOriginal style = {{ color : '#689F38'}} />,
-        iconText: 'Custom Image'
-    } */
+        title: () => <Typography style={style} noWrap type='title'>Entrevista</Typography>,
+        main: () => <Entrevista />,
+        linkTo: 'entrevista',
+        // icon: () => <ColorLens style = {{ color : '#689F38'}} />,
+        iconText: 'Entrevista'
+    }
+    ,
+    {
+        path : '/graficas',
+        exact: true,
+        title: () => <Typography style={style} noWrap type='title'>Graficas</Typography>,
+        main: () => <Graficas />,
+        linkTo: 'graficas',
+        // icon: () => <ColorLens style = {{ color : '#689F38'}} />,
+        iconText: 'Graficas'
+    }
 ];
 
 export default routes

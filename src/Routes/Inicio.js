@@ -158,8 +158,6 @@ class Inicio extends Component {
                     data.push(casosArray)
             })
 
-            //////////////////////////////////////
-
             this.state.transporteData.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(this.state.year, 10) )
                 .filter((caso) => new Date(caso.val.FMFecha).getMonth() === i )
                 .forEach((caso) => {
@@ -174,21 +172,10 @@ class Inicio extends Component {
                     
                     let casosArray = [id, val.FMFecha, val.FMNumero, val.DGNom, val.DGDomicilio, val.DGColonia, 
                         val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, 'FORANEA', 
-                        'OTROS/FORANEO', 'ZONA FORÁNEA, OTRAS DIOCESIS', '', '',
-                        '', '', '',
-                        '', '', '',
-                        '', '', '',
-                        '', '', '',
-                        '', '', '',
-                        '', '', '',
-                        '', '', '',
-                        '', '', '',
-                        '', 1, '',
-                        '', '', '',
-                        '', '', '',
-                        '', '', '',
-                        '', '', val.OTPresupuesto, val.OTDHospital, val.OTFArzobispado,
-                        val.OTFCabildo, val.OTFOlga, val.OTDonante, val.OTABeneficiado, val.OTProveedor, val.OTProcedencia === 'OTROS' ? val.OTProcedenciaOt : val.OTProcedencia,
+                        'OTROS/FORANEO', 'ZONA FORÁNEA, OTRAS DIOCESIS', '', '', '', '', '', '', '', '', '', '', 
+                        '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, '', '', '', '',
+                        '', '', '', '', '', '', '', '', val.APCantidad, '', '', '', '', '', val.APAportacion, 
+                        val.APProveedor, val.APProcedencia === 'OTROS' ? val.APProcedenciaOt : val.APProcedencia,
                         1, val.SLHemodialisis, '', '', '', '', val.FMTrabajadora
                     ]
 
@@ -196,14 +183,12 @@ class Inicio extends Component {
                     data.push(casosArray)
             })
 
-            //////////////////////////////////////
-            
             const wsAll = XLSX.utils.aoa_to_sheet(data)
             
             XLSX.utils.book_append_sheet(wb, wsAll, month)
         })
 
-        XLSX.writeFile(wb, "export-demo.xlsx")
+        XLSX.writeFile(wb, "BASE DE DATOS " + this.state.year + ".xlsx")
     }
 
     transporteTable = (data, classes) => {
@@ -235,7 +220,7 @@ class Inicio extends Component {
                             </TableCell>
                             <TableCell>{row.val.FMNumero}</TableCell>
                             <TableCell component="th" scope="row">
-                                {row.val.CFNom}
+                                {row.val.DGNom}
                             </TableCell>
                             <TableCell>{row.val.FMFecha}</TableCell>
                         </TableRow>

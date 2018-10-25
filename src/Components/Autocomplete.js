@@ -103,6 +103,7 @@ class Autocomplete extends Component {
         const inputValue = value.trim().toLowerCase();
         const inputLength = inputValue.length;
         let count = 0;
+        
         return inputLength === 0
             ? []
             : this.props.options.filter(suggestion => {
