@@ -1,13 +1,6 @@
 import React, { Component } from 'react'
 import firebase from '../config'
 import { withStyles } from '@material-ui/core/styles';
-import { 
-    ECivil, 
-    Procedencia
-} from '../Constants/Options';
-import TxtField from '../Components/TxtField';
-import Snackbar from '@material-ui/core/Snackbar';
-import Fade from '@material-ui/core/Fade';
 import Chart from "react-google-charts";
 
 const styles = theme => ({
@@ -41,18 +34,18 @@ class Graficas extends Component {
 
     get defaultState() {
         return {  
-            caso: {
-                gcantidad: 0,
-                OBObservaciones: 'Ninguna'
-            }
+            data: [0],
+            transporteData: [],
+            entrevistaData: []
         }
     }
 
     componentDidMount() {
-        this.getData();
+        this.getSocioeconomicoData();
+        this.getTransporteData();
     }
 
-    getData() {
+    getSocioeconomicoData() {
         let data = []
         let info = {};
 
@@ -66,6 +59,24 @@ class Graficas extends Component {
             })
             this.setState({
                 data
+            })
+        })
+    }
+
+    getTransporteData() {
+        let transporteData = []
+        let info = {};
+
+        firebase.database().ref(`transporte/`).once('value', snapshot => {
+            snapshot.forEach(snap => {
+                info.val = snap.val();
+                info.key = snap.key;
+
+                transporteData.push(info)
+                info = {}
+            })
+            this.setState({
+                transporteData
             })
         })
     }
@@ -99,53 +110,122 @@ class Graficas extends Component {
         documentToPrint.document.close();
     }
 
-    g1 = () =>  {
-        console.log(this.state)
+    getRandomColor = () => {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
 
-        var pieOptions = {
-            title: "",
-            pieHole: 0.6,
-            slices: [
-              {
-                color: "#2BB673"
-              },
-              {
-                color: "#d91e48"
-              }
-            ],
-            legend: {
-              position: "bottom",
-              alignment: "center",
-              textStyle: {
-                color: "233238",
-                fontSize: 14
-              }
-            },
-            tooltip: {
-              showColorCode: true
-            },
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+
+        return color;
+    }
+
+    g1 = (sortBy, chartType, title) =>  {
+        var datas = this.state.transporteData.concat(this.state.data)
+
+        /* if (this.state.data.length === 0 && this.state.transporteData === 0)
+            return */
+
+        const arc = [];
+        datas.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(2018, 10) )
+        .forEach((caso) => {
+            arc.push(caso.val[sortBy])
+        })
+
+        var counts = {};
+        for (var i = 0; i < arc.length; i++) {
+            counts[arc[i]] = 1 + (counts[arc[i]] || 0);
+        }
+
+        var result = Object.keys(counts).map((key) => {
+            return [String(key), counts[key], counts[key], this.getRandomColor()];
+        });
+        
+        result.sort(function(a,b){ return a[0] > b[0] ? 1 : -1; })
+        result = [['Estados', 'Cantidad', { role: 'annotation'}, { role: "style" }]].concat(result)
+        
+        const pieOptions = {
+            title: title,
             chartArea: {
-              left: 0,
-              top: 0,
-              width: "100%",
-              height: "80%"
+                height: '100%',
+                width: '50%',
+                top: 32,
+                /* left: 32,
+                bottom: 32,
+                right: 16 */
             },
-            fontName: "Roboto"
+            /* height: '100%',
+            width: '50%', */
+            hAxis: {
+                title: 'Estado'
+            },
+            vAxis: {
+                title: 'Casos Apoyados'
+            }
         };
 
-        return (
-            <div className="App">
-              <Chart
+        var chart = ''
+        if(chartType === 'Bar'){
+            chart = <Chart
+                chartType="BarChart"
+                width="900px"
+                height="400px"
+                data={result}
+                options={pieOptions}
+                /* legendToggle={false} */
+            />
+        }
+        else if (chartType === 'Pie'){
+            chart = <Chart
                 chartType="PieChart"
-                data={[["Age", "Weight"], ["a", 12], ["b", 5.5]]}
+                data={result}
                 options={pieOptions}
                 graph_id="PieChart"
-                width={"100%"}
+                width={"900px"}
                 height={"400px"}
                 legend_toggle
-              />
+            />
+        }
+        else {
+            chart = <Chart
+                chartType="ColumnChart"
+                width="900px"
+                height="400px"
+                options={pieOptions}
+                data={result}
+            />
+        }
+
+        return chart;
+        /* return (
+            <div>
+                <Chart
+                    chartType="BarChart"
+                    width="900px"
+                    height="400px"
+                    data={result}
+                    options={pieOptions}
+                />
+
+                <Chart
+                    chartType="PieChart"
+                    data={result}
+                    options={pieOptions}
+                    graph_id="PieChart"
+                    width={"100%"}
+                    height={"400px"}
+                    legend_toggle
+                />
+
+                <Chart
+                    chartType="ColumnChart"
+                    width="100%"
+                    height="400px"
+                    data={result}
+                />
             </div>
-          );
+        ); */
     };
 
     render() {
@@ -155,8 +235,13 @@ class Graficas extends Component {
             <div className={classes.root}>
                 <div style={{marginBottom: '70px'}}>
 
-                    {this.g1()}
-
+                    
+                    {this.state.transporteData.length > 0 && this.g1('DGEstado', 'Bar', 'Casos apoyados por estado')}
+                    {/* this.state.transporteData.length > 0 && this.g1('DGEstado', 'Pie', 'Casos apoyados por estado') */}
+                    <br/>
+                    <hr/>
+                    <br/>
+                    {this.state.transporteData.length > 0 && this.g1('DGVicaria', 'Bar', 'Casos apoyados por vicaria')}
                 </div>
             </div>
         )
