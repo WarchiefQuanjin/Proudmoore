@@ -25,7 +25,9 @@ import {
     Escolaridad,
     Parentesco,
     Estados,
-    Decanatos
+    Decanatos,
+    Municipios,
+    TipoI
 } from '../Constants/Options';
 import TxtField from '../Components/TxtField';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -200,6 +202,22 @@ class Socioeconomico extends Component {
         return otros;
     }
 
+    tablaEntrevista = (props) => {
+        var procedencia = props.OTProcedencia === 'OTROS' ? props.OTProcedenciaOt : props.OTProcedencia;
+        var otros = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">HISTORIA SOCIAL</p>'+
+        '<p style="width: 50%">HISTORIA SOCIAL </p><textarea rows="'+(props.OTHistoriaS ? this.resizeTextArea(props.OTHistoriaS, 2) : 1)+'" style="width: 100%; margin-top: -15px" >'+(props.OTHistoriaS ? props.OTHistoriaS : '')+'</textarea>'+
+        
+        '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">COTIZACIONES</p>'+
+        '<div style="display: inline-flex; margin: 10px 0px">'+
+            '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">PRONOSTICO </p><input style="margin-right: 10px" value="'+props.OTPronostico+'"/><br>'+
+        '</div>'+
+        '<p style="width: 50%">PROVEEDOR</p><textarea rows="'+(props.OTProveedor ? this.resizeTextArea(props.OTProveedor, 2) : 1)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+(props.OTProveedor ? props.OTProveedor : '')+'</textarea>'+ 
+        '<p style="width: 50%">PROCEDENCIA</p><textarea rows="'+(procedencia ? this.resizeTextArea(procedencia, 2) : 1)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+(procedencia ? procedencia : '')+'</textarea>'+ 
+        '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">CANTIDAD AUTORIZADA</p><input style="margin-right: 10px" value="'+props.OTPresupuesto+'"/><br>';
+    
+        return otros;
+    }
+
     tablaSalud = (props) => {
         var mcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">SALUD</p>'+
         '<table style="width: 100%; align: left; font-size: 12px">'+
@@ -259,7 +277,7 @@ class Socioeconomico extends Component {
 
         const tableHeader = '<div style="display:flex">'+
             '<img src="https://igx.4sqi.net/img/general/width960/82417073_V22Qrk5dPbOj3XmuXQi0gksLG4bHRXVJ-Y3JZNgNnXo.png" alt="W3Schools.com" style="width:100px;height:100px;">'+
-            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>ESTUDIO SOCIOECONOMICO</h2>'+
+            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>'+(props.DGTImpresion === 'ESE' ? 'ESTUDIO SOCIOECONOMICO' : 'GUIA DE ENTREVISTA')+'</h2>'+
             '<h2 style="width:100px; height:100px;"></h2>'+
         '</div>';
 
@@ -368,12 +386,17 @@ class Socioeconomico extends Component {
         documentToPrint.document.write(tableHeader);
         documentToPrint.document.write(this.tablaFormato(props));
         documentToPrint.document.write(datosg);
-        documentToPrint.document.write(this.tablaFamilia(props));
-        documentToPrint.document.write(economicos);
-        documentToPrint.document.write(alimentacion);
-        documentToPrint.document.write(this.tablaVivienda(props));
-        documentToPrint.document.write(this.tablaSalud(props));
-        documentToPrint.document.write(this.tablaOtros(props));
+
+        if(props.DGTImpresion === 'ESE'){
+            documentToPrint.document.write(this.tablaFamilia(props));
+            documentToPrint.document.write(economicos);
+            documentToPrint.document.write(alimentacion);
+            documentToPrint.document.write(this.tablaVivienda(props));
+            documentToPrint.document.write(this.tablaSalud(props));
+            documentToPrint.document.write(this.tablaOtros(props));
+        } else {
+            documentToPrint.document.write(this.tablaEntrevista(props));
+        }
         documentToPrint.document.write(firmas);
         documentToPrint.document.write('</body>');
         documentToPrint.document.close();
@@ -442,7 +465,7 @@ class Socioeconomico extends Component {
     }
 
     checkFields = () => {
-        const Fields = [ 'ALCarne', 'ALCereales', 'ALFruta', 'ALHuevo', 'ALLeche', 'ALLeguminosas', 'ALMar', 
+        /* const Fields = [ 'ALCarne', 'ALCereales', 'ALFruta', 'ALHuevo', 'ALLeche', 'ALLeguminosas', 'ALMar', 
             'ALObservaciones', 'ALPastas', 'ALPollo', 'ALRefresco', 'ALTortilla', 'CFObservaciones', 
             'DEAlimentacion', 'DEDeudas', 'DEEducacion', 'DEIngresoF', 'DEIngresoO', 'DEObservaciones', 'DEOtros', 
             'DERecreacion', 'DESalud', 'DEServicios', 'DETelefono', 'DETransporte', 'DEVestido', 'DEVivienda', 
@@ -450,8 +473,14 @@ class Socioeconomico extends Component {
             'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 
             'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTPlanI', 'OTPresupuesto', 'OTPronostico', 
             'SLCaso', 'SLFamilia', 'SLObservaciones', 'VVBanos', 'VVCocina', 'VVComedor', 'VVCondicion', 
-            'VVDormitorios', 'VVMenaje', 'VVMuro', 'VVObservaciones', 'VVPiso', 'VVSala', 'VVTecho', 'VVZona' ];
+            'VVDormitorios', 'VVMenaje', 'VVMuro', 'VVObservaciones', 'VVPiso', 'VVSala', 'VVTecho', 'VVZona' ]; */
         
+            const Fields = [ 
+            'DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 
+            'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 
+            'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTPresupuesto', 'OTHistoriaS', 'OTPronostico', 'OTProveedor',
+            'OTProcedencia' ];
+
         let missingFields = false;
         
         for (var j = 0; j < Fields.length; j++){
@@ -619,7 +648,7 @@ class Socioeconomico extends Component {
 
     cProcedencia = () => (
         <div>
-            <TxtField id={"OTProcedencia"} nombre={"Procedencia"} width={180} options={Procedencia} onChange={this.handleChange} state={this.state.caso}/>
+            <TxtField id={"OTProcedencia"} required nombre={"Procedencia"} width={180} options={Procedencia} onChange={this.handleChange} state={this.state.caso}/>
             {this.state.caso["OTProcedencia"] === 'OTROS' && <TxtField id={"OTProcedenciaOt"} nombre={"Procedencia"} width={180} onChange={this.handleChange} state={this.state.caso}/> }
         </div>
     )
@@ -677,6 +706,7 @@ class Socioeconomico extends Component {
                     <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.nuevo(event)}> 
                         Nuevo
                     </Button>
+                    <TxtField nombre="Tipo de Impresion" id="DGTImpresion" required options={TipoI} onChange={this.handleChange} state={this.state.caso}/>
 
                     {/* FORMATO */}
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>FORMATO</h1>
@@ -698,7 +728,8 @@ class Socioeconomico extends Component {
                         <TxtField nombre="Cruce de calles" id="DGCruce" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Colonia" id="DGColonia" required onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Codigo postal" id="DGCP" required onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Municipio" id="DGMunicipio" required onChange={this.handleChange} state={this.state.caso}/>
+                        {/* <TxtField nombre="Municipio" id="DGMunicipio" required onChange={this.handleChange} state={this.state.caso}/> */}
+                        <Autocomplete nombre={"Municipio"} id={"DGMunicipio"} required options={Municipios} onChange={this.handleChange} state={this.state.caso}/>
                         {/* <TxtField nombre="Estado" id="DGEstado" required onChange={this.handleChange} state={this.state.caso}/> */}
                         <Autocomplete nombre={"Estado"} id={"DGEstado"} required options={Estados} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Telefono" id="DGTelefono" onChange={this.handleChange} state={this.state.caso}/>
@@ -736,8 +767,8 @@ class Socioeconomico extends Component {
                         <div style={{width:'50%'}}>
                             <h4 style={{marginTop: '0px'}}>INGRESOS MENSUALES</h4>
 
-                            <TxtField nombre="Ingreso Familiar" id='DEIngresoF' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Otros Ingresos" id='DEIngresoO' required onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Ingreso Familiar" id='DEIngresoF' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Otros Ingresos" id='DEIngresoO' onChange={this.handleChange} state={this.state.caso}/>
                             
                             <TextField
                                 id={'DEIngresoT'}
@@ -764,17 +795,17 @@ class Socioeconomico extends Component {
                         <div style={{width:'50%'}}>
                             <h4 style={{marginTop: '0px'}}>EGRESOS MENSUALES</h4>
 
-                            <TxtField nombre="Alimentacion" id='DEAlimentacion' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Vivienda" id='DEVivienda' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Servicios Basicos" id='DEServicios' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Telefono" id='DETelefono' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Transporte" id='DETransporte' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Educacion" id='DEEducacion' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Salud" id='DESalud' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Vestido" id='DEVestido' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Recreacion" id='DERecreacion' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Deudas" id='DEDeudas' required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre="Otros" id='DEOtros' required onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Alimentacion" id='DEAlimentacion' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Vivienda" id='DEVivienda' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Servicios Basicos" id='DEServicios' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Telefono" id='DETelefono' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Transporte" id='DETransporte' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Educacion" id='DEEducacion' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Salud" id='DESalud' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Vestido" id='DEVestido' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Recreacion" id='DERecreacion' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Deudas" id='DEDeudas' onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre="Otros" id='DEOtros' onChange={this.handleChange} state={this.state.caso}/>
                             
                             <TextField
                                 id={'DEEngresoT'}
@@ -792,17 +823,17 @@ class Socioeconomico extends Component {
                     {/* ALIMENTACION */}
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>ALIMENTACION</h1>
                     <div className={classes.container}>
-                        <TxtField nombre="Cereales" id="ALCereales" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Leguminosas" id="ALLeguminosas" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Pastas" id="ALPastas" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Fruta" id="ALFruta" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Tortilla" id="ALTortilla" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Huevo" id="ALHuevo" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Leche" id="ALLeche" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Refresco" id="ALRefresco" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Carne" id="ALCarne" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Pollo" id="ALPollo" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Pescado o Mariscos" id="ALMar" required options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Cereales" id="ALCereales" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Leguminosas" id="ALLeguminosas" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Pastas" id="ALPastas" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Fruta" id="ALFruta" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Tortilla" id="ALTortilla" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Huevo" id="ALHuevo" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Leche" id="ALLeche" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Refresco" id="ALRefresco" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Carne" id="ALCarne" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Pollo" id="ALPollo" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Pescado o Mariscos" id="ALMar" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Tipos de Apoyo" id="ALTiposA" onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Observaciones"} id={"ALObservaciones"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
@@ -810,17 +841,17 @@ class Socioeconomico extends Component {
                     {/* VIVIENDA */}
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>VIVIENDA</h1>
                     <div className={classes.container}>
-                        <TxtField nombre="Condicion" id="VVCondicion" required options={CondicionVivienda} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Zona" id="VVZona" required options={Zona} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Piso" id="VVPiso" required options={Piso} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Techo" id="VVTecho" required options={Techo} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Muro" id="VVMuro" required options={Muro} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Menaje" id="VVMenaje" required options={Menaje} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Dormitorios" id="VVDormitorios" required options={Dormitorios} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Cocina" id="VVCocina" required options={Vivienda} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Sala" id="VVSala" required options={Vivienda} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Comedor" id="VVComedor" required options={Vivienda} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Baños" id="VVBanos" required options={Bano} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Condicion" id="VVCondicion" options={CondicionVivienda} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Zona" id="VVZona" options={Zona} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Piso" id="VVPiso" options={Piso} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Techo" id="VVTecho" options={Techo} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Muro" id="VVMuro" options={Muro} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Menaje" id="VVMenaje" options={Menaje} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Dormitorios" id="VVDormitorios" options={Dormitorios} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Cocina" id="VVCocina" options={Vivienda} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Sala" id="VVSala" options={Vivienda} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Comedor" id="VVComedor" options={Vivienda} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Baños" id="VVBanos" options={Bano} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Otros" id="VVOtros" onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Organizacion e higiene" id="VVOrgEHig" onChange={this.handleChange} state={this.state.caso}/>
 
@@ -849,20 +880,20 @@ class Socioeconomico extends Component {
                         <TxtField id={"SLHemodialisis"} nombre={"Cantidad de hemodialisis"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField id={"SLObservaciones"} nombre={"Observaciones"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                         <h3 style={{backgroundColor: '#acb8f3', color:'white'}}>ESTADO ACTUAL DE SALUD</h3>
-                        <TxtField id={"SLCaso"} nombre={"Caso"} required multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField id={"SLFamilia"} nombre={"Familia"} required multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField id={"SLCaso"} nombre={"Caso"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField id={"SLFamilia"} nombre={"Familia"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
 
                     {/* OTROS */}
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>OTROS</h1>
                     <div className={classes.container}>
                         <TxtField nombre={"Referencias Con Colaterales"} id={"OTReferenciasC"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre={"Historia Social"} id={"OTHistoriaS"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre={"Historia Social"} id={"OTHistoriaS"} required multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Diagnostico Socio-Economico"} id={"OTDiagnosticoSE"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Pronostico"} id={"OTPronostico"} required options={Pronostico} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre={"Proveedor"} id={"OTProveedor"} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre={"Proveedor"} id={"OTProveedor"} required onChange={this.handleChange} state={this.state.caso}/>
                         {this.cProcedencia()}
-                        <TxtField nombre={"Plan de Intervencion"} id={"OTPlanI"} required multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre={"Plan de Intervencion"} id={"OTPlanI"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Cantidad Autorizada"} id={"OTPresupuesto"} required width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Donativo Hospital"} id={"OTDHospital"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Fondo Arzobispado"} id={"OTFArzobispado"} onChange={this.handleChange} state={this.state.caso}/>

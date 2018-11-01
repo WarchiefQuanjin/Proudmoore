@@ -538,7 +538,7 @@ class Transporte extends Component {
                     {/* APOYO */}
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>APOYO</h1>
                     <div className={classes.container}>
-                        <TxtField nombre={"Destino"} id="APDestino" required width={300} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre={"Destino Autorizado"} id="APDestino" required width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Numero de boletos"} id="APBoletos" options={Frecuencia} required width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Cantidad Autorizada"} id="APCantidad" width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Aportacion del solicitante"} id="APAportacion" width={300} onChange={this.handleChange} state={this.state.caso}/>

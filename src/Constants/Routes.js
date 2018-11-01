@@ -2,7 +2,6 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 // import Info from '@material-ui/icons/Info';
 import Inicio from '../Routes/Inicio.js';
-import Entrevista from '../Routes/Entrevista.js';
 import Graficas from '../Routes/Graficas.js';
 import Socioeconomico from '../Routes/Socioeconomico.js';
 import Transporte from '../Routes/Transporte.js';
@@ -40,16 +39,6 @@ const routes = [
         // icon: () => <ColorLens style = {{ color : '#689F38'}} />,
         iconText: 'Transporte'
     },
-    {
-        path : '/entrevista',
-        exact: true,
-        title: () => <Typography style={style} noWrap type='title'>Entrevista</Typography>,
-        main: () => <Entrevista />,
-        linkTo: 'entrevista',
-        // icon: () => <ColorLens style = {{ color : '#689F38'}} />,
-        iconText: 'Entrevista'
-    }
-    ,
     {
         path : '/graficas',
         exact: true,

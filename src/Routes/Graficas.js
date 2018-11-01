@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import firebase from '../config'
 import { withStyles } from '@material-ui/core/styles';
 import Chart from "react-google-charts";
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import debounce from 'lodash.debounce';
 
 const styles = theme => ({
     root: {
@@ -34,9 +37,9 @@ class Graficas extends Component {
 
     get defaultState() {
         return {  
-            data: [0],
+            data: [],
             transporteData: [],
-            entrevistaData: []
+            year: new Date().getFullYear(),
         }
     }
 
@@ -121,28 +124,30 @@ class Graficas extends Component {
         return color;
     }
 
-    g1 = (sortBy, chartType, title) =>  {
+    chartGenerator = (sortBy, chartType, title, type) =>  {
         var datas = this.state.transporteData.concat(this.state.data)
 
-        /* if (this.state.data.length === 0 && this.state.transporteData === 0)
-            return */
+        if (datas.length <= 0)
+            return
 
-        const arc = [];
-        datas.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(2018, 10) )
+        const data = [];
+        datas.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(this.state.year, 10) )
         .forEach((caso) => {
-            arc.push(caso.val[sortBy])
+            data.push([caso.val[sortBy], caso.val['OTPresupuesto'] !== undefined ? caso.val['OTPresupuesto'] : caso.val['APCantidad']])
         })
 
         var counts = {};
-        for (var i = 0; i < arc.length; i++) {
-            counts[arc[i]] = 1 + (counts[arc[i]] || 0);
+        for (var i = 0; i < data.length; i++) {
+            type === 'Casos' ?
+            counts[data[i][0]] = 1 + (counts[data[i][0]] || 0) :
+            counts[data[i][0]] = parseInt(data[i][1], 10) + parseInt((counts[data[i][0]] || 0), 10);
         }
 
         var result = Object.keys(counts).map((key) => {
             return [String(key), counts[key], counts[key], this.getRandomColor()];
         });
         
-        result.sort(function(a,b){ return a[0] > b[0] ? 1 : -1; })
+        result.sort((a,b) => { return a[0] > b[0] ? 1 : -1; })
         result = [['Estados', 'Cantidad', { role: 'annotation'}, { role: "style" }]].concat(result)
         
         const pieOptions = {
@@ -164,69 +169,42 @@ class Graficas extends Component {
                 title: 'Casos Apoyados'
             }
         };
-
-        var chart = ''
-        if(chartType === 'Bar'){
-            chart = <Chart
-                chartType="BarChart"
-                width="900px"
-                height="400px"
-                data={result}
-                options={pieOptions}
-                /* legendToggle={false} */
-            />
-        }
-        else if (chartType === 'Pie'){
-            chart = <Chart
-                chartType="PieChart"
-                data={result}
-                options={pieOptions}
-                graph_id="PieChart"
-                width={"900px"}
-                height={"400px"}
-                legend_toggle
-            />
-        }
-        else {
-            chart = <Chart
-                chartType="ColumnChart"
-                width="900px"
-                height="400px"
-                options={pieOptions}
-                data={result}
-            />
-        }
-
-        return chart;
-        /* return (
+        
+        return (
+            result.length <= 1 ?
+                <div>
+                    <br/><hr/><br/>
+                    <Typography component="h2" variant="headline" gutterBottom>
+                        {title}
+                    </Typography>
+                    <Typography style={{color: 'red'}} variant="title" gutterBottom>
+                        No hay informacion disponible
+                    </Typography>
+                </div>
+            :
             <div>
+                <br/><hr/><br/>
                 <Chart
-                    chartType="BarChart"
-                    width="900px"
-                    height="400px"
+                    chartType={chartType === 'Bar' ? "BarChart" : "PieChart"}
                     data={result}
                     options={pieOptions}
-                />
-
-                <Chart
-                    chartType="PieChart"
-                    data={result}
-                    options={pieOptions}
-                    graph_id="PieChart"
-                    width={"100%"}
+                    /* graph_id="PieChart" */
+                    width={"900px"}
                     height={"400px"}
-                    legend_toggle
-                />
-
-                <Chart
-                    chartType="ColumnChart"
-                    width="100%"
-                    height="400px"
-                    data={result}
+                    /* legend_toggle */
                 />
             </div>
-        ); */
+        );
     };
+
+    handleChange = debounce((value) => {
+        if(isNaN(value) || value.length >= 5)
+            return
+
+        this.setState({
+            year: value
+        })
+    }, 300)
 
     render() {
         const { classes } = this.props;
@@ -234,14 +212,24 @@ class Graficas extends Component {
         return (
             <div className={classes.root}>
                 <div style={{marginBottom: '70px'}}>
+                    <TextField
+                        required
+                        id="standard-required"
+                        label="Año"
+                        defaultValue={this.state.year}
+                        className={classes.textField}
+                        margin="normal"
+                        onChange={(event) => this.handleChange(event.target.value)}
+                    />
 
-                    
-                    {this.state.transporteData.length > 0 && this.g1('DGEstado', 'Bar', 'Casos apoyados por estado')}
-                    {/* this.state.transporteData.length > 0 && this.g1('DGEstado', 'Pie', 'Casos apoyados por estado') */}
-                    <br/>
-                    <hr/>
-                    <br/>
-                    {this.state.transporteData.length > 0 && this.g1('DGVicaria', 'Bar', 'Casos apoyados por vicaria')}
+                    {this.chartGenerator('DGEstado', 'Bar', 'Casos apoyados por estado', 'Casos')}
+                    {this.chartGenerator('DGEstado', 'Pie', 'Cantidad apoyada por estado', 'Cantidad')}
+                    {this.chartGenerator('DGVicaria', 'Bar', 'Casos apoyados por vicaria', 'Casos')}
+                    {this.chartGenerator('DGVicaria', 'Pie', 'Cantidad apoyada por vicaria', 'Cantidad')}
+                    {this.chartGenerator('DGMunicipio', 'Bar', 'Casos apoyados por municipio', 'Casos')}
+                    {this.chartGenerator('DGMunicipio', 'Pie', 'Cantidad apoyada por municipio', 'Cantidad')}
+                    {this.chartGenerator('DGSexo', 'Bar', 'Casos apoyados por sexo', 'Casos')}
+                    {this.chartGenerator('DGSexo', 'Pie', 'Cantidad apoyada por sexo', 'Cantidad')}
                 </div>
             </div>
         )

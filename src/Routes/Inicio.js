@@ -34,7 +34,7 @@ const styles = theme => ({
         marginBottom: '2px',
         width: 200,
     }
-  });
+});
 
 class Inicio extends Component {
     constructor(props) {
@@ -86,24 +86,6 @@ class Inicio extends Component {
             })
         })
     }
-
-    /* getEntrevistaData() {
-        let data = []
-        let info = {};
-
-        firebase.database().ref(`casos/`).once('value', snapshot => {
-            snapshot.forEach(snap => {
-                info.val = snap.val();
-                info.key = snap.key;
-
-                data.push(info)
-                info = {}
-            })
-            this.setState({
-                data
-            })
-        })
-    } */
 
     exportFileControl = (option) => {
         option === 0 ? this.exportFileSocio() : this.exportFileTran();
@@ -259,6 +241,15 @@ class Inicio extends Component {
                                         Editar
                                     </Button>
                                 </Link>
+                                <Link to={{ 
+                                    pathname: '/socioeconomico', 
+                                    user: data[i],
+                                    modifying: 0
+                                }}>
+                                    <Button variant="contained" color="primary" className={classes.button}> 
+                                        Copiar
+                                    </Button>
+                                </Link>
                             </TableCell>
                             <TableCell component="th" scope="row">
                                 {row.val.DGCaso}
@@ -273,10 +264,6 @@ class Inicio extends Component {
                 </Table>
             </div>
         )
-    }
-
-    entrevistaTable = (data, classes) => {
-        return (null)
     }
 
     handleChange = (value) => {
@@ -296,7 +283,6 @@ class Inicio extends Component {
         const { classes } = this.props;
         const data = this.state.data;
         const transporteData = this.state.transporteData;
-        const entrevistaData = this.state.transporteData;
         const value = this.state.value;
 
         return (
@@ -305,7 +291,6 @@ class Inicio extends Component {
                     <Tabs value={value} onChange={this.handleTabChange}>
                         <Tab label="Socioeconomico" />
                         <Tab label="Transporte" />
-                        <Tab label="Entrevista" />
                     </Tabs>
                 </AppBar>
 
@@ -326,7 +311,6 @@ class Inicio extends Component {
 
                 {value === 0 && this.socioeconomicoTable(data, classes)}
                 {value === 1 && this.transporteTable(transporteData, classes)}
-                {value === 2 && this.entrevistaTable(entrevistaData, classes)}
 
             </div>
         )
