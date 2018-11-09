@@ -179,6 +179,27 @@ class Inicio extends Component {
         XLSX.writeFile(wb, "BASE DE DATOS " + this.state.year + ".xlsx")
     }
 
+    handleChange = (field, value) => {
+        if(field === 'year' && (isNaN(value) || value.length >= 5))
+            return
+
+        this.setState({
+            [field]: value
+        })
+    }
+
+    handleChangePage = (event, page) => {
+        this.setState({ page });
+    };
+    
+    handleChangeRowsPerPage = event => {
+        this.setState({ rowsPerPage: event.target.value });
+    };
+
+    handleTabChange = (event, value) => {
+        this.setState({ value });
+    };
+
     transporteTable = (data, classes) => {
         const { rowsPerPage, page, searchT, searchByT } = this.state;
         const rows = this.state.data
@@ -195,12 +216,12 @@ class Inicio extends Component {
                                     label={'Buscar'}
                                     placeholder={'Buscar'}
                                     defaultValue={searchT}
-                                    onChange={(event) => this.handleSearch('searchT', event.target.value)}
+                                    onChange={(event) => this.handleChange('searchT', event.target.value)}
                                 />
                                 
                             </TableCell>
                             <TableCell>
-                                {<TxtField id={"searchByT"} nombre={"Buscar Por"} width={100} options={Search} onChange={this.handleSearch} state={this.state}/>}
+                                {<TxtField id={"searchByT"} nombre={"Buscar Por"} width={100} options={Search} onChange={this.handleChange} state={this.state}/>}
                             </TableCell>
                         </TableRow>
                         <TableRow>
@@ -277,12 +298,12 @@ class Inicio extends Component {
                                     label={'Buscar'}
                                     placeholder={'Buscar'}
                                     defaultValue={searchSE}
-                                    onChange={(event) => this.handleSearch('searchSE', event.target.value)}
+                                    onChange={(event) => this.handleChange('searchSE', event.target.value)}
                                 />
                                 
                             </TableCell>
                             <TableCell>
-                                {<TxtField id={"searchBySE"} nombre={"Buscar Por"} width={100} options={Search} onChange={this.handleSearch} state={this.state}/>}
+                                {<TxtField id={"searchBySE"} nombre={"Buscar Por"} width={100} options={Search} onChange={this.handleChange} state={this.state}/>}
                             </TableCell>
                         </TableRow>
                         <TableRow>
@@ -347,41 +368,6 @@ class Inicio extends Component {
         )
     }
 
-    handleChange = (value) => {
-        if(isNaN(value) || value.length >= 5)
-            return
-
-        this.setState({
-            year: value
-        })
-    }
-
-    handleSearch = (field, value) => {
-        /* console.log('-------------')
-        console.log(value)
-        const data = this.state.data;
-        console.log(data)
-        const result = data.filter(caso => caso.val.DGCaso.includes(value))
-        console.log(result) */
-        /* console.log('-------------')
-        console.log(field)
-        console.log(value) */
-        this.setState({[field]: value})
-    }
-
-    handleChangePage = (event, page) => {
-        console.log(page)
-        this.setState({ page });
-    };
-    
-    handleChangeRowsPerPage = event => {
-        this.setState({ rowsPerPage: event.target.value });
-    };
-
-    handleTabChange = (event, value) => {
-        this.setState({ value });
-    };
-
     render() {
         const { classes } = this.props;
         const data = this.state.data;
@@ -410,7 +396,7 @@ class Inicio extends Component {
                         value={this.state.year}
                         className={classes.textField}
                         margin="normal"
-                        onChange={(event) => this.handleChange(event.target.value)}
+                        onChange={(event) => this.handleChange('year', event.target.value)}
                     />
                 </div>
 
