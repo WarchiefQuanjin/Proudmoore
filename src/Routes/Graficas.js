@@ -5,6 +5,9 @@ import Chart from "react-google-charts";
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import debounce from 'lodash.debounce';
+import Tooltip from '@material-ui/core/Tooltip';
+import PrintIcon from '@material-ui/icons/Print';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
     root: {
@@ -25,6 +28,13 @@ const styles = theme => ({
         marginTop: '2px',
         marginBottom: '2px',
         width: 200,
+    },
+    fixed: {
+        position: 'fixed',
+        width: '50px',
+        height: '50px'/* ,
+        backgroundColor: '#8BC34A',
+        color: 'white' */
     }
 });
 
@@ -39,7 +49,7 @@ class Graficas extends Component {
         return {  
             data: [],
             transporteData: [],
-            year: new Date().getFullYear(),
+            year: new Date().getFullYear()
         }
     }
 
@@ -84,9 +94,11 @@ class Graficas extends Component {
         })
     }
 
-    tablaObservaciones = (props) => {
-        var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">OBSERVACIONES</p>'+
-        '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.OBObservaciones, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OBObservaciones+'</textarea>';
+    tablaCharts = (image) => {
+        var fcantidad = ''
+        for(var i=0; i < image.length ; i++){
+            fcantidad += '<br/><hr/><br/><img id="ItemPreview" src="'+ image[i] +'" />'
+        }
 
         return fcantidad;
     }
@@ -94,11 +106,19 @@ class Graficas extends Component {
     print = (event, props) => {
         event.preventDefault();
 
+        var count = 0
+        Object.keys(this.state).map(s => s.indexOf('chartWrapper') !== -1 && count++)
+
+        const image = []
+        for(var i=0; i < count ; i++){
+            image[i] = this.state['chartWrapper' + (i + 1)].getChart().getImageURI();
+        }
+
         const gridName="Consulta nuestro aviso de privacidad en http://caritasgdl.org.mx en la seccion; Aviso de Privacidad";
 
         const tableHeader = '<div style="display:flex">'+
             '<img src="https://igx.4sqi.net/img/general/width960/82417073_V22Qrk5dPbOj3XmuXQi0gksLG4bHRXVJ-Y3JZNgNnXo.png" alt="W3Schools.com" style="width:100px;height:100px;">'+
-            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>AREA DE TRANSPORTE</h2>'+
+            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>GRAFICAS</h2>'+
             '<h2 style="width:100px; height:100px;"></h2>'+
         '</div>';
 
@@ -108,7 +128,7 @@ class Graficas extends Component {
         documentToPrint.document.title = gridName;
         documentToPrint.document.write('<body style="font-size: 12px; overflow-y: scroll; height: 100%" onload="window.print();">');
         documentToPrint.document.write(tableHeader);
-        documentToPrint.document.write(this.tablaObservaciones(props));
+        documentToPrint.document.write(this.tablaCharts(image));
         documentToPrint.document.write('</body>');
         documentToPrint.document.close();
     }
@@ -124,7 +144,7 @@ class Graficas extends Component {
         return color;
     }
 
-    chartGenerator = (sortBy, chartType, title, type) =>  {
+    chartGenerator = (sortBy, chartType, title, type, id) =>  {
         var datas = this.state.transporteData.concat(this.state.data)
 
         if (datas.length <= 0)
@@ -144,12 +164,14 @@ class Graficas extends Component {
         }
 
         var result = Object.keys(counts).map((key) => {
-            return [String(key), counts[key], counts[key], this.getRandomColor()];
+            return [chartType === 'Pie' ? String(key) + ', '+ counts[key] : String(key), counts[key], counts[key], this.getRandomColor()];
         });
         
         result.sort((a,b) => { return a[0] > b[0] ? 1 : -1; })
         result = [['Estados', 'Cantidad', { role: 'annotation'}, { role: "style" }]].concat(result)
         
+        console.log(result)
+
         const pieOptions = {
             title: title,
             chartArea: {
@@ -169,7 +191,7 @@ class Graficas extends Component {
                 title: 'Casos Apoyados'
             }
         };
-        
+
         return (
             result.length <= 1 ?
                 <div>
@@ -191,6 +213,10 @@ class Graficas extends Component {
                     /* graph_id="PieChart" */
                     width={"900px"}
                     height={"400px"}
+
+                    getChartWrapper={chartWrapper => {
+                        this.setState({ ['chartWrapper' + id]: chartWrapper });
+                    }}
                     /* legend_toggle */
                 />
             </div>
@@ -211,10 +237,11 @@ class Graficas extends Component {
 
         return (
             <div className={classes.root}>
-                <div style={{marginBottom: '70px'}}>
+                <div style={{marginBottom: '70px', marginTop: '40px'}}>
+                    
                     <TextField
                         required
-                        id="standard-required"
+                        id="year"
                         label="Año"
                         defaultValue={this.state.year}
                         className={classes.textField}
@@ -222,14 +249,20 @@ class Graficas extends Component {
                         onChange={(event) => this.handleChange(event.target.value)}
                     />
 
-                    {this.chartGenerator('DGEstado', 'Bar', 'Casos apoyados por estado', 'Casos')}
-                    {this.chartGenerator('DGEstado', 'Pie', 'Cantidad apoyada por estado', 'Cantidad')}
-                    {this.chartGenerator('DGVicaria', 'Bar', 'Casos apoyados por vicaria', 'Casos')}
-                    {this.chartGenerator('DGVicaria', 'Pie', 'Cantidad apoyada por vicaria', 'Cantidad')}
-                    {this.chartGenerator('DGMunicipio', 'Bar', 'Casos apoyados por municipio', 'Casos')}
-                    {this.chartGenerator('DGMunicipio', 'Pie', 'Cantidad apoyada por municipio', 'Cantidad')}
-                    {this.chartGenerator('DGSexo', 'Bar', 'Casos apoyados por sexo', 'Casos')}
-                    {this.chartGenerator('DGSexo', 'Pie', 'Cantidad apoyada por sexo', 'Cantidad')}
+                    {this.chartGenerator('DGEstado', 'Bar', 'Casos apoyados por estado', 'Casos', 1)}
+                    {this.chartGenerator('DGEstado', 'Pie', 'Cantidad apoyada por estado', 'Cantidad', 2)}
+                    {this.chartGenerator('DGVicaria', 'Bar', 'Casos apoyados por vicaria', 'Casos', 3)}
+                    {this.chartGenerator('DGVicaria', 'Pie', 'Cantidad apoyada por vicaria', 'Cantidad', 4)}
+                    {this.chartGenerator('DGMunicipio', 'Bar', 'Casos apoyados por municipio', 'Casos', 5)}
+                    {this.chartGenerator('DGMunicipio', 'Pie', 'Cantidad apoyada por municipio', 'Cantidad', 6)}
+                    {this.chartGenerator('DGSexo', 'Pie', 'Casos apoyados por sexo', 'Casos', 7)}
+                    {this.chartGenerator('DGSexo', 'Pie', 'Cantidad apoyada por sexo', 'Cantidad', 8)}
+
+                    <Tooltip title="Imprimir" >
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '20px', right: '25px'}} onClick={(event) => this.print(event, this.state.caso)}>
+                            <PrintIcon />
+                        </Button>
+                    </Tooltip>
                 </div>
             </div>
         )

@@ -591,6 +591,11 @@ const TipoI = [
     { value: 'Entrevista' }
 ]
 
+const Search = [
+    { value: 'Persona' },
+    { value: 'No. Caso' }
+]
+
 export { 
     ECivil, 
     Empleo, 
@@ -617,5 +622,6 @@ export {
     Estados,
     Decanatos,
     Municipios,
-    TipoI
+    TipoI,
+    Search
 };

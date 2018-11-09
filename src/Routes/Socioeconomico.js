@@ -3,6 +3,14 @@ import firebase from '../config'
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import TxtField from '../Components/TxtField';
+import Snackbar from '@material-ui/core/Snackbar';
+import Fade from '@material-ui/core/Fade';
+import Autocomplete from '../Components/Autocomplete';
+import Tooltip from '@material-ui/core/Tooltip';
+import PrintIcon from '@material-ui/icons/Print';
+import CreateIcon from '@material-ui/icons/Create';
+import SaveIcon from '@material-ui/icons/Save';
 import { 
     ECivil, 
     Empleo, 
@@ -29,10 +37,6 @@ import {
     Municipios,
     TipoI
 } from '../Constants/Options';
-import TxtField from '../Components/TxtField';
-import Snackbar from '@material-ui/core/Snackbar';
-import Fade from '@material-ui/core/Fade';
-import Autocomplete from '../Components/Autocomplete';
 
 const styles = theme => ({
     root: {
@@ -53,6 +57,18 @@ const styles = theme => ({
         marginTop: '2px',
         marginBottom: '2px',
         width: 200,
+    },
+    fixed: {
+        position: 'fixed',
+        width: '50px',
+        height: '50px'/* ,
+        backgroundColor: '#8BC34A',
+        color: 'white' */
+    },
+    title: {
+        backgroundColor: '#5c70d2', 
+        color: 'white',
+        width: '95%'
     }
 });
 
@@ -277,7 +293,7 @@ class Socioeconomico extends Component {
 
         const tableHeader = '<div style="display:flex">'+
             '<img src="https://igx.4sqi.net/img/general/width960/82417073_V22Qrk5dPbOj3XmuXQi0gksLG4bHRXVJ-Y3JZNgNnXo.png" alt="W3Schools.com" style="width:100px;height:100px;">'+
-            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>'+(props.DGTImpresion === 'ESE' ? 'ESTUDIO SOCIOECONOMICO' : 'GUIA DE ENTREVISTA')+'</h2>'+
+            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>'+(props.FMTImpresion === 'ESE' ? 'ESTUDIO SOCIOECONOMICO' : 'GUIA DE ENTREVISTA')+'</h2>'+
             '<h2 style="width:100px; height:100px;"></h2>'+
         '</div>';
 
@@ -387,7 +403,7 @@ class Socioeconomico extends Component {
         documentToPrint.document.write(this.tablaFormato(props));
         documentToPrint.document.write(datosg);
 
-        if(props.DGTImpresion === 'ESE'){
+        if(props.FMTImpresion === 'ESE'){
             documentToPrint.document.write(this.tablaFamilia(props));
             documentToPrint.document.write(economicos);
             documentToPrint.document.write(alimentacion);
@@ -477,7 +493,7 @@ class Socioeconomico extends Component {
         
             const Fields = [ 
             'DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 
-            'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 
+            'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 'FMTImpresion',
             'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTPresupuesto', 'OTHistoriaS', 'OTPronostico', 'OTProveedor',
             'OTProcedencia' ];
 
@@ -612,6 +628,8 @@ class Socioeconomico extends Component {
                     <TxtField id={"CFFam" + i + "ocupacion"} nombre={"Ocupacion"} width={150} onChange={this.handleChange} state={this.state.caso}/>
                     <TxtField id={"CFFam" + i + "empleo"} nombre={"Empleo"} width={100} options={Empleo} onChange={this.handleChange} state={this.state.caso}/>
                     <Autocomplete id={"CFFam" + i + "escolaridad"} nombre={"Escolaridad"} options={Escolaridad} onChange={this.handleChange} state={this.state.caso}/>
+                    
+                    <hr style={{borderColor: 'black'}}></hr>
                 </div>
             );
         }
@@ -700,26 +718,48 @@ class Socioeconomico extends Component {
                         message={<span id="message-id">{message}</span>}
                     />
                     
-                    <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.print(event, this.state.caso)}> 
+                    <Tooltip title="Imprimir" >
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '20px', right: '25px'}} onClick={(event) => this.print(event, this.state.caso)}>
+                            <PrintIcon />
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Nuevo" >
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '80px', right: '25px'}} onClick={(event) => this.nuevo(event)}>
+                            <CreateIcon />
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Guardar" >
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '140px', right: '25px'}} onClick={(event) => modifying === 1 ? this.modify(event) : this.save(event)}>
+                            <SaveIcon />
+                        </Button>
+                    </Tooltip>
+
+                    {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.print(event, this.state.caso)}> 
                         Imprimir
                     </Button>
                     <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.nuevo(event)}> 
                         Nuevo
-                    </Button>
-                    <TxtField nombre="Tipo de Impresion" id="DGTImpresion" required options={TipoI} onChange={this.handleChange} state={this.state.caso}/>
+                    </Button> */}
+                    {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => modifying === 1 ? this.modify(event) : this.save(event)}> 
+                        Guardar
+                    </Button> */}
+                    
 
                     {/* FORMATO */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>FORMATO</h1>
+                    <h1 className={classes.title}>FORMATO</h1>
                     <div className={classes.container}>
                         <TxtField nombre="Fecha" id="FMFecha" required type={'date'} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="No. De Caso" id="FMNumero" required onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Tipo de Impresion" id="FMTImpresion" required options={TipoI} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Trabajadora Social" id="FMTrabajadora" required options={TrabajadoraS} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Cantidad Apoyo" id="apcantidad" onChange={this.handleChange} state={this.state.caso}/>
                         {this.cApoyo()}
                     </div>
 
                     {/* DATOS GENERALES */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>DATOS GENERALES</h1>
+                    <h1 className={classes.title}>DATOS GENERALES</h1>
                     <div className={classes.container}>
                         <TxtField nombre="Nombre del caso" id="DGCaso" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Edad" id="DGEdad" required onChange={this.handleChange} state={this.state.caso}/>
@@ -751,7 +791,7 @@ class Socioeconomico extends Component {
 
                     {/* COMPOSICION FAMILIAR */}
                     <div className={classes.container}>
-                        <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>COMPOSICION FAMILIAR</h1>
+                        <h1 className={classes.title}>COMPOSICION FAMILIAR</h1>
                         <TxtField nombre={"Cantidad"} id={"fcantidad"} width={80} onChange={this.handleChange} state={this.state.caso}/>
                         {this.cfamiliar()}
                         <TxtField nombre={"Observaciones"} id={"CFObservaciones"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
@@ -760,7 +800,7 @@ class Socioeconomico extends Component {
                     <br/>
 
                     {/* DATOS ECONOMICOS */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>DATOS ECONOMICOS</h1>
+                    <h1 className={classes.title}>DATOS ECONOMICOS</h1>
                     <div className={classes.container}>
 
                         {/* INGRESOS MENSUALES */}
@@ -821,7 +861,7 @@ class Socioeconomico extends Component {
                     </div>
 
                     {/* ALIMENTACION */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>ALIMENTACION</h1>
+                    <h1 className={classes.title}>ALIMENTACION</h1>
                     <div className={classes.container}>
                         <TxtField nombre="Cereales" id="ALCereales" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Leguminosas" id="ALLeguminosas" options={Alimentacion} onChange={this.handleChange} state={this.state.caso}/>
@@ -839,7 +879,7 @@ class Socioeconomico extends Component {
                     </div>
 
                     {/* VIVIENDA */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>VIVIENDA</h1>
+                    <h1 className={classes.title}>VIVIENDA</h1>
                     <div className={classes.container}>
                         <TxtField nombre="Condicion" id="VVCondicion" options={CondicionVivienda} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Zona" id="VVZona" options={Zona} onChange={this.handleChange} state={this.state.caso}/>
@@ -867,7 +907,7 @@ class Socioeconomico extends Component {
                     </div>
 
                     {/* SALUD */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>SALUD</h1>
+                    <h1 className={classes.title}>SALUD</h1>
                     <div className={classes.container}>
                         <div style={{width: '100%'}}>
                             <br/>
@@ -885,7 +925,7 @@ class Socioeconomico extends Component {
                     </div>
 
                     {/* OTROS */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>OTROS</h1>
+                    <h1 className={classes.title}>OTROS</h1>
                     <div className={classes.container}>
                         <TxtField nombre={"Referencias Con Colaterales"} id={"OTReferenciasC"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Historia Social"} id={"OTHistoriaS"} required multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
@@ -904,11 +944,11 @@ class Socioeconomico extends Component {
                         <TxtField nombre={"Notas de seguimiento y/o Evolucion"} id={"OTNotasSE"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
 
-                    <div className={classes.container}>
+                    {/* <div className={classes.container}>
                         <Button variant="contained" color="primary" className={classes.button} onClick={(event) => modifying === 1 ? this.modify(event) : this.save(event)}> 
                             Guardar
                         </Button>
-                    </div>
+                    </div> */}
 
                 </div>
             </div>

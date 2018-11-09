@@ -6,6 +6,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
 import XLSX from 'xlsx'
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
@@ -14,6 +16,12 @@ import TextField from '@material-ui/core/TextField';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
+import EditIcon from '@material-ui/icons/Edit'
+import FileCopyIcon from '@material-ui/icons/FileCopy'
+import IconButton from '@material-ui/core/IconButton';
+import TxtField from '../Components/TxtField';
+import TablePaginationActions from '../Components/TablePaginationActions.js'
+import { Search } from '../Constants/Options';
 
 const styles = theme => ({
     root: {
@@ -42,7 +50,13 @@ class Inicio extends Component {
         this.state = {
             data: [],
             year: new Date().getFullYear(),
-            value: 0
+            value: 0,
+            page: 0,
+            rowsPerPage: 10,
+            searchBySE: 'Persona',
+            searchByT: 'Persona',
+            searchT: '',
+            searchSE: ''
         }
     }
 
@@ -87,15 +101,7 @@ class Inicio extends Component {
         })
     }
 
-    exportFileControl = (option) => {
-        option === 0 ? this.exportFileSocio() : this.exportFileTran();
-    }
-
-    exportFileTran = () => {
-        console.log('transporte')
-    }
-
-    exportFileSocio() {
+    exportFile() {
         const wb = XLSX.utils.book_new()
         const months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 
             'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
@@ -152,7 +158,7 @@ class Inicio extends Component {
                         apoyo.push(val["FMApoyo" + i]);
                     }
                     
-                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGNom, val.DGDomicilio, val.DGColonia, 
+                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGCaso, val.DGDomicilio, val.DGColonia, 
                         val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, 'FORANEA', 
                         'OTROS/FORANEO', 'ZONA FORÁNEA, OTRAS DIOCESIS', '', '', '', '', '', '', '', '', '', '', 
                         '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, '', '', '', '',
@@ -174,93 +180,168 @@ class Inicio extends Component {
     }
 
     transporteTable = (data, classes) => {
+        const { rowsPerPage, page, searchT, searchByT } = this.state;
+        const rows = this.state.data
+        const searchBy = searchByT === 'Persona' ? 'DGCaso' : 'FMNumero'
+
         return (
             <div style={{paddingTop: "90px"}}>
                 <Table className={classes.table}>
                     <TableHead>
-                    <TableRow>
-                        <TableCell></TableCell>
-                        <TableCell>Numero</TableCell>
-                        <TableCell>Caso</TableCell>
-                        <TableCell>Fecha</TableCell>
-                    </TableRow>
+                        <TableRow>
+                            <TableCell>
+                                <TextField 
+                                    id={'Buscar'}
+                                    label={'Buscar'}
+                                    placeholder={'Buscar'}
+                                    defaultValue={searchT}
+                                    onChange={(event) => this.handleSearch('searchT', event.target.value)}
+                                />
+                                
+                            </TableCell>
+                            <TableCell>
+                                {<TxtField id={"searchByT"} nombre={"Buscar Por"} width={100} options={Search} onChange={this.handleSearch} state={this.state}/>}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell>Numero</TableCell>
+                            <TableCell>Caso</TableCell>
+                            <TableCell>Fecha</TableCell>
+                        </TableRow>
                     </TableHead>
                     <TableBody>
-                    {data.map((row, i) => {
-                        return (
-                        <TableRow key={row.key}>
-                            <TableCell>
-                                <Link to={{ 
-                                    pathname: '/transporte', 
-                                    user: data[i],
-                                    modifying: 1
-                                }}>
-                                    <Button variant="contained" color="primary" className={classes.button}> 
-                                        Editar
-                                    </Button>
-                                </Link>
-                            </TableCell>
-                            <TableCell>{row.val.FMNumero}</TableCell>
-                            <TableCell component="th" scope="row">
-                                {row.val.DGNom}
-                            </TableCell>
-                            <TableCell>{row.val.FMFecha}</TableCell>
-                        </TableRow>
-                        );
-                    })}
+                        {data.filter(caso => caso.val[searchBy].includes(searchT)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                            return (
+                            <TableRow key={row.key}>
+                                <TableCell style={{display: 'flex'}}>
+                                    <Link to={{ 
+                                        pathname: '/transporte', 
+                                        user: data[i],
+                                        modifying: 1
+                                    }}>
+                                        <IconButton  variant="contained" color="primary" className={classes.button}> 
+                                            <EditIcon/>
+                                        </IconButton >
+                                    </Link>
+                                    <Link to={{ 
+                                        pathname: '/transporte', 
+                                        user: data[i],
+                                        modifying: 0
+                                    }}>
+                                        <IconButton variant="contained" color="primary" className={classes.button}> 
+                                            <FileCopyIcon/>
+                                        </IconButton>
+                                    </Link>
+                                </TableCell>
+                                <TableCell>{row.val.FMNumero}</TableCell>
+                                <TableCell component="th" scope="row">
+                                    {row.val.DGCaso}
+                                </TableCell>
+                                <TableCell>{row.val.FMFecha}</TableCell>
+                            </TableRow>
+                            );
+                        })}
                     </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                            colSpan={3}
+                            count={rows.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onChangePage={(e, p) => this.handleChangePage(e, p)}
+                            onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                            ActionsComponent={TablePaginationActions}
+                            />
+                        </TableRow>
+                    </TableFooter>
                 </Table>
             </div>
         )
     }
 
     socioeconomicoTable = (data, classes) => {
+        const { rowsPerPage, page, searchSE, searchBySE } = this.state;
+        const rows = this.state.data
+        const searchBy = searchBySE === 'Persona' ? 'DGCaso' : 'FMNumero'
+        
         return (
             <div style={{paddingTop: "90px"}}>
                 <Table className={classes.table}>
                     <TableHead>
-                    <TableRow>
-                        <TableCell></TableCell>
-                        <TableCell>Caso</TableCell>
-                        <TableCell numeric>Telefono</TableCell>
-                        <TableCell numeric>Celular</TableCell>
-                        <TableCell >Fecha</TableCell>
-                    </TableRow>
+                        <TableRow>
+                            <TableCell>
+                                <TextField 
+                                    id={'Buscar'}
+                                    label={'Buscar'}
+                                    placeholder={'Buscar'}
+                                    defaultValue={searchSE}
+                                    onChange={(event) => this.handleSearch('searchSE', event.target.value)}
+                                />
+                                
+                            </TableCell>
+                            <TableCell>
+                                {<TxtField id={"searchBySE"} nombre={"Buscar Por"} width={100} options={Search} onChange={this.handleSearch} state={this.state}/>}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell>No.</TableCell>
+                            <TableCell>Caso</TableCell>
+                            <TableCell>Tipo</TableCell>
+                            <TableCell numeric>Celular</TableCell>
+                            <TableCell >Fecha</TableCell>
+                        </TableRow>
                     </TableHead>
                     <TableBody>
-                    {data.map((row, i) => {
-                        return (
-                        <TableRow key={row.key}>
-                            <TableCell>
-                                <Link to={{ 
-                                    pathname: '/socioeconomico', 
-                                    user: data[i],
-                                    modifying: 1
-                                }}>
-                                    <Button variant="contained" color="primary" className={classes.button}> 
-                                        Editar
-                                    </Button>
-                                </Link>
-                                <Link to={{ 
-                                    pathname: '/socioeconomico', 
-                                    user: data[i],
-                                    modifying: 0
-                                }}>
-                                    <Button variant="contained" color="primary" className={classes.button}> 
-                                        Copiar
-                                    </Button>
-                                </Link>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                                {row.val.DGCaso}
-                            </TableCell>
-                            <TableCell numeric>{row.val.DGTelefono}</TableCell>
-                            <TableCell numeric>{row.val.DGCelular}</TableCell>
-                            <TableCell >{row.val.FMFecha}</TableCell>
-                        </TableRow>
-                        );
-                    })}
+                        {data.filter(caso => caso.val[searchBy].includes(searchSE)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                            return (
+                            <TableRow key={row.key}>
+                                <TableCell style={{display: 'flex'}}>
+                                    <Link to={{ 
+                                        pathname: '/socioeconomico', 
+                                        user: data[i],
+                                        modifying: 1
+                                    }}>
+                                        <IconButton  variant="contained" color="primary" className={classes.button}> 
+                                            <EditIcon/>
+                                        </IconButton >
+                                    </Link>
+                                    <Link to={{ 
+                                        pathname: '/socioeconomico', 
+                                        user: data[i],
+                                        modifying: 0
+                                    }}>
+                                        <IconButton variant="contained" color="primary" className={classes.button}> 
+                                            <FileCopyIcon/>
+                                        </IconButton>
+                                    </Link>
+                                </TableCell>
+                                <TableCell>{row.val.FMNumero}</TableCell>
+                                <TableCell component="th" scope="row">
+                                    {row.val.DGCaso}
+                                </TableCell>
+                                <TableCell numeric>{row.val.FMTImpresion}</TableCell>
+                                <TableCell numeric>{row.val.DGCelular}</TableCell>
+                                <TableCell >{row.val.FMFecha}</TableCell>
+                            </TableRow>
+                            );
+                        })}
                     </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                            colSpan={3}
+                            count={rows.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onChangePage={(e, p) => this.handleChangePage(e, p)}
+                            onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                            ActionsComponent={TablePaginationActions}
+                            />
+                        </TableRow>
+                    </TableFooter>
                 </Table>
             </div>
         )
@@ -275,6 +356,28 @@ class Inicio extends Component {
         })
     }
 
+    handleSearch = (field, value) => {
+        /* console.log('-------------')
+        console.log(value)
+        const data = this.state.data;
+        console.log(data)
+        const result = data.filter(caso => caso.val.DGCaso.includes(value))
+        console.log(result) */
+        /* console.log('-------------')
+        console.log(field)
+        console.log(value) */
+        this.setState({[field]: value})
+    }
+
+    handleChangePage = (event, page) => {
+        console.log(page)
+        this.setState({ page });
+    };
+    
+    handleChangeRowsPerPage = event => {
+        this.setState({ rowsPerPage: event.target.value });
+    };
+
     handleTabChange = (event, value) => {
         this.setState({ value });
     };
@@ -284,6 +387,8 @@ class Inicio extends Component {
         const data = this.state.data;
         const transporteData = this.state.transporteData;
         const value = this.state.value;
+        /* const { rows, rowsPerPage, page } = this.state;
+        const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage); */
 
         return (
             <div >
@@ -295,7 +400,7 @@ class Inicio extends Component {
                 </AppBar>
 
                 <div style={{marginTop: '20px'}}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.exportFileControl(value)/* () => this.exportFile() */}> 
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.exportFile(value)/* () => this.exportFile() */}> 
                         Exportar a excel
                     </Button>
                     <TextField

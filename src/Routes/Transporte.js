@@ -10,12 +10,17 @@ import {
     Sexo,
     Procedencia,
     Estados,
-    Decanatos
+    Decanatos,
+    Municipios
 } from '../Constants/Options';
 import TxtField from '../Components/TxtField';
 import Autocomplete from '../Components/Autocomplete';
 import Snackbar from '@material-ui/core/Snackbar';
 import Fade from '@material-ui/core/Fade';
+import Tooltip from '@material-ui/core/Tooltip';
+import PrintIcon from '@material-ui/icons/Print';
+import CreateIcon from '@material-ui/icons/Create';
+import SaveIcon from '@material-ui/icons/Save';
 
 const styles = theme => ({
     root: {
@@ -36,6 +41,13 @@ const styles = theme => ({
         marginTop: '2px',
         marginBottom: '2px',
         width: 200,
+    },
+    fixed: {
+        position: 'fixed',
+        width: '50px',
+        height: '50px'/* ,
+        backgroundColor: '#8BC34A',
+        color: 'white' */
     }
 });
 
@@ -94,7 +106,7 @@ class Transporte extends Component {
         var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">DATOS GENERALES</p>'+
             '<div style="display:flex">'+
             '<div style="width: 50%; text-align:right">'+
-                '<p style="display: contents">NOMBRE </p><textarea rows="'+this.resizeTextArea(props.DGNom, 1)+'" style="width: 50%;">'+props.DGNom+'</textarea><br>'+
+                '<p style="display: contents">NOMBRE </p><textarea rows="'+this.resizeTextArea(props.DGCaso, 1)+'" style="width: 50%;">'+props.DGCaso+'</textarea><br>'+
                 '<p style="width: 100px; display: contents">ESTADO CIVIL </p><input style="width: 50%;" value="'+props.DGECivil+'"/><br>'+
                 '<p style="width: 100px; display: contents">ESCOLARIDAD </p><input style="width: 50%;" value="'+escolaridad+'"/><br>'+
                 '<p style="display: contents">PARROQUIA </p><textarea rows="'+this.resizeTextArea(props.DGParroquia, 1)+'" style="width: 50%;">'+props.DGParroquia+'</textarea><br>'+
@@ -301,7 +313,7 @@ class Transporte extends Component {
     checkFields = () => {
         const Fields = [ 'FMFecha', 'FMNumero', 'FMDerivado', 'FMFrecuencia', 'FMTrabajadora', 'IDTipo', 
             'IDOriginario', 'IDTiempo', 'IDHospeda', 'SDDestino', 'SDMotivo', 'APDestino', 'APProveedor', 'APProcedencia', 'APBoletos', 'APFolioTS', 
-            'DGNom', 'DGEdad', 'DGECivil', 'DGOcupacion', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGSexo' ];
+            'DGCaso', 'DGEdad', 'DGECivil', 'DGOcupacion', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGSexo' ];
         
         let missingFields = false;
         
@@ -472,12 +484,14 @@ class Transporte extends Component {
                         message={<span id="message-id">{message}</span>}
                     />
                     
-                    <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.print(event, this.state.caso)}> 
+                    {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.print(event, this.state.caso)}> 
                         Imprimir
                     </Button>
                     <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.nuevo(event)}> 
                         Nuevo
-                    </Button>
+                    </Button> */}
+
+                    
 
                     {/* FORMATO */}
                     <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>FORMATO</h1>
@@ -494,7 +508,7 @@ class Transporte extends Component {
                         <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>DATOS GENERALES</h1>
                         <TxtField nombre={"Cantidad"} id={"gcantidad"} width={80} onChange={this.handleChange} state={this.state.caso}/>
                         <div>
-                            <TxtField id={"DGNom"} nombre={"Nombre"} width={160} required onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField id={"DGCaso"} nombre={"Nombre"} width={160} required onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGEdad"} nombre={"Edad"} width={50} required onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGSexo"} nombre="Sexo" required options={Sexo} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGECivil"} nombre={"Estado Civil"} width={120} required options={ECivil} onChange={this.handleChange} state={this.state.caso}/>
@@ -509,9 +523,10 @@ class Transporte extends Component {
                         <div>
                             <TxtField id={"DGDomicilio"} nombre={"Domicilio"}  onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGColonia"} nombre={"Colonia"} onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField id={"DGMunicipio"} nombre={"Municipio"} onChange={this.handleChange} state={this.state.caso}/>
+                            {/* <TxtField id={"DGMunicipio"} nombre={"Municipio"} onChange={this.handleChange} state={this.state.caso}/> */}
+                            <Autocomplete nombre={"Municipio"} id={"DGMunicipio"} options={Municipios} onChange={this.handleChange} state={this.state.caso}/>
                             {/* <TxtField id={"DGEstado"} nombre={"Estado"} onChange={this.handleChange} state={this.state.caso}/> */}
-                            <Autocomplete nombre={"Estado"} id={"DGEstado"} required options={Estados} onChange={this.handleChange} state={this.state.caso}/>
+                            <Autocomplete nombre={"Estado"} id={"DGEstado"} options={Estados} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGPais"} nombre={"Pais"} onChange={this.handleChange} state={this.state.caso}/>
                         </div>
                     </div>
@@ -556,11 +571,29 @@ class Transporte extends Component {
                     </div>
                     <br/>
 
-                    <div className={classes.container}>
+                    <Tooltip title="Imprimir" >
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '20px', right: '25px'}} onClick={(event) => this.print(event, this.state.caso)}>
+                            <PrintIcon />
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Nuevo" >
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '80px', right: '25px'}} onClick={(event) => this.nuevo(event)}>
+                            <CreateIcon />
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Guardar" >
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '140px', right: '25px'}} onClick={(event) => modifying === 1 ? this.modify(event) : this.save(event)}>
+                            <SaveIcon />
+                        </Button>
+                    </Tooltip>
+
+                    {/* <div className={classes.container}>
                         <Button variant="contained" color="primary" className={classes.button} onClick={(event) => modifying === 1 ? this.modify(event) : this.save(event)}> 
                             Guardar
                         </Button>
-                    </div>
+                    </div> */}
 
                 </div>
             </div>

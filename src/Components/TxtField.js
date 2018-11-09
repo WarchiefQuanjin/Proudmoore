@@ -31,14 +31,14 @@ class TxtField extends Component {
                 select={props.options !== undefined}
                 placeholder={props.nombre}
                 className={props.classes.textField}
-                margin="normal"
+                margin={"normal"}
                 type={props.type ? props.type : 'string'}
                 multiline={props.multiline && props.multiline}
                 onChange={(event) => props.onChange(props.id, event.target.value)}
                 required={props.required}
                 InputProps={{
                     classes: {
-                      input: props.classes.font,
+                        input: props.classes.font,
                     },
                 }}
                 value={props.state[props.id] ? props.state[props.id] : ''}
