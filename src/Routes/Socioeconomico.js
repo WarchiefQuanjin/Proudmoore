@@ -90,7 +90,8 @@ class Socioeconomico extends Component {
                 DEObservaciones: 'Ninguna',
                 ALObservaciones: 'Ninguna',
                 VVObservaciones: 'Ninguna',
-                SLObservaciones: 'Ninguna'
+                SLObservaciones: 'Ninguna',
+                OTPlanI: 'ENTREVISTA INICIAL\nAPLICACION ESE\nVALORACION\nORIENTACION\nSEGUIMIENTO'
             }
         }
     }
@@ -204,10 +205,11 @@ class Socioeconomico extends Component {
             '<div style="width: 50%; text-align: right">'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">CANTIDAD AUTORIZADA</p><input style="margin-right: 10px" value="'+props.OTPresupuesto+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONATIVO HOSPITAL</p><input style="margin-right: 10px" value="'+(props.OTDHospital ? props.OTDHospital : '')+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO ARZOBISPADO</p><input style="margin-right: 10px" value="'+(props.OTFArzobispado ? props.OTFArzobispado : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO PROYECTO</p><input style="margin-right: 10px" value="'+(props.OTFProyecto ? props.OTFProyecto : '')+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO CABILDO</p><input style="margin-right: 10px" value="'+(props.OTFCabildo ? props.OTFCabildo : '')+'"/><br>'+
             '</div>'+
             '<div style="width: 50%; text-align: right">'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO ARZOBISPADO</p><input style="margin-right: 10px" value="'+(props.OTFArzobispado ? props.OTFArzobispado : '')+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO OLGA</p><input style="margin-right: 10px" value="'+(props.OTFOlga ? props.OTFOlga : '')+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONANTE</p><input style="margin-right: 10px" value="'+(props.OTDonante ? props.OTDonante : '')+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">APORTACION BENEFICIADO</p><input value="'+(props.OTABeneficiado ? props.OTABeneficiado : '')+'"/><br>'+
@@ -936,6 +938,7 @@ class Socioeconomico extends Component {
                         <TxtField nombre={"Plan de Intervencion"} id={"OTPlanI"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Cantidad Autorizada"} id={"OTPresupuesto"} required width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Donativo Hospital"} id={"OTDHospital"} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre={"Fondo Proyecto"} id={"OTFProyecto"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Fondo Arzobispado"} id={"OTFArzobispado"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Fondo Cabildo"} id={"OTFCabildo"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Fondo Olga"} id={"OTFOlga"} onChange={this.handleChange} state={this.state.caso}/>

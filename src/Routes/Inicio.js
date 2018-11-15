@@ -22,6 +22,7 @@ import IconButton from '@material-ui/core/IconButton';
 import TxtField from '../Components/TxtField';
 import TablePaginationActions from '../Components/TablePaginationActions.js'
 import { Search } from '../Constants/Options';
+import * as moment from 'moment';
 
 const styles = theme => ({
     root: {
@@ -110,8 +111,8 @@ class Inicio extends Component {
             let data = JSON.parse(JSON.stringify(Excel))
             let id = 1;
 
-            this.state.data.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(this.state.year, 10) )
-                .filter((caso) => new Date(caso.val.FMFecha).getMonth() === i )
+            this.state.data.filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').year() === parseInt(this.state.year, 10) )
+                .filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').month() === i )
                 .forEach((caso) => {
                     const val = caso.val;
                     const clasificacion = val.DGEdad <= 17 ? "INFANTIL" :
@@ -146,8 +147,8 @@ class Inicio extends Component {
                     data.push(casosArray)
             })
 
-            this.state.transporteData.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(this.state.year, 10) )
-                .filter((caso) => new Date(caso.val.FMFecha).getMonth() === i )
+            this.state.transporteData.filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').year() === parseInt(this.state.year, 10) )
+                .filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').month() === i )
                 .forEach((caso) => {
                     const val = caso.val;
                     const clasificacion = val.DGEdad <= 17 ? "INFANTIL" :
@@ -241,7 +242,7 @@ class Inicio extends Component {
                                         user: data[i],
                                         modifying: 1
                                     }}>
-                                        <IconButton  variant="contained" color="primary" className={classes.button}> 
+                                        <IconButton variant="contained" color="primary" className={classes.button}> 
                                             <EditIcon/>
                                         </IconButton >
                                     </Link>
@@ -325,7 +326,7 @@ class Inicio extends Component {
                                         user: data[i],
                                         modifying: 1
                                     }}>
-                                        <IconButton  variant="contained" color="primary" className={classes.button}> 
+                                        <IconButton variant="contained" color="primary" className={classes.button}> 
                                             <EditIcon/>
                                         </IconButton >
                                     </Link>

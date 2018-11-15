@@ -169,8 +169,6 @@ class Graficas extends Component {
         
         result.sort((a,b) => { return a[0] > b[0] ? 1 : -1; })
         result = [['Estados', 'Cantidad', { role: 'annotation'}, { role: "style" }]].concat(result)
-        
-        console.log(result)
 
         const pieOptions = {
             title: title,
