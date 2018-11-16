@@ -32,12 +32,13 @@ const styles = theme => ({
     },
     button: {
         margin: theme.spacing.unit,
+        marginLeft: '10px'
     },
     table: {
       minWidth: 700,
     },
     textField: {
-        marginLeft: theme.spacing.unit,
+        marginLeft: '10px',
         marginRight: theme.spacing.unit,
         marginTop: '2px',
         marginBottom: '2px',
@@ -207,24 +208,24 @@ class Inicio extends Component {
         const searchBy = searchByT === 'Persona' ? 'DGCaso' : 'FMNumero'
 
         return (
-            <div style={{paddingTop: "90px"}}>
+            <div style={{paddingTop: "50px"}}>
+                <div style={{paddingLeft: "10px"}}>
+                    <TextField 
+                        id={'Buscar'}
+                        label={'Buscar'}
+                        placeholder={'Buscar'}
+                        defaultValue={searchT}
+                        onChange={(event) => this.handleChange('searchT', event.target.value)} />
+                    <TxtField  
+                        id={"searchByT"} 
+                        nombre={"Buscar Por"} 
+                        width={100} 
+                        options={Search} 
+                        onChange={this.handleChange} 
+                        state={this.state}/>
+                </div>
                 <Table className={classes.table}>
                     <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                <TextField 
-                                    id={'Buscar'}
-                                    label={'Buscar'}
-                                    placeholder={'Buscar'}
-                                    defaultValue={searchT}
-                                    onChange={(event) => this.handleChange('searchT', event.target.value)}
-                                />
-                                
-                            </TableCell>
-                            <TableCell>
-                                {<TxtField id={"searchByT"} nombre={"Buscar Por"} width={100} options={Search} onChange={this.handleChange} state={this.state}/>}
-                            </TableCell>
-                        </TableRow>
                         <TableRow>
                             <TableCell></TableCell>
                             <TableCell>Numero</TableCell>
@@ -289,24 +290,24 @@ class Inicio extends Component {
         const searchBy = searchBySE === 'Persona' ? 'DGCaso' : 'FMNumero'
         
         return (
-            <div style={{paddingTop: "90px"}}>
+            <div style={{paddingTop: "50px"}}>
+                <div style={{paddingLeft: "10px"}}>
+                    <TextField 
+                        id={'Buscar'}
+                        label={'Buscar'}
+                        placeholder={'Buscar'}
+                        defaultValue={searchSE}
+                        onChange={(event) => this.handleChange('searchSE', event.target.value)} />
+                    <TxtField 
+                        id={"searchBySE"} 
+                        nombre={"Buscar Por"} 
+                        width={100} 
+                        options={Search} 
+                        onChange={this.handleChange} 
+                        state={this.state}/>
+                </div>
                 <Table className={classes.table}>
                     <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                <TextField 
-                                    id={'Buscar'}
-                                    label={'Buscar'}
-                                    placeholder={'Buscar'}
-                                    defaultValue={searchSE}
-                                    onChange={(event) => this.handleChange('searchSE', event.target.value)}
-                                />
-                                
-                            </TableCell>
-                            <TableCell>
-                                {<TxtField id={"searchBySE"} nombre={"Buscar Por"} width={100} options={Search} onChange={this.handleChange} state={this.state}/>}
-                            </TableCell>
-                        </TableRow>
                         <TableRow>
                             <TableCell></TableCell>
                             <TableCell>No.</TableCell>

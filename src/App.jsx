@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Routes from './Constants/Routes.js';
 import { Link, HashRouter as Router, Route, Switch } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
@@ -102,6 +103,8 @@ const styles = theme => ({
   },
   button: {
       margin: theme.spacing.unit,
+      color: 'red',
+      backgroundColor: 'white'
   },
   loginComponent: {
       width: '50%',
@@ -133,6 +136,11 @@ const styles = theme => ({
     marginTop: '2px',
     marginBottom: '2px',
     width: '70%'
+  },
+  image: {
+    width: '55px',
+    height: '50px',
+    marginTop: '10px'
   }
 });
 
@@ -151,17 +159,9 @@ class App extends Component {
 
   login = (event) => {
     event.preventDefault();
-    /* firebase.auth().signInWithEmailAndPassword('warchiefquanjin94@gmail.com', 'ilovetacos94'); */
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch((error) => {
-      // Handle Errors here.
-      /* var errorCode = error.code;
-      var errorMessage = error.message; */
       this.setState({ open: true, message: error.message});
-      // ...
     });
-
-    /* this.setState({ open: true, message: 'El caso ha sido modificado'}); */
-    /* firebase.auth().signInWithPopup(provider); */
   }
 
   logout = (event) => {
@@ -225,6 +225,8 @@ class App extends Component {
             <Typography variant="title" gutterBottom>
               ESTUDIOS SOCIOECONOMICOS
             </Typography>
+            <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=b5b0256f-b99e-48d6-94a8-bb723663b1bb'} alt="CÁRITAS DE GUADALAJARA" />
+            <br/>
             <TxtField id={"email"} nombre={"Email"} width={70} term={"%"} onChange={this.handleChange} state={this.state}/>
             <br/>
             <TextField
@@ -261,7 +263,7 @@ class App extends Component {
       <div>
         <div>
           <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center' }} >
-            <Typography style={{ overflow: 'visible', margin: 'auto', width: 'auto', display: 'block' }} type='title' noWrap>Casos Emergentes</Typography>
+            <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=b5b0256f-b99e-48d6-94a8-bb723663b1bb'} alt="CÁRITAS DE GUADALAJARA" />
           </div>
           <Divider />
           <List>
@@ -270,8 +272,13 @@ class App extends Component {
                 route.linkTo &&
                 <Link key={index} className={classes.link} to={route.linkTo}>
                   <ListItem onClick={this.handleDrawerToggle}/* button onClick={this.handleDrawerToggle} */>
-                    {/* <ListItemIcon>{route.icon()}</ListItemIcon> */}
-                    <ListItemText primary={route.iconText} />
+                    <ListItemIcon>{route.icon()}</ListItemIcon>
+
+                    {<ListItemText primary={route.iconText} />}
+                    {/* <Button variant="contained" color="primary" style={{width:'100%'}}>
+                      {route.iconText}
+                    </Button> */}
+                    
                     {/* <ListItemText primary={route.iconText} /> */}
                   </ListItem>
                 </Link>
@@ -337,7 +344,6 @@ class App extends Component {
 
   render() {
     const { classes } = this.props;
-    /* const { anchor } = this.state; */
     const vertical = 'top', horizontal = 'center'
     const { open, message } = this.state;
 
@@ -354,79 +360,10 @@ class App extends Component {
           }}
           message={<span id="message-id">{message}</span>}
         />
-        {console.log('user: '+this.state.user)}
+        {/* console.log('user: '+this.state.user) */}
         {this.state.user !== undefined ? this.state.user !== '' ? this.main(classes) : this.loginComponent(classes) : <div/>}
       </div>
     )
-
-    /* const drawer = (
-      <div>
-        <div>
-          <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center' }} >
-            <Typography style={{ overflow: 'visible', margin: 'auto', width: 'auto', display: 'block' }} type='title' noWrap>Casos Emergentes</Typography>
-          </div>
-          <Divider />
-          <List>
-            {
-              Routes.map((route, index) =>
-                route.linkTo &&
-                <Link key={index} className={classes.link} to={route.linkTo}>
-                  <ListItem onClick={this.handleDrawerToggle}>
-                    <ListItemText primary={route.iconText} />
-                  </ListItem>
-                </Link>
-              )
-            }
-          </List>
-        </div>
-      </div>
-    );
-
-    return (
-      <Router>
-        <div className={classes.root}>
-          <div className={classes.appFrame}>
-            <AppBar className={classes.appBar}>
-              <Toolbar>
-                <IconButton color='default' aria-label='open drawer' onClick={this.handleDrawerToggle} className={classes.navIconHide}>
-                  <MenuIcon />
-                </IconButton>
-                {Routes.map((route, index) => (
-                  <Route key={index} path={route.path} exact={route.exact} component={route.title} />
-                ))}
-                <div className={classes.spacer}></div>
-              </Toolbar>
-            </AppBar>
-            <Hidden mdUp>
-              <Drawer type='temporary' open={this.state.mobileOpen} classes={{ paper: classes.drawerPaper }} onClose={this.handleDrawerToggle} ModalProps={{
-                keepMounted: true 
-              }}>
-                {drawer}
-              </Drawer>
-            </Hidden>
-            <Drawer 
-              variant='permanent' 
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-              style={this.state.docked === true ? { display: "flex" } : { display: "none" }}
-              anchor={anchor}>
-              {drawer}
-            </Drawer>
-            <main className={classes.content}>
-              <div className={classes.routes}>
-                <Switch>
-                  <Route path='/' exact={true} component={Inicio} />
-                  <Route path='/socioeconomico' render={(props) => <Socioeconomico {...props}/>} />
-                  <Route path='/transporte' render={(props) => <Transporte {...props}/>} />
-                  <Route path='/graficas' render={(props) => <Graficas {...props}/>} />
-                </Switch>
-              </div>
-            </main>
-          </div>
-        </div>
-      </Router>
-    ); */
   }
 }
 

@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
     root: {
-        display: 'flex',
+        display: 'block',
         justifyContent: 'center',
         paddingLeft: '40px'
     },
@@ -235,18 +235,18 @@ class Graficas extends Component {
 
         return (
             <div className={classes.root}>
-                <div style={{marginBottom: '70px', marginTop: '40px'}}>
-                    
+                <div style={{ marginTop: '40px'}}>
                     <TextField
-                        required
-                        id="year"
-                        label="Año"
-                        defaultValue={this.state.year}
-                        className={classes.textField}
-                        margin="normal"
-                        onChange={(event) => this.handleChange(event.target.value)}
-                    />
-
+                    required
+                    id="year"
+                    label="Año"
+                    defaultValue={this.state.year}
+                    className={classes.textField}
+                    margin="normal"
+                    onChange={(event) => this.handleChange(event.target.value)}
+                    />                    
+                </div>
+                <div style={{marginBottom: '70px', marginTop: '40px'}}>
                     {this.chartGenerator('DGEstado', 'Bar', 'Casos apoyados por estado', 'Casos', 1)}
                     {this.chartGenerator('DGEstado', 'Pie', 'Cantidad apoyada por estado', 'Cantidad', 2)}
                     {this.chartGenerator('DGVicaria', 'Bar', 'Casos apoyados por vicaria', 'Casos', 3)}
