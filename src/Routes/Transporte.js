@@ -70,6 +70,8 @@ class Transporte extends Component {
     componentDidMount() {
         var user = this.props.location.user;
         
+        this.props.checkToken()
+
         if(user !== undefined){
             var caso = {};
             for (var i = 0; i < Object.keys(user.val).length; i++) {
@@ -572,19 +574,24 @@ class Transporte extends Component {
                     <br/>
 
                     <Tooltip title="Imprimir" >
-                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '20px', right: '25px'}} onClick={(event) => this.print(event, this.state.caso)}>
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '20px', right: '25px'}} 
+                            onClick={(event) => this.props.checkToken( () => this.print(event, this.state.caso) )}>
                             <PrintIcon />
                         </Button>
                     </Tooltip>
 
                     <Tooltip title="Nuevo" >
-                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '80px', right: '25px'}} onClick={(event) => this.nuevo(event)}>
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '80px', right: '25px'}} 
+                            onClick={(event) => this.props.checkToken( () => this.nuevo(event) )}>
                             <CreateIcon />
                         </Button>
                     </Tooltip>
 
                     <Tooltip title="Guardar" >
-                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '140px', right: '25px'}} onClick={(event) => modifying === 1 ? this.modify(event) : this.save(event)}>
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '140px', right: '25px'}} 
+                            onClick={(event) => modifying === 1 ? 
+                                this.props.checkToken(() => this.modify(event)) : 
+                                this.props.checkToken(() => this.save(event))}>
                             <SaveIcon />
                         </Button>
                     </Tooltip>

@@ -174,9 +174,21 @@ class App extends Component {
     this.setState({ open: false });
   };
 
+  checkToken = (callback) => {
+    firebase.auth().currentUser.getIdToken(true).then((idToken) => {
+      if (typeof callback === "function") 
+        callback();
+    }).catch((error) => {
+        /* console.log(error) */
+        this.setState({ open: true, message: 'La sesión ha caducado, vuelva a ingresar'});
+    })
+  }
+
   componentWillMount() {
     mql.addListener(this.mediaQueryChanged.bind(this));
     this.setState({ mql: mql, docked: mql.matches });
+
+    
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -327,10 +339,10 @@ class App extends Component {
             <main className={classes.content}>
               <div className={classes.routes}>
                 <Switch>
-                  <Route path='/' exact={true} component={Inicio} />
-                  <Route path='/socioeconomico' /* exact={true}  */render={(props) => <Socioeconomico {...props}/>} />
-                  <Route path='/transporte' /* exact={true}  */render={(props) => <Transporte {...props}/>} />
-                  <Route path='/graficas' /* exact={true}  */render={(props) => <Graficas {...props}/>} />
+                  <Route path='/' exact={true} /* component={Inicio} */ render={(props) => <Inicio {...props} checkToken={this.checkToken}/>} />
+                  <Route path='/socioeconomico' /* exact={true}  */render={(props) => <Socioeconomico {...props} checkToken={this.checkToken}/>} />
+                  <Route path='/transporte' /* exact={true}  */render={(props) => <Transporte {...props} checkToken={this.checkToken}/>} />
+                  <Route path='/graficas' /* exact={true}  */render={(props) => <Graficas {...props} checkToken={this.checkToken}/>} />
                   {/* <Route path='/transition' exact={true} render={() => <Transition ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} />
                   <Route path='/customimage' exact={true} render={() => <CustomImage ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} /> */}
                 </Switch>

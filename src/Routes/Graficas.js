@@ -54,6 +54,8 @@ class Graficas extends Component {
     }
 
     componentDidMount() {
+        this.props.checkToken()
+
         this.getSocioeconomicoData();
         this.getTransporteData();
     }
@@ -257,7 +259,8 @@ class Graficas extends Component {
                     {this.chartGenerator('DGSexo', 'Pie', 'Cantidad apoyada por sexo', 'Cantidad', 8)}
 
                     <Tooltip title="Imprimir" >
-                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '20px', right: '25px'}} onClick={(event) => this.print(event, this.state.caso)}>
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '20px', right: '25px'}} 
+                            onClick={(event) => this.props.checkToken( () => this.print(event, this.state.caso) )}>
                             <PrintIcon />
                         </Button>
                     </Tooltip>

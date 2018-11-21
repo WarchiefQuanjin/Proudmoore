@@ -63,6 +63,8 @@ class Inicio extends Component {
     }
 
     componentWillMount() {
+        this.props.checkToken()
+
         this.getSocioeconomicoData()
         this.getTransporteData()
     }
@@ -185,21 +187,21 @@ class Inicio extends Component {
         if(field === 'year' && (isNaN(value) || value.length >= 5))
             return
 
-        this.setState({
+        this.props.checkToken( ()=> this.setState({
             [field]: value
-        })
+        }))
     }
 
     handleChangePage = (event, page) => {
-        this.setState({ page });
+        this.props.checkToken( ()=> this.setState({ page }));
     };
     
     handleChangeRowsPerPage = event => {
-        this.setState({ rowsPerPage: event.target.value });
+        this.props.checkToken( ()=> this.setState({ rowsPerPage: event.target.value }));
     };
 
     handleTabChange = (event, value) => {
-        this.setState({ value });
+        this.props.checkToken( ()=> this.setState({ value }));
     };
 
     transporteTable = (data, classes) => {
@@ -269,13 +271,13 @@ class Inicio extends Component {
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                            colSpan={3}
-                            count={rows.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onChangePage={(e, p) => this.handleChangePage(e, p)}
-                            onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                            ActionsComponent={TablePaginationActions}
+                                colSpan={3}
+                                count={rows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onChangePage={(e, p) => this.handleChangePage(e, p)}
+                                onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                                ActionsComponent={TablePaginationActions}
                             />
                         </TableRow>
                     </TableFooter>
@@ -355,14 +357,14 @@ class Inicio extends Component {
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                            colSpan={3}
-                            count={rows.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onChangePage={(e, p) => this.handleChangePage(e, p)}
-                            onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                            ActionsComponent={TablePaginationActions}
-                            />
+                                colSpan={3}
+                                count={rows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onChangePage={(e, p) => this.handleChangePage(e, p)}
+                                onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                                ActionsComponent={TablePaginationActions}
+                                />
                         </TableRow>
                     </TableFooter>
                 </Table>
@@ -388,7 +390,7 @@ class Inicio extends Component {
                 </AppBar>
 
                 <div style={{marginTop: '20px'}}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.exportFile(value)/* () => this.exportFile() */}> 
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.props.checkToken( () => this.exportFile() )}> 
                         Exportar a excel
                     </Button>
                     <TextField
