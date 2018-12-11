@@ -32,9 +32,7 @@ const styles = theme => ({
     fixed: {
         position: 'fixed',
         width: '50px',
-        height: '50px'/* ,
-        backgroundColor: '#8BC34A',
-        color: 'white' */
+        height: '50px'
     }
 });
 
@@ -177,13 +175,8 @@ class Graficas extends Component {
             chartArea: {
                 height: '100%',
                 width: '50%',
-                top: 32,
-                /* left: 32,
-                bottom: 32,
-                right: 16 */
+                top: 32
             },
-            /* height: '100%',
-            width: '50%', */
             hAxis: {
                 title: 'Estado'
             },
@@ -210,14 +203,13 @@ class Graficas extends Component {
                     chartType={chartType === 'Bar' ? "BarChart" : "PieChart"}
                     data={result}
                     options={pieOptions}
-                    /* graph_id="PieChart" */
+
                     width={"900px"}
                     height={"400px"}
 
                     getChartWrapper={chartWrapper => {
                         this.setState({ ['chartWrapper' + id]: chartWrapper });
                     }}
-                    /* legend_toggle */
                 />
             </div>
         );

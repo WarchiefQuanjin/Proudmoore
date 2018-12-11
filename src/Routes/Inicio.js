@@ -28,14 +28,14 @@ const styles = theme => ({
     root: {
       width: '100%',
       marginTop: theme.spacing.unit * 3,
-      overflowX: 'auto',
+      overflow: 'hidden',
     },
     button: {
         margin: theme.spacing.unit,
         marginLeft: '10px'
     },
     table: {
-      minWidth: 700,
+      minWidth: 700
     },
     textField: {
         marginLeft: '10px',
@@ -50,6 +50,8 @@ class Inicio extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            admin: false,
+            address: false,
             data: [],
             year: new Date().getFullYear(),
             value: 0,
@@ -65,8 +67,9 @@ class Inicio extends Component {
     componentWillMount() {
         this.props.checkToken()
 
-        this.getSocioeconomicoData()
-        this.getTransporteData()
+        this.getSocioeconomicoData();
+        this.getTransporteData();
+        this.checkAdmin();
     }
 
     getSocioeconomicoData() {
@@ -103,6 +106,34 @@ class Inicio extends Component {
                 transporteData
             })
         })
+    }
+
+    checkAdmin(){
+        firebase.database().ref(`admins/`).orderByChild("Mail").equalTo(this.props.user.email).once("value", snapshot => {
+            if (window.navigator.userAgent.indexOf("MSIE ") > 0 || window.navigator.userAgent.indexOf("Trident") > 0 || window.navigator.userAgent.indexOf("Edge") > 0) // If Internet Explorer, return version number
+            {
+                console.log('Internet Explorer')
+                var wmi = new global.ActiveXObject ("WbemScripting.SWbemLocator");
+                var service = wmi.ConnectServer(".");
+                var e = new global.Enumerator(service.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled = True"));
+                for(; !e.atEnd(); e.moveNext()) {
+                    var s = e.item();
+                    var macAddress = unescape(s.MACAddress);
+                }
+                console.log(macAddress)
+
+                firebase.database().ref(`pc/`).orderByChild("Address").equalTo(macAddress).once("value", snap => {
+                    this.setState({
+                        admin: snap.exists() && snapshot.exists()
+                    })
+                });
+            } else {
+                console.log('Other browser')
+                this.setState({
+                    admin: false
+                })
+            }
+        });
     }
 
     exportFile() {
@@ -226,62 +257,64 @@ class Inicio extends Component {
                         onChange={this.handleChange} 
                         state={this.state}/>
                 </div>
-                <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell>Numero</TableCell>
-                            <TableCell>Caso</TableCell>
-                            <TableCell>Fecha</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {data.filter(caso => caso.val[searchBy].includes(searchT)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                            return (
-                            <TableRow key={row.key}>
-                                <TableCell style={{display: 'flex'}}>
-                                    <Link to={{ 
-                                        pathname: '/transporte', 
-                                        user: data[i],
-                                        modifying: 1
-                                    }}>
-                                        <IconButton variant="contained" color="primary" className={classes.button}> 
-                                            <EditIcon/>
-                                        </IconButton >
-                                    </Link>
-                                    <Link to={{ 
-                                        pathname: '/transporte', 
-                                        user: data[i],
-                                        modifying: 0
-                                    }}>
-                                        <IconButton variant="contained" color="primary" className={classes.button}> 
-                                            <FileCopyIcon/>
-                                        </IconButton>
-                                    </Link>
-                                </TableCell>
-                                <TableCell>{row.val.FMNumero}</TableCell>
-                                <TableCell component="th" scope="row">
-                                    {row.val.DGCaso}
-                                </TableCell>
-                                <TableCell>{row.val.FMFecha}</TableCell>
+                <div style={{overflowX: 'scroll', height: '100%'}}>
+                    <Table className={classes.table}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell>Numero</TableCell>
+                                <TableCell>Caso</TableCell>
+                                <TableCell>Fecha</TableCell>
                             </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                colSpan={3}
-                                count={rows.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onChangePage={(e, p) => this.handleChangePage(e, p)}
-                                onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                                ActionsComponent={TablePaginationActions}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
+                        </TableHead>
+                        <TableBody>
+                            {data.filter(caso => caso.val[searchBy].indexOf(searchT) !== -1/* .includes(searchT) */).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                                return (
+                                <TableRow key={row.key}>
+                                    <TableCell style={{display: 'flex'}}>
+                                        <Link to={{ 
+                                            pathname: '/transporte', 
+                                            user: data[i],
+                                            modifying: 1
+                                        }}>
+                                            <IconButton variant="contained" color="primary" className={classes.button}> 
+                                                <EditIcon/>
+                                            </IconButton >
+                                        </Link>
+                                        <Link to={{ 
+                                            pathname: '/transporte', 
+                                            user: data[i],
+                                            modifying: 0
+                                        }}>
+                                            <IconButton variant="contained" color="primary" className={classes.button}> 
+                                                <FileCopyIcon/>
+                                            </IconButton>
+                                        </Link>
+                                    </TableCell>
+                                    <TableCell>{row.val.FMNumero}</TableCell>
+                                    <TableCell component="th" scope="row">
+                                        {row.val.DGCaso}
+                                    </TableCell>
+                                    <TableCell>{row.val.FMFecha}</TableCell>
+                                </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    colSpan={3}
+                                    count={rows.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onChangePage={(e, p) => this.handleChangePage(e, p)}
+                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </div>
             </div>
         )
     }
@@ -290,7 +323,7 @@ class Inicio extends Component {
         const { rowsPerPage, page, searchSE, searchBySE } = this.state;
         const rows = this.state.data
         const searchBy = searchBySE === 'Persona' ? 'DGCaso' : 'FMNumero'
-        
+  
         return (
             <div style={{paddingTop: "50px"}}>
                 <div style={{paddingLeft: "10px"}}>
@@ -308,66 +341,68 @@ class Inicio extends Component {
                         onChange={this.handleChange} 
                         state={this.state}/>
                 </div>
-                <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell>No.</TableCell>
-                            <TableCell>Caso</TableCell>
-                            <TableCell>Tipo</TableCell>
-                            <TableCell numeric>Celular</TableCell>
-                            <TableCell >Fecha</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {data.filter(caso => caso.val[searchBy].includes(searchSE)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                            return (
-                            <TableRow key={row.key}>
-                                <TableCell style={{display: 'flex'}}>
-                                    <Link to={{ 
-                                        pathname: '/socioeconomico', 
-                                        user: data[i],
-                                        modifying: 1
-                                    }}>
-                                        <IconButton variant="contained" color="primary" className={classes.button}> 
-                                            <EditIcon/>
-                                        </IconButton >
-                                    </Link>
-                                    <Link to={{ 
-                                        pathname: '/socioeconomico', 
-                                        user: data[i],
-                                        modifying: 0
-                                    }}>
-                                        <IconButton variant="contained" color="primary" className={classes.button}> 
-                                            <FileCopyIcon/>
-                                        </IconButton>
-                                    </Link>
-                                </TableCell>
-                                <TableCell>{row.val.FMNumero}</TableCell>
-                                <TableCell component="th" scope="row">
-                                    {row.val.DGCaso}
-                                </TableCell>
-                                <TableCell numeric>{row.val.FMTImpresion}</TableCell>
-                                <TableCell numeric>{row.val.DGCelular}</TableCell>
-                                <TableCell >{row.val.FMFecha}</TableCell>
+                <div style={{overflowX: 'scroll', height: '100%'}}>
+                    <Table className={classes.table} >
+                        <TableHead>
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell>No.</TableCell>
+                                <TableCell>Caso</TableCell>
+                                <TableCell>Tipo</TableCell>
+                                <TableCell numeric>Celular</TableCell>
+                                <TableCell >Fecha</TableCell>
                             </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                colSpan={3}
-                                count={rows.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onChangePage={(e, p) => this.handleChangePage(e, p)}
-                                onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                                ActionsComponent={TablePaginationActions}
-                                />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
+                        </TableHead>
+                        <TableBody>
+                            {data.filter(caso => caso.val[searchBy].indexOf(searchSE) !== -1/* .includes(searchSE) */).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                                return (
+                                <TableRow key={row.key}>
+                                    <TableCell style={{display: 'flex'}}>
+                                        <Link to={{ 
+                                            pathname: '/socioeconomico', 
+                                            user: data[i],
+                                            modifying: 1
+                                        }}>
+                                            <IconButton variant="contained" color="primary" className={classes.button}> 
+                                                <EditIcon/>
+                                            </IconButton >
+                                        </Link>
+                                        <Link to={{ 
+                                            pathname: '/socioeconomico', 
+                                            user: data[i],
+                                            modifying: 0
+                                        }}>
+                                            <IconButton variant="contained" color="primary" className={classes.button}> 
+                                                <FileCopyIcon/>
+                                            </IconButton>
+                                        </Link>
+                                    </TableCell>
+                                    <TableCell>{row.val.FMNumero}</TableCell>
+                                    <TableCell component="th" scope="row">
+                                        {row.val.DGCaso}
+                                    </TableCell>
+                                    <TableCell numeric>{row.val.FMTImpresion}</TableCell>
+                                    <TableCell numeric>{row.val.DGCelular}</TableCell>
+                                    <TableCell >{row.val.FMFecha}</TableCell>
+                                </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    colSpan={3}
+                                    count={rows.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onChangePage={(e, p) => this.handleChangePage(e, p)}
+                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                                    ActionsComponent={TablePaginationActions}
+                                    />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </div>
             </div>
         )
     }
@@ -377,20 +412,18 @@ class Inicio extends Component {
         const data = this.state.data;
         const transporteData = this.state.transporteData;
         const value = this.state.value;
-        /* const { rows, rowsPerPage, page } = this.state;
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage); */
 
         return (
-            <div >
+            <div className={classes.root}>
                 <AppBar position="static">
                     <Tabs value={value} onChange={this.handleTabChange}>
-                        <Tab label="Socioeconomico" />
-                        <Tab label="Transporte" />
+                        <Tab label="Socioeconomico"></Tab>
+                        <Tab label="Transporte"></Tab>
                     </Tabs>
                 </AppBar>
 
-                <div style={{marginTop: '20px'}}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.props.checkToken( () => this.exportFile() )}> 
+                <div style={{marginTop: '20px', display: 'flex'}}>
+                    <Button variant="contained" color="primary" disabled={!this.state.admin} className={classes.button} onClick={() => this.props.checkToken( () => this.exportFile() )}> 
                         Exportar a excel
                     </Button>
                     <TextField

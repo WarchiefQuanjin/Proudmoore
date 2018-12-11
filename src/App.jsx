@@ -3,7 +3,6 @@ import Inicio from './Routes/Inicio.js';
 import Graficas from './Routes/Graficas.js'
 import Socioeconomico from './Routes/Socioeconomico.js'
 import Transporte from './Routes/Transporte.js'
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -28,7 +27,8 @@ import Fade from '@material-ui/core/Fade';
 import Snackbar from '@material-ui/core/Snackbar';
 
 const drawerWidth = 240;
-const primary = '#8BC34A';
+const drawerColor = '#e3007b';
+const background = 'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Background2.jpg?alt=media&token=95e6122e-220c-44f2-bd9a-dd197e532de4';
 
 const styles = theme => ({
   root: {
@@ -36,17 +36,20 @@ const styles = theme => ({
       height: '100%',
       marginTop: 0,
       zIndex: 1,
-      overflow: 'hidden'
+      display: 'flex'
   },
   appFrame: {
-      position: 'relative',
+      /* position: 'relative', */
+      position: 'absolute', 
+      overflowY: 'hidden', 
+
+
       display: 'flex',
       width: '100%',
       height: '100%'
   },
   appBar: {
-      backgroundColor: primary,
-      position: 'absolute',
+      backgroundColor: drawerColor,
       marginLeft: drawerWidth,
       [theme.breakpoints.up('md')]: {
           width: `calc(100% - ${drawerWidth}px)`
@@ -66,14 +69,18 @@ const styles = theme => ({
           height: '100%'
       },
       borderRightStyle: 'none',
-      backgroundColor: '#FFFFFF'
+      backgroundColor: drawerColor
+  },
+  drawer: {
+    position: 'relative',
+    backgroundColor: drawerColor,
+    height: '100%'
   },
   content: {
-      backgroundColor: '#FFFFFF',
-      width: '100%',
-      height: '100%',
-      marginTop: 66,
-      overflowY: 'scroll'
+    backgroundColor: '#FFFFFF',
+    marginTop: 66,
+    overflowY: 'scroll',
+    width: '100%'
   },
   routes: {
       minHeight: 'calc(100% - 75px)'
@@ -103,7 +110,7 @@ const styles = theme => ({
   },
   button: {
       margin: theme.spacing.unit,
-      color: 'red',
+      color: 'black',
       backgroundColor: 'white'
   },
   loginComponent: {
@@ -125,7 +132,6 @@ const styles = theme => ({
     marginRight: 'auto',
     width: '400px',
     textAlign: 'center'
-    /*whatever width you want*/
   },
   loginButton: {
     marginTop: '30px'
@@ -141,6 +147,16 @@ const styles = theme => ({
     width: '55px',
     height: '50px',
     marginTop: '10px'
+  },
+  listText: {
+    color: 'white'
+  },
+  linkButton: {
+    backgroundColor: '#3f51b5',
+    borderRadius: '7px',
+    margin: '0 auto',
+    marginBottom: '5px',
+    width: '96%',
   }
 });
 
@@ -175,20 +191,22 @@ class App extends Component {
   };
 
   checkToken = (callback) => {
+    var message = '';
+
     firebase.auth().currentUser.getIdToken(true).then((idToken) => {
       if (typeof callback === "function") 
         callback();
     }).catch((error) => {
-        /* console.log(error) */
-        this.setState({ open: true, message: 'La sesión ha caducado, vuelva a ingresar'});
+        console.log(error)
+        message = error.code === 'auth/user-token-expired' ? 'La sesión ha caducado, vuelva a ingresar' : 'Ha ocurrido un error';
+
+        this.setState({ open: true, message: message});
     })
   }
 
   componentWillMount() {
     mql.addListener(this.mediaQueryChanged.bind(this));
     this.setState({ mql: mql, docked: mql.matches });
-
-    
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -228,33 +246,36 @@ class App extends Component {
 
   loginComponent = (classes) => {
     return (
-      <div className={classes.outer}>
-        <div className={classes.middle}>
-          <div className={classes.inner}>
-            <Typography variant="title" gutterBottom>
-              CARITAS GDL
-            </Typography>
-            <Typography variant="title" gutterBottom>
-              ESTUDIOS SOCIOECONOMICOS
-            </Typography>
-            <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=b5b0256f-b99e-48d6-94a8-bb723663b1bb'} alt="CÁRITAS DE GUADALAJARA" />
-            <br/>
-            <TxtField id={"email"} nombre={"Email"} width={70} term={"%"} onChange={this.handleChange} state={this.state}/>
-            <br/>
-            <TextField
-              id={'password'}
-              label={'Password'}
-              placeholder={'Password'}
-              type={'password'}
-              className={classes.textField}
-              onChange={(event) => this.handleChange('password', event.target.value)}
-              onKeyPress={this.loginEnter}
-              value={this.state.password} />
-            <br/>
+      <div>
+        <div style={{backgroundImage: "url(" + background + ")", position: 'absolute', opacity: '0.7', height: '100%', width: '100%'}}></div>
+        <div className={classes.outer}>
+          <div className={classes.middle}>
+            <div className={classes.inner}>
+              <Typography variant="title" gutterBottom>
+                CARITAS GDL
+              </Typography>
+              <Typography variant="title" gutterBottom>
+                ESTUDIOS SOCIOECONOMICOS
+              </Typography>
+              <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=fa2effcc-3778-409e-816a-e6dd4452ab2e'} alt="CÁRITAS DE GUADALAJARA" />
+              <br/>
+              <TxtField id={"email"} nombre={"Email"} width={70} term={"%"} onChange={this.handleChange} state={this.state}/>
+              <br/>
+              <TextField
+                id={'password'}
+                label={'Password'}
+                placeholder={'Password'}
+                type={'password'}
+                className={classes.textField}
+                onChange={(event) => this.handleChange('password', event.target.value)}
+                onKeyPress={this.loginEnter}
+                value={this.state.password} />
+              <br/>
 
-            <Button variant="contained" color="primary" aria-label='login' onClick={this.login} className={classes.loginButton}>
-              Ingresar
-            </Button>
+              <Button variant="contained" color="primary" aria-label='login' onClick={this.login} className={classes.loginButton}>
+                Ingresar
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -264,34 +285,26 @@ class App extends Component {
   main = (classes) => {
     const { anchor } = this.state;
 
-    /* if (this.state.user) {
-      console.log(this.state.user)
-      icon = <Avatar src={this.state.user.photoURL} />
-      title = this.state.user.displayName;
-      elementRight = <FlatButton label="Sign-Out" onClick={(event) => this.logout(event)} />;
-    } */
-
     const drawer = (
       <div>
         <div>
-          <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center' }} >
-            <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=b5b0256f-b99e-48d6-94a8-bb723663b1bb'} alt="CÁRITAS DE GUADALAJARA" />
+          <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center', backgroundColor: '#3f51b5' }} >
+            <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=fa2effcc-3778-409e-816a-e6dd4452ab2e'} alt="CÁRITAS DE GUADALAJARA" />
           </div>
-          <Divider />
-          <List>
+
+          <List style={{backgroundColor: drawerColor, color: 'white'}}>
             {
               Routes.map((route, index) =>
                 route.linkTo &&
                 <Link key={index} className={classes.link} to={route.linkTo}>
-                  <ListItem onClick={this.handleDrawerToggle}/* button onClick={this.handleDrawerToggle} */>
-                    <ListItemIcon>{route.icon()}</ListItemIcon>
+                  <ListItem className={classes.linkButton} onClick={this.handleDrawerToggle}/* button onClick={this.handleDrawerToggle} */>
+                    <ListItemIcon>{route.icon}</ListItemIcon>
 
-                    {<ListItemText primary={route.iconText} />}
-                    {/* <Button variant="contained" color="primary" style={{width:'100%'}}>
-                      {route.iconText}
-                    </Button> */}
-                    
-                    {/* <ListItemText primary={route.iconText} /> */}
+                    <ListItemText primary={route.iconText} 
+                      classes={{
+                        primary: classes.listText }
+                      }
+                    />
                   </ListItem>
                 </Link>
               )
@@ -305,7 +318,7 @@ class App extends Component {
       <Router>
         <div className={classes.root}>
           <div className={classes.appFrame}>
-            <AppBar className={classes.appBar}>
+            <AppBar position="fixed" className={classes.appBar}>
               <Toolbar>
                 <IconButton color='default' aria-label='open drawer' onClick={this.handleDrawerToggle} className={classes.navIconHide}>
                   <MenuIcon />
@@ -315,36 +328,38 @@ class App extends Component {
                   <Route key={index} path={route.path} exact={route.exact} component={route.title} />
                 ))}
                 <div className={classes.spacer}></div>
-                <IconButton /* variant="contained" color="primary" */ aria-label='logout' onClick={this.logout} className={classes.button}>
+                <IconButton aria-label='logout' onClick={this.logout} className={classes.button}>
                   <PowerSettingsNew/>
                 </IconButton>
               </Toolbar>
             </AppBar>
-            <Hidden mdUp>
-              <Drawer type='temporary' open={this.state.mobileOpen} classes={{ paper: classes.drawerPaper }} onClose={this.handleDrawerToggle} ModalProps={{
-                keepMounted: true // Better open performance on mobile.
-              }}>
+
+            <div className={classes.drawer}>
+              <Hidden mdUp>
+                <Drawer type='temporary' open={this.state.mobileOpen} classes={{ paper: classes.drawerPaper }} onClose={this.handleDrawerToggle} ModalProps={{
+                  keepMounted: true
+                }}>
+                  {drawer}
+                </Drawer>
+              </Hidden>
+              <Drawer 
+                variant='permanent' 
+                classes={{
+                  paper: classes.drawerPaper,
+                }}
+                style={this.state.docked === true ? { display: "flex" } : { display: "none" }}
+                anchor={anchor}>
                 {drawer}
               </Drawer>
-            </Hidden>
-            <Drawer 
-              variant='permanent' 
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-              style={this.state.docked === true ? { display: "flex" } : { display: "none" }}
-              anchor={anchor} /* open */ /* style={this.state.docked === true ? { display: "flex" } : { display: "none" }} */ /* classes={{ paper: classes.drawerPaper }} */>
-              {drawer}
-            </Drawer>
+            </div>
+
             <main className={classes.content}>
               <div className={classes.routes}>
                 <Switch>
-                  <Route path='/' exact={true} /* component={Inicio} */ render={(props) => <Inicio {...props} checkToken={this.checkToken}/>} />
-                  <Route path='/socioeconomico' /* exact={true}  */render={(props) => <Socioeconomico {...props} checkToken={this.checkToken}/>} />
-                  <Route path='/transporte' /* exact={true}  */render={(props) => <Transporte {...props} checkToken={this.checkToken}/>} />
-                  <Route path='/graficas' /* exact={true}  */render={(props) => <Graficas {...props} checkToken={this.checkToken}/>} />
-                  {/* <Route path='/transition' exact={true} render={() => <Transition ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} />
-                  <Route path='/customimage' exact={true} render={() => <CustomImage ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} /> */}
+                  <Route path='/' exact={true} render={(props) => <Inicio {...props} checkToken={this.checkToken} user={this.state.user}/>} />
+                  <Route path='/socioeconomico' render={(props) => <Socioeconomico {...props} checkToken={this.checkToken} user={this.state.user}/>} />
+                  <Route path='/transporte' render={(props) => <Transporte {...props} checkToken={this.checkToken} user={this.state.user}/>} />
+                  <Route path='/graficas' render={(props) => <Graficas {...props} checkToken={this.checkToken} user={this.state.user}/>} />
                 </Switch>
               </div>
             </main>
@@ -370,9 +385,8 @@ class App extends Component {
           ContentProps={{
               'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id">{message}</span>}
+          message={message}
         />
-        {/* console.log('user: '+this.state.user) */}
         {this.state.user !== undefined ? this.state.user !== '' ? this.main(classes) : this.loginComponent(classes) : <div/>}
       </div>
     )

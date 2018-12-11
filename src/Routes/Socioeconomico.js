@@ -48,7 +48,7 @@ const styles = theme => ({
         margin: theme.spacing.unit,
     },
     container: {
-        display: 'flex',
+        /* display: 'flex', */
         flexWrap: 'wrap',
     },
     textField: {
@@ -104,7 +104,9 @@ class Socioeconomico extends Component {
         if(user !== undefined){
             var caso = {};
             for (var i = 0; i < Object.keys(user.val).length; i++) {
-                caso[Object.keys(user.val)[i]] = Object.values(user.val)[i];
+                /* caso[Object.keys(user.val)[i]] = Object.values(user.val)[i]; */
+                caso[Object.keys(user.val)[i]] = Object.keys(user.val).map(i => user.val[i])[i];
+                /* Object.keys(deneme).map(itm => deneme[itm]); */
             }
 
             this.setState({caso});
@@ -143,7 +145,7 @@ class Socioeconomico extends Component {
         
         fcantidad += '<div style="margin-top: 25px">'+
             '<p style="width: 100%">OBSERVACIONES </p>'+
-            '<textarea rows="'+this.resizeTextArea(props.CFObservaciones, 2)+'" style="width: 100%; margin-top: -15px" >'+props.CFObservaciones+'</textarea>'+
+            '<textarea rows="'+this.resizeTextArea(props.CFObservaciones, 2)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden" >'+props.CFObservaciones+'</textarea>'+
         '</div>'
         
         return fcantidad;
@@ -185,7 +187,7 @@ class Socioeconomico extends Component {
         }
 
         vcantidad += '</table>'+
-        '<p style="margin-bottom: 0px">OBSERVACIONES</p><textarea rows="'+this.resizeTextArea(props.VVObservaciones, 2)+'" style="width: 100%" >'+props.VVObservaciones+'</textarea>';
+        '<p style="margin-bottom: 0px">OBSERVACIONES</p><textarea rows="'+this.resizeTextArea(props.VVObservaciones, 2)+'" style="width: 100%; overflow-y: hidden" >'+props.VVObservaciones+'</textarea>';
 
         return vcantidad;
     }
@@ -193,15 +195,15 @@ class Socioeconomico extends Component {
     tablaOtros = (props) => {
         var procedencia = props.OTProcedencia === 'OTROS' ? props.OTProcedenciaOt : props.OTProcedencia;
         var otros = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">OTROS</p>'+
-        '<p style="width: 50%">REFERENCIA CON COLATERALES  </p><textarea rows="'+(props.OTReferenciasC ? this.resizeTextArea(props.OTReferenciasC, 2) : 1)+'" style="width: 100%; margin-top: -15px" >'+(props.OTReferenciasC ? props.OTReferenciasC : '')+'</textarea>'+
-        '<p style="width: 50%">HISTORIA SOCIAL </p><textarea rows="'+(props.OTHistoriaS ? this.resizeTextArea(props.OTHistoriaS, 2) : 1)+'" style="width: 100%; margin-top: -15px" >'+(props.OTHistoriaS ? props.OTHistoriaS : '')+'</textarea>'+
-        '<p style="width: 50%">DIAGNOSTICO SOCIO-ECONOMICO </p><textarea rows="'+(props.OTDiagnosticoSE ? this.resizeTextArea(props.OTDiagnosticoSE, 2) : 1)+'" style="width: 100%; margin-top: -15px" >'+(props.OTDiagnosticoSE ? props.OTDiagnosticoSE : '')+'</textarea>'+
+        '<p style="width: 50%">REFERENCIA CON COLATERALES  </p><textarea rows="'+(props.OTReferenciasC ? this.resizeTextArea(props.OTReferenciasC, 2) : 1)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden">'+(props.OTReferenciasC ? props.OTReferenciasC : '')+'</textarea>'+
+        '<p style="width: 50%">HISTORIA SOCIAL </p><textarea rows="'+(props.OTHistoriaS ? this.resizeTextArea(props.OTHistoriaS, 2) : 1)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden">'+(props.OTHistoriaS ? props.OTHistoriaS : '')+'</textarea>'+
+        '<p style="width: 50%">DIAGNOSTICO SOCIO-ECONOMICO </p><textarea rows="'+(props.OTDiagnosticoSE ? this.resizeTextArea(props.OTDiagnosticoSE, 2) : 1)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden">'+(props.OTDiagnosticoSE ? props.OTDiagnosticoSE : '')+'</textarea>'+
         '<div style="display: inline-flex; margin: 10px 0px">'+
             '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">PRONOSTICO </p><input style="margin-right: 10px" value="'+props.OTPronostico+'"/><br>'+
         '</div>'+
-        '<p style="width: 50%">PROVEEDOR</p><textarea rows="'+(props.OTProveedor ? this.resizeTextArea(props.OTProveedor, 2) : 1)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+(props.OTProveedor ? props.OTProveedor : '')+'</textarea>'+ 
-        '<p style="width: 50%">PROCEDENCIA</p><textarea rows="'+(procedencia ? this.resizeTextArea(procedencia, 2) : 1)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px" >'+(procedencia ? procedencia : '')+'</textarea>'+ 
-        '<p style="width: 50%">PLAN DE INTERVENCION </p><textarea rows="'+this.resizeTextArea(props.OTPlanI, 2)+'" style="width: 100%; margin-top: -15px" >'+props.OTPlanI+'</textarea>'+
+        '<p style="width: 50%">PROVEEDOR</p><textarea rows="'+(props.OTProveedor ? this.resizeTextArea(props.OTProveedor, 2) : 1)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px; overflow-y: hidden">'+(props.OTProveedor ? props.OTProveedor : '')+'</textarea>'+ 
+        '<p style="width: 50%">PROCEDENCIA</p><textarea rows="'+(procedencia ? this.resizeTextArea(procedencia, 2) : 1)+'" style="width: 100%; margin-top: -15px; margin-bottom: 15px; overflow-y: hidden">'+(procedencia ? procedencia : '')+'</textarea>'+ 
+        '<p style="width: 50%">PLAN DE INTERVENCION </p><textarea rows="'+this.resizeTextArea(props.OTPlanI, 2)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden">'+props.OTPlanI+'</textarea>'+
 
         '<div style="display: flex; margin: 10px 0px">'+
             '<div style="width: 50%; text-align: right">'+
@@ -214,10 +216,10 @@ class Socioeconomico extends Component {
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO ARZOBISPADO</p><input style="margin-right: 10px" value="'+(props.OTFArzobispado ? props.OTFArzobispado : '')+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO OLGA</p><input style="margin-right: 10px" value="'+(props.OTFOlga ? props.OTFOlga : '')+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONANTE</p><input style="margin-right: 10px" value="'+(props.OTDonante ? props.OTDonante : '')+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">APORTACION BENEFICIADO</p><input value="'+(props.OTABeneficiado ? props.OTABeneficiado : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">APORTACION BENEFICIADO</p><input style="margin-right: 10px" value="'+(props.OTABeneficiado ? props.OTABeneficiado : '')+'"/><br>'+
             '</div>'+
         '</div>'+
-        '<p style="width: 50%">NOTAS DE SEGUIMIENTO </p><textarea rows="'+(props.OTNotasSE ? this.resizeTextArea(props.OTNotasSE, 2) : 1)+'" style="width: 100%; margin-top: -15px" >'+(props.OTNotasSE ? props.OTNotasSE : '')+'</textarea>';
+        '<p style="width: 50%">NOTAS DE SEGUIMIENTO </p><textarea rows="'+(props.OTNotasSE ? this.resizeTextArea(props.OTNotasSE, 2) : 1)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden">'+(props.OTNotasSE ? props.OTNotasSE : '')+'</textarea>';
     
         return otros;
     }
@@ -257,10 +259,10 @@ class Socioeconomico extends Component {
 
         mcantidad += '</table>'+
             '<p style="width: 170px; display: inline-flex">CANTIDAD DE HEMODIALISIS</p><input style="width: 50px;" value="'+props.SLHemodialisis+'"/><br>'+
-            '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.SLObservaciones, 2)+'" style="width: 100%; margin-top: -15px" >'+props.SLObservaciones+'</textarea>'+
+            '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.SLObservaciones, 2)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden">'+props.SLObservaciones+'</textarea>'+
             '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px;">ESTADO ACTUAL DE SALUD</p>'+
-            '<p style="width: 50%">CASO </p><textarea rows="'+this.resizeTextArea(props.SLCaso, 2)+'" style="width: 100%; margin-top: -15px" >'+props.SLCaso+'</textarea>'+
-            '<p style="width: 50%">FAMILIA </p><textarea rows="'+this.resizeTextArea(props.SLFamilia, 2)+'" style="width: 100%; margin-top: -15px" >'+props.SLFamilia+'</textarea>';
+            '<p style="width: 50%">CASO </p><textarea rows="'+this.resizeTextArea(props.SLCaso, 2)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden" >'+props.SLCaso+'</textarea>'+
+            '<p style="width: 50%">FAMILIA </p><textarea rows="'+this.resizeTextArea(props.SLFamilia, 2)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden" >'+props.SLFamilia+'</textarea>';
 
         return mcantidad;
     }
@@ -275,20 +277,18 @@ class Socioeconomico extends Component {
 
         var fcantidad = '<div style="display: flex">'+
         '<div style="width: 50%; text-align:right">'+
-            '<p style="width: 100px; display: contents">FECHA DE APLICACION </p><input value="'+props.FMFecha+'"/><br>'+
-            '<p style="width: 100px; display: contents">Trabajadora Social </p><input value="'+props.FMTrabajadora+'"/>'+
+            '<p style="width: 100px; display: inline">FECHA DE APLICACION </p><input value="'+props.FMFecha+'"/><br>'+
+            '<p style="width: 100px; display: inline">Trabajadora Social </p><input value="'+props.FMTrabajadora+'"/>'+
         '</div>'+
         '<div style="width: 50%; text-align:right">'+
-            '<p style="width: 100px; display: contents">NO. DE CASO </p><input value="'+props.FMNumero+'"/><br>'+
-            '<p style="display: contents">APOYOS </p><textarea rows="'+this.resizeTextArea(apoyos, 1)+'" style="width: 50%;">'+apoyos+'</textarea>'+
+            '<p style="width: 100px; display: inline">NO. DE CASO </p><input value="'+props.FMNumero+'"/><br>'+
+            '<p style="display: inline">APOYOS </p><textarea rows="'+this.resizeTextArea(apoyos, 1)+'" style="width: 50%;">'+apoyos+'</textarea>'+
         '</div></div>';
 
         return fcantidad;
     }
 
     print = (event, props) => {
-        event.preventDefault();
-
         if(this.checkFields()){
             return;
         }
@@ -304,27 +304,27 @@ class Socioeconomico extends Component {
         const datosg = '<p style="width: 100%; text-align: center; background-color: #4a76c5; color: white; margin-top: 30px; -webkit-print-color-adjust: exact">DATOS GENERALES</p>'+
         '<div style="display:flex">'+
             '<div style="width: 50%; text-align:right">'+
-                '<p style="display: contents">NOMBRE DEL CASO </p><textarea rows="'+this.resizeTextArea(props.DGCaso, 1)+'" style="width: 60%;">'+props.DGCaso+'</textarea><br>'+
-                '<p style="display: contents">CALLE </p><textarea rows="'+this.resizeTextArea(props.DGCalle, 1)+'" style="width: 50%;">'+props.DGCalle+'</textarea><br>'+
-                '<p style="width: 100px; display: contents">COLONIA </p><input style="width: 50%;" value="'+props.DGColonia+'"/><br>'+
-                '<p style="width: 100px; display: contents">MUNICIPIO </p><input style="width: 50%;" value="'+props.DGMunicipio+'"/><br>'+
-                '<p style="width: 100px; display: contents">TELEFONO </p><input style="width: 50%;" value="'+(props.DGTelefono ? props.DGTelefono : '')+'"/><br>'+
-                '<p style="width: 100px; display: contents">TEL. RECADOS </p><input style="width: 50%;" value="'+(props.DGTelefonoR ? props.DGTelefonoR : '')+'"/><br>'+
-                '<p style="width: 100px; display: contents">OCUPACION </p><input style="width: 50%;" value="'+props.DGOcupacion+'"/><br>'+
-                '<p style="display: contents">PARROQUIA </p><textarea rows="'+this.resizeTextArea(props.DGParroquia, 1)+'" style="width: 50%;">'+props.DGParroquia+'</textarea><br>'+
-                '<p style="display: contents">VICARIA </p><textarea rows="'+this.resizeTextArea(props.DGVicaria, 1)+'" style="width: 80%;">'+props.DGVicaria+'</textarea><br>'+
-                '<p style="width: 100px; display: contents">PARENTESCO </p><input style="width: 50%;" value="'+props.DGParentesco+'"/>'+
+                '<p style="display: inline">NOMBRE DEL CASO </p><textarea rows="'+this.resizeTextArea(props.DGCaso, 1)+'" style="width: 60%; overflow-y: hidden">'+props.DGCaso+'</textarea><br>'+
+                '<p style="display: inline">CALLE </p><textarea rows="'+this.resizeTextArea(props.DGCalle, 1)+'" style="width: 50%; overflow-y: hidden">'+props.DGCalle+'</textarea><br>'+
+                '<p style="width: 100px; display: inline">COLONIA </p><input style="width: 50%;" value="'+props.DGColonia+'"/><br>'+
+                '<p style="width: 100px; display: inline">MUNICIPIO </p><input style="width: 50%;" value="'+props.DGMunicipio+'"/><br>'+
+                '<p style="width: 100px; display: inline">TELEFONO </p><input style="width: 50%;" value="'+(props.DGTelefono ? props.DGTelefono : '')+'"/><br>'+
+                '<p style="width: 100px; display: inline">TEL. RECADOS </p><input style="width: 50%;" value="'+(props.DGTelefonoR ? props.DGTelefonoR : '')+'"/><br>'+
+                '<p style="width: 100px; display: inline">OCUPACION </p><input style="width: 50%;" value="'+props.DGOcupacion+'"/><br>'+
+                '<p style="display: inline">PARROQUIA </p><textarea rows="'+this.resizeTextArea(props.DGParroquia, 1)+'" style="width: 50%; overflow-y: hidden">'+props.DGParroquia+'</textarea><br>'+
+                '<p style="display: inline">VICARIA </p><textarea rows="'+this.resizeTextArea(props.DGVicaria, 1)+'" style="width: 80%; overflow-y: hidden">'+props.DGVicaria+'</textarea><br>'+
+                '<p style="width: 100px; display: inline">PARENTESCO </p><input style="width: 50%;" value="'+props.DGParentesco+'"/>'+
             '</div>'+
             '<div style="width: 50%; text-align:right">'+
-                '<p style="width: 100px; display: contents">EDAD</p><input style="width: 20%;" value="'+props.DGEdad+'"/><br>'+
-                '<p style="display: contents">CRUCE DE CALLES</p><textarea rows="'+this.resizeTextArea(props.DGCruce, 1)+'" style="width: 70%;">'+props.DGCruce+'</textarea><br>'+
-                '<p style="width: 100px; display: contents">C.P. </p><input value="'+props.DGCP+'"/><br>'+
-                '<p style="width: 100px; display: contents">ESTADO </p><input value="'+props.DGEstado+'"/><br>'+
-                '<p style="width: 100px; display: contents">CEL </p><input value="'+(props.DGCelular ? props.DGCelular : '')+'"/><br>'+
-                '<p style="width: 100px; display: contents">ESTADO CIVIL </p><input style="width: 50%;" style="width: 60%;" value="'+props.DGECivil+'"/><br>'+
-                '<p style="width: 100px; display: contents">ESCOLARIDAD </p><input style="width: 50%;" value="'+(props.DGEscolaridad ? props.DGEscolaridad : '')+'"/><br>'+
-                '<p style="display: contents">DECANATO </p><textarea rows="'+this.resizeTextArea(props.DGDecanato, 1)+'" style="width: 70%;">'+props.DGDecanato+'</textarea><br>'+
-                '<p style="display: contents">PERSONA ENTREVISTADA </p><textarea rows="'+this.resizeTextArea(props.DGPersona, 1)+'" style="width: 50%;">'+props.DGPersona+'</textarea>'+
+                '<p style="width: 100px; display: inline">EDAD</p><input style="width: 20%;" value="'+props.DGEdad+'"/><br>'+
+                '<p style="display: inline">CRUCE DE CALLES</p><textarea rows="'+this.resizeTextArea(props.DGCruce, 1)+'" style="width: 70%; overflow-y: hidden">'+props.DGCruce+'</textarea><br>'+
+                '<p style="width: 100px; display: inline">C.P. </p><input value="'+props.DGCP+'"/><br>'+
+                '<p style="width: 100px; display: inline">ESTADO </p><input value="'+props.DGEstado+'"/><br>'+
+                '<p style="width: 100px; display: inline">CEL </p><input value="'+(props.DGCelular ? props.DGCelular : '')+'"/><br>'+
+                '<p style="width: 100px; display: inline">ESTADO CIVIL </p><input style="width: 50%;" style="width: 60%;" value="'+props.DGECivil+'"/><br>'+
+                '<p style="width: 100px; display: inline">ESCOLARIDAD </p><input style="width: 50%;" value="'+(props.DGEscolaridad ? props.DGEscolaridad : '')+'"/><br>'+
+                '<p style="display: inline">DECANATO </p><textarea rows="'+this.resizeTextArea(props.DGDecanato, 1)+'" style="width: 70%; overflow-y: hidden">'+props.DGDecanato+'</textarea><br>'+
+                '<p style="display: inline">PERSONA ENTREVISTADA </p><textarea rows="'+this.resizeTextArea(props.DGPersona, 1)+'" style="width: 50%; overflow-y: hidden">'+props.DGPersona+'</textarea>'+
             '</div>'+
         '</div>';
 
@@ -343,7 +343,7 @@ class Socioeconomico extends Component {
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">OTROS INGRESOS </p><input style="width: 20%;" value="'+props.DEIngresoO+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TOTAL DE INGRESOS </p><input style="width: 20%;" value="'+ingresoT+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">DIFERENCIA </p><input style="width: 20%;" value="'+diferencia+'"/><br>'+
-                '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.DEObservaciones, 2)+'" style="width: 95%; margin-top: -15px" >'+props.DEObservaciones+'</textarea>'+
+                '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.DEObservaciones, 2)+'" style="width: 95%; margin-top: -15px; overflow-y: hidden" >'+props.DEObservaciones+'</textarea>'+
             '</div>'+
             '<div style="width: 50%">'+
                 '<p style="width: 100%;text-align: center;">EGRESOS MENSUALES</p>'+
@@ -381,9 +381,9 @@ class Socioeconomico extends Component {
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TIPOS DE APOYO </p><input style="width: 20%;" value="'+(props.ALTiposA ? props.ALTiposA : '')+'"/><br>'+
             '</div>'+
         '</div>'+
-        '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.ALObservaciones, 2)+'" style="width: 100%; margin-top: -15px" >'+props.ALObservaciones+'</textarea>';
+        '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.ALObservaciones, 2)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden" >'+props.ALObservaciones+'</textarea>';
 
-        const firmas = '<div style="padding-top: 80px; display: flex">'+
+        const firmas = '<br/><br/><br/><br/><br/><div style="display: flex">'+
             '<div style="width: 33%; text-align: center">'+
                 '<hr style="border-color: black; width:80%">'+
                 '<p style="display: inline-flex; margin-bottom: 8px">FIRMA DEL COORDINADOR</p>'+
@@ -423,8 +423,6 @@ class Socioeconomico extends Component {
     }
 
     modify = (event) => {
-        event.preventDefault();
-
         if(this.checkFields()){
             return;
         }
@@ -440,7 +438,7 @@ class Socioeconomico extends Component {
     }
     
     save = (event) => {
-        event.preventDefault();
+        /* event.preventDefault(); */
         let casos = {};
         
         if(this.checkFields()){
@@ -481,7 +479,7 @@ class Socioeconomico extends Component {
             n = value.split("\n").length;
         }
 
-        return n;
+        return n > 1 ? n + 1 : n;
     }
 
     checkFields = () => {
@@ -495,8 +493,7 @@ class Socioeconomico extends Component {
             'SLCaso', 'SLFamilia', 'SLObservaciones', 'VVBanos', 'VVCocina', 'VVComedor', 'VVCondicion', 
             'VVDormitorios', 'VVMenaje', 'VVMuro', 'VVObservaciones', 'VVPiso', 'VVSala', 'VVTecho', 'VVZona' ]; */
         
-            const Fields = [ 
-            'DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 
+        const Fields = ['DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 
             'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 'FMTImpresion',
             'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTPresupuesto', 'OTHistoriaS', 'OTPronostico', 'OTProveedor',
             'OTProcedencia' ];
@@ -637,6 +634,7 @@ class Socioeconomico extends Component {
                 </div>
             );
         }
+        
         return rows;
     }
 
@@ -745,17 +743,6 @@ class Socioeconomico extends Component {
                         </Button>
                     </Tooltip>
 
-                    {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.print(event, this.state.caso)}> 
-                        Imprimir
-                    </Button>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.nuevo(event)}> 
-                        Nuevo
-                    </Button> */}
-                    {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => modifying === 1 ? this.modify(event) : this.save(event)}> 
-                        Guardar
-                    </Button> */}
-                    
-
                     {/* FORMATO */}
                     <h1 className={classes.title}>FORMATO</h1>
                     <div className={classes.container}>
@@ -777,9 +764,7 @@ class Socioeconomico extends Component {
                         <TxtField nombre="Cruce de calles" id="DGCruce" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Colonia" id="DGColonia" required onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Codigo postal" id="DGCP" required onChange={this.handleChange} state={this.state.caso}/>
-                        {/* <TxtField nombre="Municipio" id="DGMunicipio" required onChange={this.handleChange} state={this.state.caso}/> */}
                         <Autocomplete nombre={"Municipio"} id={"DGMunicipio"} required options={Municipios} onChange={this.handleChange} state={this.state.caso}/>
-                        {/* <TxtField nombre="Estado" id="DGEstado" required onChange={this.handleChange} state={this.state.caso}/> */}
                         <Autocomplete nombre={"Estado"} id={"DGEstado"} required options={Estados} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Telefono" id="DGTelefono" onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Celular" id="DGCelular" onChange={this.handleChange} state={this.state.caso}/>
@@ -788,21 +773,20 @@ class Socioeconomico extends Component {
                         <TxtField nombre="Ocupacion" id="DGOcupacion" required onChange={this.handleChange} state={this.state.caso}/>
                         <Autocomplete id={"DGEscolaridad"} nombre={"Escolaridad"} options={Escolaridad} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Parroquia" id="DGParroquia" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
-                        {/* <TxtField nombre="Decanato" id="DGDecanato" required multiline={true} onChange={this.handleChange} state={this.state.caso}/> */}
                         <Autocomplete nombre={"Decanato"} id={"DGDecanato"} required multiline={true} options={Decanatos} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Vicaria" id="DGVicaria" required multiline onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Persona Entrevistada" id="DGPersona" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
-                        {/* <TxtField nombre="Parentesco" id="DGParentesco" required onChange={this.handleChange} state={this.state.caso}/> */}
                         <Autocomplete nombre={"Parentesco"} id={"DGParentesco"} required options={Parentesco} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
-
                     <br/>
 
                     {/* COMPOSICION FAMILIAR */}
-                    <div className={classes.container}>
+                    <div className={classes.container} style={{display: 'inline'}}>
                         <h1 className={classes.title}>COMPOSICION FAMILIAR</h1>
                         <TxtField nombre={"Cantidad"} id={"fcantidad"} width={80} onChange={this.handleChange} state={this.state.caso}/>
-                        {this.cfamiliar()}
+                        <div>
+                            {this.cfamiliar()}
+                        </div>
                         <TxtField nombre={"Observaciones"} id={"CFObservaciones"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
 
@@ -810,7 +794,7 @@ class Socioeconomico extends Component {
 
                     {/* DATOS ECONOMICOS */}
                     <h1 className={classes.title}>DATOS ECONOMICOS</h1>
-                    <div className={classes.container}>
+                    <div className={classes.container} /* style={{display: 'flex'}} */>
 
                         {/* INGRESOS MENSUALES */}
                         <div style={{width:'50%'}}>
@@ -953,13 +937,6 @@ class Socioeconomico extends Component {
                         <TxtField nombre={"Aportacion Beneficiado"} id={"OTABeneficiado"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Notas de seguimiento y/o Evolucion"} id={"OTNotasSE"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
-
-                    {/* <div className={classes.container}>
-                        <Button variant="contained" color="primary" className={classes.button} onClick={(event) => modifying === 1 ? this.modify(event) : this.save(event)}> 
-                            Guardar
-                        </Button>
-                    </div> */}
-
                 </div>
             </div>
         )

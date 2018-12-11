@@ -32,7 +32,7 @@ const styles = theme => ({
         margin: theme.spacing.unit,
     },
     container: {
-        display: 'flex',
+        /* display: 'flex', */
         flexWrap: 'wrap',
     },
     textField: {
@@ -45,9 +45,12 @@ const styles = theme => ({
     fixed: {
         position: 'fixed',
         width: '50px',
-        height: '50px'/* ,
-        backgroundColor: '#8BC34A',
-        color: 'white' */
+        height: '50px'
+    },
+    title: {
+        backgroundColor: '#5c70d2', 
+        color: 'white',
+        width: '95%'
     }
 });
 
@@ -75,7 +78,8 @@ class Transporte extends Component {
         if(user !== undefined){
             var caso = {};
             for (var i = 0; i < Object.keys(user.val).length; i++) {
-                caso[Object.keys(user.val)[i]] = Object.values(user.val)[i];
+                /* caso[Object.keys(user.val)[i]] = Object.values(user.val)[i]; */
+                caso[Object.keys(user.val)[i]] = Object.keys(user.val).map(i => user.val[i])[i];
             }
 
             this.setState({caso});
@@ -85,13 +89,13 @@ class Transporte extends Component {
     tablaFormato = (props) => {
         var fcantidad = '<div style="display: flex">'+
         '<div style="width: 50%; text-align:right">'+
-            '<p style="width: 100px; display: contents">FECHA DE APLICACION </p><input value="'+props.FMFecha+'"/><br>'+
-            '<p style="width: 100px; display: contents">DERIVADO POR </p><input value="'+props.FMDerivado+'"/><br>'+
-            '<p style="width: 100px; display: contents">TRABAJADORA SOCIAL </p><input value="'+props.FMTrabajadora+'"/>'+
+            '<p style="width: 100px; display: inline">FECHA DE APLICACION </p><input value="'+props.FMFecha+'"/><br>'+
+            '<p style="width: 100px; display: inline">DERIVADO POR </p><input value="'+props.FMDerivado+'"/><br>'+
+            '<p style="width: 100px; display: inline">TRABAJADORA SOCIAL </p><input value="'+props.FMTrabajadora+'"/>'+
         '</div>'+
         '<div style="width: 50%; text-align:right">'+
-            '<p style="width: 100px; display: contents">NO. DE CASO </p><input value="'+props.FMNumero+'"/><br>'+
-            '<p style="width: 100px; display: contents">FRECUENCIA </p><input value="'+props.FMFrecuencia+'"/>'+
+            '<p style="width: 100px; display: inline">NO. DE CASO </p><input value="'+props.FMNumero+'"/><br>'+
+            '<p style="width: 100px; display: inline">FRECUENCIA </p><input value="'+props.FMFrecuencia+'"/>'+
         '</div></div>';
 
         return fcantidad;
@@ -108,22 +112,22 @@ class Transporte extends Component {
         var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">DATOS GENERALES</p>'+
             '<div style="display:flex">'+
             '<div style="width: 50%; text-align:right">'+
-                '<p style="display: contents">NOMBRE </p><textarea rows="'+this.resizeTextArea(props.DGCaso, 1)+'" style="width: 50%;">'+props.DGCaso+'</textarea><br>'+
-                '<p style="width: 100px; display: contents">ESTADO CIVIL </p><input style="width: 50%;" value="'+props.DGECivil+'"/><br>'+
-                '<p style="width: 100px; display: contents">ESCOLARIDAD </p><input style="width: 50%;" value="'+escolaridad+'"/><br>'+
-                '<p style="display: contents">PARROQUIA </p><textarea rows="'+this.resizeTextArea(props.DGParroquia, 1)+'" style="width: 50%;">'+props.DGParroquia+'</textarea><br>'+
-                '<p style="display: contents">VICARIA </p><textarea rows="'+this.resizeTextArea(props.DGVicaria, 1)+'" style="width: 50%;">'+props.DGVicaria+'</textarea><br>'+
-                '<p style="width: 100px; display: contents">COLONIA </p><input style="width: 50%;" value="'+colonia+'"/><br>'+
-                '<p style="width: 100px; display: contents">ESTADO </p><input value="'+estado+'"/><br>'+
+                '<p style="display: inline">NOMBRE </p><textarea rows="'+this.resizeTextArea(props.DGCaso, 1)+'" style="width: 50%;">'+props.DGCaso+'</textarea><br>'+
+                '<p style="width: 100px; display: inline">ESTADO CIVIL </p><input style="width: 50%;" value="'+props.DGECivil+'"/><br>'+
+                '<p style="width: 100px; display: inline">ESCOLARIDAD </p><input style="width: 50%;" value="'+escolaridad+'"/><br>'+
+                '<p style="display: inline">PARROQUIA </p><textarea rows="'+this.resizeTextArea(props.DGParroquia, 1)+'" style="width: 50%;">'+props.DGParroquia+'</textarea><br>'+
+                '<p style="display: inline">VICARIA </p><textarea rows="'+this.resizeTextArea(props.DGVicaria, 1)+'" style="width: 50%;">'+props.DGVicaria+'</textarea><br>'+
+                '<p style="width: 100px; display: inline">COLONIA </p><input style="width: 50%;" value="'+colonia+'"/><br>'+
+                '<p style="width: 100px; display: inline">ESTADO </p><input value="'+estado+'"/><br>'+
             '</div>'+
             '<div style="width: 50%; text-align:right">'+
-                '<p style="width: 100px; display: contents">EDAD </p><input style="width: 50%;" value="'+props.DGEdad+'"/><br>'+
-                '<p style="width: 100px; display: contents">OCUPACION </p><input value="'+props.DGOcupacion+'"/><br>'+
-                '<p style="width: 100px; display: contents">SEXO </p><input value="'+props.DGSexo+'"/><br>'+
-                '<p style="display: contents">DECANATO </p><textarea rows="'+this.resizeTextArea(props.DGDecanato, 1)+'" style="width: 50%;">'+props.DGDecanato+'</textarea><br>'+
-                '<p style="display: contents">CALLE </p><textarea rows="'+this.resizeTextArea(domicilio, 1)+'" style="width: 50%;">'+domicilio+'</textarea><br>'+
-                '<p style="width: 100px; display: contents">MUNICIPIO </p><input style="width: 50%;" value="'+municipio+'"/><br>'+
-                '<p style="width: 100px; display: contents">PAIS </p><input style="width: 50%;" value="'+pais+'"/><br>'+
+                '<p style="width: 100px; display: inline">EDAD </p><input style="width: 50%;" value="'+props.DGEdad+'"/><br>'+
+                '<p style="width: 100px; display: inline">OCUPACION </p><input value="'+props.DGOcupacion+'"/><br>'+
+                '<p style="width: 100px; display: inline">SEXO </p><input value="'+props.DGSexo+'"/><br>'+
+                '<p style="display: inline">DECANATO </p><textarea rows="'+this.resizeTextArea(props.DGDecanato, 1)+'" style="width: 50%;">'+props.DGDecanato+'</textarea><br>'+
+                '<p style="display: inline">CALLE </p><textarea rows="'+this.resizeTextArea(domicilio, 1)+'" style="width: 50%;">'+domicilio+'</textarea><br>'+
+                '<p style="width: 100px; display: inline">MUNICIPIO </p><input style="width: 50%;" value="'+municipio+'"/><br>'+
+                '<p style="width: 100px; display: inline">PAIS </p><input style="width: 50%;" value="'+pais+'"/><br>'+
             '</div>'+
         '</div><br>'
         
@@ -132,6 +136,7 @@ class Transporte extends Component {
             '<tr>'+
                 '<th>NOMBRE</th>'+
                 '<th>EDAD</th>'+
+                '<th>SEXO</th>'+
                 '<th>ESTADO CIVIL</th>'+
                 '<th>OCUPACION</th>'+
                 '<th>ESCOLARIDAD</th>'+
@@ -141,6 +146,7 @@ class Transporte extends Component {
                 fcantidad += '<tr>'+
                     '<td>'+props['CFFam'+i+'nom']+'</td>'+
                     '<td>'+props['CFFam'+i+'edad']+'</td>'+
+                    '<td>'+props['CFFam'+i+'sexo']+'</td>'+
                     '<td>'+props['CFFam'+i+'ecivil']+'</td>'+
                     '<td>'+props['CFFam'+i+'ocupacion']+'</td>'+
                     '<td>'+props['CFFam'+i+'escolaridad']+'</td>'+
@@ -156,10 +162,10 @@ class Transporte extends Component {
     tablaIdentificacion = (props) => {
         var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">IDENTIFICACION</p>'+
         '<div style="display: flex"><div>'+
-            '<p style="width: 100px; display: contents">TIPO DE IDENTIFICACION </p><input value="'+props.IDTipo+'"/><br>'+
-            '<p style="width: 100px; display: contents">ORIGINARIO DE </p><input value="'+props.IDOriginario+'"/><br>'+
-            '<p style="width: 100px; display: contents">TIEMPO QUE TIENE EN LA CIUDAD </p><input value="'+props.IDTiempo+'"/><br>'+
-            '<p style="width: 100px; display: contents">LUGAR DONDE SE HOSPEDA </p><input value="'+props.IDHospeda+'"/>'+
+            '<p style="width: 100px; display: inline">TIPO DE IDENTIFICACION </p><input value="'+props.IDTipo+'"/><br>'+
+            '<p style="width: 100px; display: inline">ORIGINARIO DE </p><input value="'+props.IDOriginario+'"/><br>'+
+            '<p style="width: 100px; display: inline">TIEMPO QUE TIENE EN LA CIUDAD </p><input value="'+props.IDTiempo+'"/><br>'+
+            '<p style="width: 100px; display: inline">LUGAR DONDE SE HOSPEDA </p><input value="'+props.IDHospeda+'"/>'+
         '</div></div>';
 
         return fcantidad;
@@ -168,8 +174,8 @@ class Transporte extends Component {
     tablaSolicitud = (props) => {
         var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">SOLICITUD</p>'+
         '<div style="display: flex"><div>'+
-            '<p style="width: 100px; display: contents">DESTINO AL QUE SOLICITA APOYO </p><input value="'+props.SDDestino+'"/><br>'+
-            '<p style="display: contents">MOTIVO DE SOLICITUD </p><textarea rows="'+this.resizeTextArea(props.SDMotivo, 1)+'" style="width: 50%;">'+props.SDMotivo+'</textarea><br>'+
+            '<p style="width: 100px; display: inline">DESTINO AL QUE SOLICITA APOYO </p><input value="'+props.SDDestino+'"/><br>'+
+            '<p style="display: inline">MOTIVO DE SOLICITUD </p><textarea rows="'+this.resizeTextArea(props.SDMotivo, 1)+'" style="width: 50%;">'+props.SDMotivo+'</textarea><br>'+
         '</div></div>';
 
         return fcantidad;
@@ -183,14 +189,14 @@ class Transporte extends Component {
 
         var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">APOYO</p>'+
         '<div style="display: flex"><div>'+
-            '<p style="width: 100px; display: contents">DESTINO</p><input value="'+props.APDestino+'"/><br>'+
-            '<p style="width: 100px; display: contents">NUMERO DE BOLETOS</p><input value="'+props.APBoletos+'"/><br>'+
-            '<p style="width: 100px; display: contents">CANTIDAD AUTORIZADA</p><input value="'+cantidad+'"/><br>'+
-            '<p style="width: 100px; display: contents">APORTACION DEL SOLICITANTE</p><input value="'+aportacion+'"/><br>'+
-            '<p style="display: contents">PROVEEDOR</p><textarea rows="'+(props.APProveedor ? this.resizeTextArea(props.APProveedor, 2) : 1)+'" style="width: 50%" >'+(props.APProveedor ? props.APProveedor : '')+'</textarea><br>'+ 
-            '<p style="display: contents">PROCEDENCIA</p><textarea rows="'+(procedencia ? this.resizeTextArea(procedencia, 2) : 1)+'" style="width: 50%" >'+(procedencia ? procedencia : '')+'</textarea><br>'+ 
-            '<p style="width: 100px; display: contents">FOLIO DE TRABAJO SOCIAL</p><input value="'+props.APFolioTS+'"/><br>'+
-            '<p style="width: 100px; display: contents">FOLIO DE CAJA</p><input value="'+folioC+'"/>'+
+            '<p style="width: 100px; display: inline">DESTINO</p><input value="'+props.APDestino+'"/><br>'+
+            '<p style="width: 100px; display: inline">NUMERO DE BOLETOS</p><input value="'+props.APBoletos+'"/><br>'+
+            '<p style="width: 100px; display: inline">CANTIDAD AUTORIZADA</p><input value="'+cantidad+'"/><br>'+
+            '<p style="width: 100px; display: inline">APORTACION DEL SOLICITANTE</p><input value="'+aportacion+'"/><br>'+
+            '<p style="display: inline">PROVEEDOR</p><textarea rows="'+(props.APProveedor ? this.resizeTextArea(props.APProveedor, 2) : 1)+'" style="width: 50%" >'+(props.APProveedor ? props.APProveedor : '')+'</textarea><br>'+ 
+            '<p style="display: inline">PROCEDENCIA</p><textarea rows="'+(procedencia ? this.resizeTextArea(procedencia, 2) : 1)+'" style="width: 50%" >'+(procedencia ? procedencia : '')+'</textarea><br>'+ 
+            '<p style="width: 100px; display: inline">FOLIO DE TRABAJO SOCIAL</p><input value="'+props.APFolioTS+'"/><br>'+
+            '<p style="width: 100px; display: inline">FOLIO DE CAJA</p><input value="'+folioC+'"/>'+
         '</div></div>';
 
         return fcantidad;
@@ -309,7 +315,7 @@ class Transporte extends Component {
             n = value.split("\n").length;
         }
 
-        return n;
+        return n > 1 ? n + 1 : n;
     }
 
     checkFields = () => {
@@ -450,7 +456,8 @@ class Transporte extends Component {
                 <div key={'familia' + i} >
                     <TxtField id={"CFFam" + i + "nom"} nombre={"Nombre"} width={160} onChange={this.handleChange} state={this.state.caso}/>
                     <TxtField id={"CFFam" + i + "edad"} nombre={"Edad"} width={50} onChange={this.handleChange} state={this.state.caso}/>
-                    <TxtField id={"CFFam" + i + "ecivil"} nombre={"Estado Civil"} width={100} options={ECivil} onChange={this.handleChange} state={this.state.caso}/>
+                    <TxtField id={"CFFam" + i + "sexo"} nombre="Sexo" required width={120} options={Sexo} onChange={this.handleChange} state={this.state.caso}/>
+                    <TxtField id={"CFFam" + i + "ecivil"} nombre={"Estado Civil"} width={120} options={ECivil} onChange={this.handleChange} state={this.state.caso}/>
                     <TxtField id={"CFFam" + i + "ocupacion"} nombre={"Ocupacion"} width={150} onChange={this.handleChange} state={this.state.caso}/>
                     <TxtField id={"CFFam" + i + "escolaridad"} nombre={"Escolaridad"} width={150} onChange={this.handleChange} state={this.state.caso}/>
                     
@@ -485,18 +492,9 @@ class Transporte extends Component {
                         }}
                         message={<span id="message-id">{message}</span>}
                     />
-                    
-                    {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.print(event, this.state.caso)}> 
-                        Imprimir
-                    </Button>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={(event) => this.nuevo(event)}> 
-                        Nuevo
-                    </Button> */}
-
-                    
 
                     {/* FORMATO */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>FORMATO</h1>
+                    <h1 className={classes.title}>FORMATO</h1>
                     <div className={classes.container}>
                         <TxtField nombre="Fecha" id="FMFecha" required type={'date'} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="No. De Caso" id="FMNumero" required onChange={this.handleChange} state={this.state.caso}/>
@@ -507,35 +505,34 @@ class Transporte extends Component {
 
                     {/* DATOS GENERALES */}
                     <div className={classes.container}>
-                        <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>DATOS GENERALES</h1>
+                        <h1 className={classes.title}>DATOS GENERALES</h1>
                         <TxtField nombre={"Cantidad"} id={"gcantidad"} width={80} onChange={this.handleChange} state={this.state.caso}/>
                         <div>
                             <TxtField id={"DGCaso"} nombre={"Nombre"} width={160} required onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGEdad"} nombre={"Edad"} width={50} required onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField id={"DGSexo"} nombre="Sexo" required options={Sexo} onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField id={"DGSexo"} nombre="Sexo" required width={120} options={Sexo} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGECivil"} nombre={"Estado Civil"} width={120} required options={ECivil} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGOcupacion"} nombre={"Ocupacion"} width={150} required onChange={this.handleChange} state={this.state.caso}/>
                             <Autocomplete id={"DGEscolaridad"} nombre={"Escolaridad"} options={Escolaridad} onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre={"Parroquia"} id={"DGParroquia"} required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
-                            <Autocomplete nombre={"Decanato"} id={"DGDecanato"} required multiline={true} options={Decanatos} onChange={this.handleChange} state={this.state.caso}/>
-                            <TxtField nombre={"Vicaria"} id={"DGVicaria"} required multiline onChange={this.handleChange} state={this.state.caso}/>
                             <hr style={{borderColor: 'black'}}></hr>
                             {this.cGenerales()}
                         </div>
                         <div>
                             <TxtField id={"DGDomicilio"} nombre={"Domicilio"}  onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGColonia"} nombre={"Colonia"} onChange={this.handleChange} state={this.state.caso}/>
-                            {/* <TxtField id={"DGMunicipio"} nombre={"Municipio"} onChange={this.handleChange} state={this.state.caso}/> */}
                             <Autocomplete nombre={"Municipio"} id={"DGMunicipio"} options={Municipios} onChange={this.handleChange} state={this.state.caso}/>
-                            {/* <TxtField id={"DGEstado"} nombre={"Estado"} onChange={this.handleChange} state={this.state.caso}/> */}
                             <Autocomplete nombre={"Estado"} id={"DGEstado"} options={Estados} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGPais"} nombre={"Pais"} onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre={"Parroquia"} id={"DGParroquia"} required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
+                            <Autocomplete nombre={"Decanato"} id={"DGDecanato"} required multiline={true} options={Decanatos} onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField nombre={"Vicaria"} id={"DGVicaria"} required multiline onChange={this.handleChange} state={this.state.caso}/>
+                            
                         </div>
                     </div>
                     <br/>
 
                     {/* IDENTIFICACION */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>IDENTIFICACION</h1>
+                    <h1 className={classes.title}>IDENTIFICACION</h1>
                     <div className={classes.container}>
                         <TxtField nombre="Tipo de identificacion" id="IDTipo" required width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Originario de" id="IDOriginario" required width={300} onChange={this.handleChange} state={this.state.caso}/>
@@ -545,7 +542,7 @@ class Transporte extends Component {
                     <br/>
 
                     {/* SOLICITUD */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>SOLICITUD</h1>
+                    <h1 className={classes.title}>SOLICITUD</h1>
                     <div className={classes.container}>
                         <TxtField nombre={"Destino"} id={"SDDestino"} required width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Motivo"} id={"SDMotivo"} multiline={true} required width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
@@ -553,7 +550,7 @@ class Transporte extends Component {
                     <br/>
 
                     {/* APOYO */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>APOYO</h1>
+                    <h1 className={classes.title}>APOYO</h1>
                     <div className={classes.container}>
                         <TxtField nombre={"Destino Autorizado"} id="APDestino" required width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Numero de boletos"} id="APBoletos" options={Frecuencia} required width={300} onChange={this.handleChange} state={this.state.caso}/>
@@ -567,7 +564,7 @@ class Transporte extends Component {
                     <br/>
 
                     {/* OBSERVACIONES */}
-                    <h1 style={{backgroundColor: '#5c70d2', color:'white'}}>OBSERVACIONES</h1>
+                    <h1 className={classes.title}>OBSERVACIONES</h1>
                     <div className={classes.container}>
                         <TxtField nombre={"Observaciones"} id={"OBObservaciones"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
@@ -595,13 +592,6 @@ class Transporte extends Component {
                             <SaveIcon />
                         </Button>
                     </Tooltip>
-
-                    {/* <div className={classes.container}>
-                        <Button variant="contained" color="primary" className={classes.button} onClick={(event) => modifying === 1 ? this.modify(event) : this.save(event)}> 
-                            Guardar
-                        </Button>
-                    </div> */}
-
                 </div>
             </div>
         )

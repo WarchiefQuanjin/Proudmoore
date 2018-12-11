@@ -588,7 +588,7 @@ const Municipios = [
 
 const TipoI = [
     { value: 'ESE' },
-    { value: 'Entrevista' }
+    { value: 'ENTREVISTA' }
 ]
 
 const Search = [
