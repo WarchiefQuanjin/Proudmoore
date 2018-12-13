@@ -32,7 +32,6 @@ const styles = theme => ({
         margin: theme.spacing.unit,
     },
     container: {
-        /* display: 'flex', */
         flexWrap: 'wrap',
     },
     textField: {
@@ -78,7 +77,6 @@ class Transporte extends Component {
         if(user !== undefined){
             var caso = {};
             for (var i = 0; i < Object.keys(user.val).length; i++) {
-                /* caso[Object.keys(user.val)[i]] = Object.values(user.val)[i]; */
                 caso[Object.keys(user.val)[i]] = Object.keys(user.val).map(i => user.val[i])[i];
             }
 

@@ -39,11 +39,8 @@ const styles = theme => ({
       display: 'flex'
   },
   appFrame: {
-      /* position: 'relative', */
       position: 'absolute', 
       overflowY: 'hidden', 
-
-
       display: 'flex',
       width: '100%',
       height: '100%'
@@ -297,7 +294,7 @@ class App extends Component {
               Routes.map((route, index) =>
                 route.linkTo &&
                 <Link key={index} className={classes.link} to={route.linkTo}>
-                  <ListItem className={classes.linkButton} onClick={this.handleDrawerToggle}/* button onClick={this.handleDrawerToggle} */>
+                  <ListItem className={classes.linkButton} onClick={this.handleDrawerToggle}>
                     <ListItemIcon>{route.icon}</ListItemIcon>
 
                     <ListItemText primary={route.iconText} 

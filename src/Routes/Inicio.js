@@ -268,7 +268,7 @@ class Inicio extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.filter(caso => caso.val[searchBy].indexOf(searchT) !== -1/* .includes(searchT) */).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                            {data.filter(caso => caso.val[searchBy].indexOf(searchT) !== -1).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                                 return (
                                 <TableRow key={row.key}>
                                     <TableCell style={{display: 'flex'}}>
@@ -354,7 +354,7 @@ class Inicio extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.filter(caso => caso.val[searchBy].indexOf(searchSE) !== -1/* .includes(searchSE) */).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                            {data.filter(caso => caso.val[searchBy].indexOf(searchSE) !== -1).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                                 return (
                                 <TableRow key={row.key}>
                                     <TableCell style={{display: 'flex'}}>

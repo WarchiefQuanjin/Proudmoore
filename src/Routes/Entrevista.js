@@ -510,7 +510,6 @@ class Entrevista extends Component {
                             <TxtField id={"DGDomicilio"} nombre={"Domicilio"}  onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGColonia"} nombre={"Colonia"} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGMunicipio"} nombre={"Municipio"} onChange={this.handleChange} state={this.state.caso}/>
-                            {/* <TxtField id={"DGEstado"} nombre={"Estado"} onChange={this.handleChange} state={this.state.caso}/> */}
                             <Autocomplete nombre={"Estado"} id={"DGEstado"} required options={Estados} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGPais"} nombre={"Pais"} onChange={this.handleChange} state={this.state.caso}/>
                         </div>

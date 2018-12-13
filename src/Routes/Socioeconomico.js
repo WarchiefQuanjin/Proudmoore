@@ -48,7 +48,6 @@ const styles = theme => ({
         margin: theme.spacing.unit,
     },
     container: {
-        /* display: 'flex', */
         flexWrap: 'wrap',
     },
     textField: {
@@ -61,9 +60,7 @@ const styles = theme => ({
     fixed: {
         position: 'fixed',
         width: '50px',
-        height: '50px'/* ,
-        backgroundColor: '#8BC34A',
-        color: 'white' */
+        height: '50px'
     },
     title: {
         backgroundColor: '#5c70d2', 
@@ -104,9 +101,7 @@ class Socioeconomico extends Component {
         if(user !== undefined){
             var caso = {};
             for (var i = 0; i < Object.keys(user.val).length; i++) {
-                /* caso[Object.keys(user.val)[i]] = Object.values(user.val)[i]; */
                 caso[Object.keys(user.val)[i]] = Object.keys(user.val).map(i => user.val[i])[i];
-                /* Object.keys(deneme).map(itm => deneme[itm]); */
             }
 
             this.setState({caso});
@@ -438,7 +433,6 @@ class Socioeconomico extends Component {
     }
     
     save = (event) => {
-        /* event.preventDefault(); */
         let casos = {};
         
         if(this.checkFields()){
@@ -483,16 +477,6 @@ class Socioeconomico extends Component {
     }
 
     checkFields = () => {
-        /* const Fields = [ 'ALCarne', 'ALCereales', 'ALFruta', 'ALHuevo', 'ALLeche', 'ALLeguminosas', 'ALMar', 
-            'ALObservaciones', 'ALPastas', 'ALPollo', 'ALRefresco', 'ALTortilla', 'CFObservaciones', 
-            'DEAlimentacion', 'DEDeudas', 'DEEducacion', 'DEIngresoF', 'DEIngresoO', 'DEObservaciones', 'DEOtros', 
-            'DERecreacion', 'DESalud', 'DEServicios', 'DETelefono', 'DETransporte', 'DEVestido', 'DEVivienda', 
-            'DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 
-            'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 
-            'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTPlanI', 'OTPresupuesto', 'OTPronostico', 
-            'SLCaso', 'SLFamilia', 'SLObservaciones', 'VVBanos', 'VVCocina', 'VVComedor', 'VVCondicion', 
-            'VVDormitorios', 'VVMenaje', 'VVMuro', 'VVObservaciones', 'VVPiso', 'VVSala', 'VVTecho', 'VVZona' ]; */
-        
         const Fields = ['DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 
             'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 'FMTImpresion',
             'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTPresupuesto', 'OTHistoriaS', 'OTPronostico', 'OTProveedor',
@@ -794,7 +778,7 @@ class Socioeconomico extends Component {
 
                     {/* DATOS ECONOMICOS */}
                     <h1 className={classes.title}>DATOS ECONOMICOS</h1>
-                    <div className={classes.container} /* style={{display: 'flex'}} */>
+                    <div className={classes.container}>
 
                         {/* INGRESOS MENSUALES */}
                         <div style={{width:'50%'}}>

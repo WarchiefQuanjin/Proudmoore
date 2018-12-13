@@ -14,7 +14,6 @@ const styles = theme => ({
     font: {
         fontSize: '14px',
         height: 'inherit',
-        /* width: 'auto', */
         overflow: 'hidden'
     }
 });
