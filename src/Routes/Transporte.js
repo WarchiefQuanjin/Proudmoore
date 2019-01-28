@@ -340,7 +340,7 @@ class Transporte extends Component {
         </div>
     )
 
-    handleChange = (id, value) => {
+    handleChange = (id, value, type) => {
         let caso = this.state.caso
         caso[id] = value
 

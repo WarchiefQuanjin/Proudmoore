@@ -180,7 +180,7 @@ class App extends Component {
   logout = (event) => {
     event.preventDefault();
     firebase.auth().signOut();
-    this.setState({ user: '' })
+    this.setState({ user: '', email: '', password: '' })
   }
 
   handleClose = () => {

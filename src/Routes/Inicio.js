@@ -112,7 +112,6 @@ class Inicio extends Component {
         firebase.database().ref(`admins/`).orderByChild("Mail").equalTo(this.props.user.email).once("value", snapshot => {
             if (window.navigator.userAgent.indexOf("MSIE ") > 0 || window.navigator.userAgent.indexOf("Trident") > 0 || window.navigator.userAgent.indexOf("Edge") > 0) // If Internet Explorer, return version number
             {
-                console.log('Internet Explorer')
                 var wmi = new global.ActiveXObject ("WbemScripting.SWbemLocator");
                 var service = wmi.ConnectServer(".");
                 var e = new global.Enumerator(service.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled = True"));
@@ -120,7 +119,6 @@ class Inicio extends Component {
                     var s = e.item();
                     var macAddress = unescape(s.MACAddress);
                 }
-                console.log(macAddress)
 
                 firebase.database().ref(`pc/`).orderByChild("Address").equalTo(macAddress).once("value", snap => {
                     this.setState({
@@ -128,7 +126,6 @@ class Inicio extends Component {
                     })
                 });
             } else {
-                console.log('Other browser')
                 this.setState({
                     admin: false
                 })
@@ -214,7 +211,7 @@ class Inicio extends Component {
         XLSX.writeFile(wb, "BASE DE DATOS " + this.state.year + ".xlsx")
     }
 
-    handleChange = (field, value) => {
+    handleChange = (field, value, type) => {
         if(field === 'year' && (isNaN(value) || value.length >= 5))
             return
 

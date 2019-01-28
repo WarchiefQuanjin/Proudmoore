@@ -494,9 +494,13 @@ class Socioeconomico extends Component {
         return missingFields;
     }
 
-    handleChange = (id, value) => {
+    handleChange = (id, value, type) => {
         let caso = this.state.caso
         caso[id] = value
+
+        console.log(type)
+        if(type === 'int' && (isNaN(value) ))
+            return
         
         if(id === 'DGDecanato'){
             let vicaria = ''

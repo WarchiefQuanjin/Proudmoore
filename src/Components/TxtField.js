@@ -22,6 +22,7 @@ class TxtField extends Component {
     render() {
         var props = this.props;
         var term = props.term ? props.term : 'px';
+        var type = props.type ? props.type : 'string'
 
         return (
             <TextField
@@ -31,9 +32,9 @@ class TxtField extends Component {
                 placeholder={props.nombre}
                 className={props.classes.textField}
                 margin={"normal"}
-                type={props.type ? props.type : 'string'}
+                type={type}
                 multiline={props.multiline && props.multiline}
-                onChange={(event) => props.onChange(props.id, event.target.value)}
+                onChange={(event) => props.onChange(props.id, event.target.value, type)}
                 required={props.required}
                 InputProps={{
                     classes: {
