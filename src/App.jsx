@@ -27,7 +27,8 @@ import Fade from '@material-ui/core/Fade';
 import Snackbar from '@material-ui/core/Snackbar';
 
 const drawerWidth = 240;
-const drawerColor = '#e3007b';
+const drawerColor = '#e28ebb';
+const secondaryColor = '#5c70d2';
 const background = 'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Background2.jpg?alt=media&token=95e6122e-220c-44f2-bd9a-dd197e532de4';
 
 const styles = theme => ({
@@ -149,7 +150,7 @@ const styles = theme => ({
     color: 'white'
   },
   linkButton: {
-    backgroundColor: '#3f51b5',
+    /* backgroundColor: '#3f51b5', */
     borderRadius: '7px',
     margin: '0 auto',
     marginBottom: '5px',
@@ -285,7 +286,7 @@ class App extends Component {
     const drawer = (
       <div>
         <div>
-          <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center', backgroundColor: '#3f51b5' }} >
+          <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center', backgroundColor: secondaryColor }} >
             <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=fa2effcc-3778-409e-816a-e6dd4452ab2e'} alt="CÁRITAS DE GUADALAJARA" />
           </div>
 
@@ -294,7 +295,7 @@ class App extends Component {
               Routes.map((route, index) =>
                 route.linkTo &&
                 <Link key={index} className={classes.link} to={route.linkTo}>
-                  <ListItem className={classes.linkButton} onClick={this.handleDrawerToggle}>
+                  <ListItem className={classes.linkButton} style={{backgroundColor: secondaryColor}} onClick={this.handleDrawerToggle}>
                     <ListItemIcon>{route.icon}</ListItemIcon>
 
                     <ListItemText primary={route.iconText} 

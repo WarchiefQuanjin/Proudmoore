@@ -11,7 +11,8 @@ import {
     Procedencia,
     Estados,
     Decanatos,
-    Municipios
+    Municipios,
+    Edad
 } from '../Constants/Options';
 import TxtField from '../Components/TxtField';
 import Autocomplete from '../Components/Autocomplete';
@@ -119,7 +120,7 @@ class Transporte extends Component {
                 '<p style="width: 100px; display: inline">ESTADO </p><input value="'+estado+'"/><br>'+
             '</div>'+
             '<div style="width: 50%; text-align:right">'+
-                '<p style="width: 100px; display: inline">EDAD </p><input style="width: 50%;" value="'+props.DGEdad+'"/><br>'+
+                '<p style="width: 100px; display: inline">EDAD </p><input style="width: 50%;" value="'+props.DGEdad+" "+props.DGTEdad+'"/><br>'+
                 '<p style="width: 100px; display: inline">OCUPACION </p><input value="'+props.DGOcupacion+'"/><br>'+
                 '<p style="width: 100px; display: inline">SEXO </p><input value="'+props.DGSexo+'"/><br>'+
                 '<p style="display: inline">DECANATO </p><textarea rows="'+this.resizeTextArea(props.DGDecanato, 1)+'" style="width: 50%;">'+props.DGDecanato+'</textarea><br>'+
@@ -159,11 +160,11 @@ class Transporte extends Component {
 
     tablaIdentificacion = (props) => {
         var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">IDENTIFICACION</p>'+
-        '<div style="display: flex"><div>'+
+        '<div><div>'+
             '<p style="width: 100px; display: inline">TIPO DE IDENTIFICACION </p><input value="'+props.IDTipo+'"/><br>'+
             '<p style="width: 100px; display: inline">ORIGINARIO DE </p><input value="'+props.IDOriginario+'"/><br>'+
             '<p style="width: 100px; display: inline">TIEMPO QUE TIENE EN LA CIUDAD </p><input value="'+props.IDTiempo+'"/><br>'+
-            '<p style="width: 100px; display: inline">LUGAR DONDE SE HOSPEDA </p><input value="'+props.IDHospeda+'"/>'+
+            '<p style="width: 100px; display: inline">LUGAR DONDE SE HOSPEDA </p><input style="width: 70%; " value="'+props.IDHospeda+'"/>'+
         '</div></div>';
 
         return fcantidad;
@@ -171,9 +172,9 @@ class Transporte extends Component {
 
     tablaSolicitud = (props) => {
         var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">SOLICITUD</p>'+
-        '<div style="display: flex"><div>'+
+        '<div ><div>'+
             '<p style="width: 100px; display: inline">DESTINO AL QUE SOLICITA APOYO </p><input value="'+props.SDDestino+'"/><br>'+
-            '<p style="display: inline">MOTIVO DE SOLICITUD </p><textarea rows="'+this.resizeTextArea(props.SDMotivo, 1)+'" style="width: 50%;">'+props.SDMotivo+'</textarea><br>'+
+            '<p style="display: inline">MOTIVO DE SOLICITUD </p><textarea rows="'+this.resizeTextArea(props.SDMotivo, 2)+'" style="width: 50%;">'+props.SDMotivo+'</textarea><br>'+
         '</div></div>';
 
         return fcantidad;
@@ -186,14 +187,13 @@ class Transporte extends Component {
         var procedencia = props.APProcedencia === 'OTROS' ? props.APProcedenciaOt : props.APProcedencia;
 
         var fcantidad = '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px; -webkit-print-color-adjust: exact">APOYO</p>'+
-        '<div style="display: flex"><div>'+
+        '<div><div>'+
             '<p style="width: 100px; display: inline">DESTINO</p><input value="'+props.APDestino+'"/><br>'+
             '<p style="width: 100px; display: inline">NUMERO DE BOLETOS</p><input value="'+props.APBoletos+'"/><br>'+
             '<p style="width: 100px; display: inline">CANTIDAD AUTORIZADA</p><input value="'+cantidad+'"/><br>'+
             '<p style="width: 100px; display: inline">APORTACION DEL SOLICITANTE</p><input value="'+aportacion+'"/><br>'+
             '<p style="display: inline">PROVEEDOR</p><textarea rows="'+(props.APProveedor ? this.resizeTextArea(props.APProveedor, 2) : 1)+'" style="width: 50%" >'+(props.APProveedor ? props.APProveedor : '')+'</textarea><br>'+ 
             '<p style="display: inline">PROCEDENCIA</p><textarea rows="'+(procedencia ? this.resizeTextArea(procedencia, 2) : 1)+'" style="width: 50%" >'+(procedencia ? procedencia : '')+'</textarea><br>'+ 
-            '<p style="width: 100px; display: inline">FOLIO DE TRABAJO SOCIAL</p><input value="'+props.APFolioTS+'"/><br>'+
             '<p style="width: 100px; display: inline">FOLIO DE CAJA</p><input value="'+folioC+'"/>'+
         '</div></div>';
 
@@ -208,8 +208,6 @@ class Transporte extends Component {
     }
 
     print = (event, props) => {
-        event.preventDefault();
-
         if(this.checkFields()){
             return;
         }
@@ -255,8 +253,6 @@ class Transporte extends Component {
     }
 
     modify = (event) => {
-        event.preventDefault();
-
         if(this.checkFields()){
             return;
         }
@@ -272,7 +268,6 @@ class Transporte extends Component {
     }
     
     save = (event) => {
-        event.preventDefault();
         let casos = {};
         
         if(this.checkFields()){
@@ -296,11 +291,14 @@ class Transporte extends Component {
     resizeTextArea = (value, type) => {
         let n=1;
 
-        if(type === 1) {
-            var res = value.split(" ");
+        var rows = value.split("\n");
+        var arc = type === 1 ? 25 : 50;
 
-            if (value.length > 20){
-                n = n + parseInt(value.length / 25, 10);
+        rows.forEach(element => {
+            var res = element.split(" ");
+
+            if (element.length > 20){
+                n = n + parseInt(element.length / arc, 10);
             }
 
             for(var i=0; i < res.length; i++){
@@ -308,17 +306,14 @@ class Transporte extends Component {
                     n = n + 1;
                 }
             }
-        }
-        else if(type === 2){
-            n = value.split("\n").length;
-        }
-
+        });
+        
         return n > 1 ? n + 1 : n;
     }
 
     checkFields = () => {
         const Fields = [ 'FMFecha', 'FMNumero', 'FMDerivado', 'FMFrecuencia', 'FMTrabajadora', 'IDTipo', 
-            'IDOriginario', 'IDTiempo', 'IDHospeda', 'SDDestino', 'SDMotivo', 'APDestino', 'APProveedor', 'APProcedencia', 'APBoletos', 'APFolioTS', 
+            'IDOriginario', 'IDTiempo', 'IDHospeda', 'SDDestino', 'SDMotivo', 'APDestino', 'APProveedor', 'APProcedencia', 'APBoletos', 'APFolioC', 
             'DGCaso', 'DGEdad', 'DGECivil', 'DGOcupacion', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGSexo' ];
         
         let missingFields = false;
@@ -508,6 +503,7 @@ class Transporte extends Component {
                         <div>
                             <TxtField id={"DGCaso"} nombre={"Nombre"} width={160} required onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGEdad"} nombre={"Edad"} width={50} required onChange={this.handleChange} state={this.state.caso}/>
+                            <TxtField id={"DGTEdad"} nombre="Tipo de Edad" required options={Edad} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGSexo"} nombre="Sexo" required width={120} options={Sexo} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGECivil"} nombre={"Estado Civil"} width={120} required options={ECivil} onChange={this.handleChange} state={this.state.caso}/>
                             <TxtField id={"DGOcupacion"} nombre={"Ocupacion"} width={150} required onChange={this.handleChange} state={this.state.caso}/>
@@ -556,7 +552,6 @@ class Transporte extends Component {
                         <TxtField nombre={"Aportacion del solicitante"} id="APAportacion" width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Proveedor"} id={"APProveedor"} required onChange={this.handleChange} state={this.state.caso}/>
                         {this.cProcedencia()}
-                        <TxtField nombre={"Folio de trabajo social"} id="APFolioTS" required width={300} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Folio de caja"} id="APFolioC" width={300} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
                     <br/>

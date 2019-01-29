@@ -87,7 +87,6 @@ const Muro = [
 const Techo = [
     { value: 'LAMINA' },
     { value: 'BOVEDA'},
-    { value: 'LAMINA' },
     { value: 'MADERA' },
     { value: 'LONA' },
     { value: 'OTROS' }
@@ -186,6 +185,7 @@ const Procedencia = [
     { value: 'TELETON' },
     { value: 'UNA OPORTUNIDAD DE VIDA' },
     { value: 'OTROS' },
+    { value: 'INICIATIVA PROPIA' },
     { value: 'DIF ACATIC' },
     { value: 'DIF ACATLÁN DE JUÁREZ' },
     { value: 'DIF AHUALULCO DE MERCADO' },
@@ -322,9 +322,9 @@ const Excel = [[
     "BASTON", "CORSET", "I. ORTOPEDICO", "ENSERES DOMESTICOS", "RENTA", "TRANSPORTE", "PEQUEÑO COMERCIO", 
     "DOCUMENTOS DE EMPLEO", "FUNERAL", "ROPA", "ZAPATOS O TENIS", "KIT DE LIMPIEZA", "COBIJAS", "CENAS NAVIDEÑAS", 
     "SEGUIMIENTO", "RENOVO CANALIZACION", "DERIVACION", "OTROS", "CANTIDAD AUTORIZADA", "DONATIVO HOSPITAL", 
-    "FONDO ARZOBISPADO", "FONDO CABILDO", "FONDO OLGA", "DONANTE", "APORTACIÓN BENEFICIADO", "PROVEEDOR", 
-    "PROCEDENCIA", "SERVICIOS", "CANTIDAD DE HEMODIALISIS", "GASTO DIARIO", "LIC. CANELA", "MES DE APADRINAMIENTO", 
-    "AÑO DE APADRINAMIENTO", "TRABAJADORA SOCIAL"
+    "FONDO ARZOBISPADO", "FONDO CABILDO", "FONDO OLGA", "DONACION", "DONANTE", "MES DE APADRINAMIENTO", 
+    "AÑO DE APADRINAMIENTO", "APORTACIÓN BENEFICIADO", "PROVEEDOR", "PROCEDENCIA", "SERVICIOS", 
+    "CANTIDAD DE HEMODIALISIS", "GASTO DIARIO", "TRABAJADORA SOCIAL"
 ]];
 
 const Frecuencia = [
@@ -596,6 +596,31 @@ const Search = [
     { value: 'No. Caso' }
 ]
 
+const Edad = [
+    { value: 'DIAS' },
+    { value: 'MESES'},
+    { value: 'AÑOS' }
+];
+
+const Donantes = [
+    { value: 'LIC. CANELA' }
+];
+
+const Meses = [
+    { value: 'ENERO' },
+    { value: 'FEBRERO' },
+    { value: 'MARZO' },
+    { value: 'ABRIL' },
+    { value: 'MAYO' },
+    { value: 'JUNIO' },
+    { value: 'JULIO' },
+    { value: 'AGOSTO' },
+    { value: 'SEPTIEMBRE' },
+    { value: 'OCTUBRE' },
+    { value: 'NOVIEMBRE' },
+    { value: 'DICIEMBRE' },
+];
+
 export { 
     ECivil, 
     Empleo, 
@@ -623,5 +648,8 @@ export {
     Decanatos,
     Municipios,
     TipoI,
-    Search
+    Search,
+    Edad,
+    Donantes,
+    Meses
 };

@@ -15,6 +15,9 @@ const styles = theme => ({
         fontSize: '14px',
         height: 'inherit',
         overflow: 'hidden'
+    },
+    selected: {
+        backgroundColor: '#ffffff',
     }
 });
 
@@ -39,6 +42,7 @@ class TxtField extends Component {
                 InputProps={{
                     classes: {
                         input: props.classes.font,
+                        /* hover: props.classes.selected */
                     },
                 }}
                 value={props.state[props.id] ? props.state[props.id] : ''}

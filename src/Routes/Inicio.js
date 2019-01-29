@@ -56,6 +56,7 @@ class Inicio extends Component {
             year: new Date().getFullYear(),
             value: 0,
             page: 0,
+            pageT: 0,
             rowsPerPage: 10,
             searchBySE: 'Persona',
             searchByT: 'Persona',
@@ -170,8 +171,8 @@ class Inicio extends Component {
                         apoyo.includes("ZAPATOS O TENIS") ? 1 : '', apoyo.includes("KIT DE LIMPIEZA") ? 1 : '', apoyo.includes("COBIJAS") ? 1 : '',
                         apoyo.includes("CENAS NAVIDEÑAS") ? 1 : '', apoyo.includes("SEGUIMIENTO") ? 1 : '', apoyo.includes("RENOVO CANALIZACION") ? 1 : '',
                         apoyo.includes("DERIVACION") ? 1 : '', apoyo.includes("OTROS") ? 1 : '', val.OTPresupuesto, val.OTDHospital, val.OTFArzobispado,
-                        val.OTFCabildo, val.OTFOlga, val.OTDonante, val.OTABeneficiado, val.OTProveedor, val.OTProcedencia === 'OTROS' ? val.OTProcedenciaOt : val.OTProcedencia,
-                        apoyo.length, val.SLHemodialisis, '', '', '', '', val.FMTrabajadora
+                        val.OTFCabildo, val.OTFOlga, val.OTDonacion, val.OTDonante, val.OTMesA, val.OTAnoA, val.OTABeneficiado, val.OTProveedor, val.OTProcedencia === 'OTROS' ? val.OTProcedenciaOt : val.OTProcedencia,
+                        apoyo.length, val.SLHemodialisis, '', val.FMTrabajadora
                     ]
 
                     id++;
@@ -194,9 +195,9 @@ class Inicio extends Component {
                         val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, 'FORANEA', 
                         'OTROS/FORANEO', 'ZONA FORÁNEA, OTRAS DIOCESIS', '', '', '', '', '', '', '', '', '', '', 
                         '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, '', '', '', '',
-                        '', '', '', '', '', '', '', '', val.APCantidad, '', '', '', '', '', val.APAportacion, 
+                        '', '', '', '', '', '', '', '', val.APCantidad, '', '', '', '', '', '', '', '', val.APAportacion, 
                         val.APProveedor, val.APProcedencia === 'OTROS' ? val.APProcedenciaOt : val.APProcedencia,
-                        1, val.SLHemodialisis, '', '', '', '', val.FMTrabajadora
+                        1, val.SLHemodialisis, '', val.FMTrabajadora
                     ]
 
                     id++;
@@ -233,9 +234,8 @@ class Inicio extends Component {
     };
 
     transporteTable = (data, classes) => {
-        const { rowsPerPage, page, searchT, searchByT } = this.state;
-        const rows = this.state.data
-        const searchBy = searchByT === 'Persona' ? 'DGCaso' : 'FMNumero'
+        const { rowsPerPage, pageT, searchT, searchByT } = this.state;
+        const searchBy = searchByT === 'Persona' ? 'DGCaso' : 'FMNumero';
 
         return (
             <div style={{paddingTop: "50px"}}>
@@ -258,6 +258,17 @@ class Inicio extends Component {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
+                                <TablePagination
+                                    colSpan={3}
+                                    count={data.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={pageT}
+                                    onChangePage={(e, p) => this.handleChangePage(e, p)}
+                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </TableRow>
+                            <TableRow>
                                 <TableCell></TableCell>
                                 <TableCell>Numero</TableCell>
                                 <TableCell>Caso</TableCell>
@@ -265,13 +276,14 @@ class Inicio extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.filter(caso => caso.val[searchBy].indexOf(searchT) !== -1).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                            {data.filter(caso => caso.val[searchBy].indexOf(searchT) !== -1).slice(pageT * rowsPerPage, pageT * rowsPerPage + rowsPerPage).map((row, i) => {
+                                
                                 return (
                                 <TableRow key={row.key}>
                                     <TableCell style={{display: 'flex'}}>
                                         <Link to={{ 
                                             pathname: '/transporte', 
-                                            user: data[i],
+                                            user: data[pageT * rowsPerPage + i],
                                             modifying: 1
                                         }}>
                                             <IconButton variant="contained" color="primary" className={classes.button}> 
@@ -280,7 +292,7 @@ class Inicio extends Component {
                                         </Link>
                                         <Link to={{ 
                                             pathname: '/transporte', 
-                                            user: data[i],
+                                            user: data[pageT * rowsPerPage + i],
                                             modifying: 0
                                         }}>
                                             <IconButton variant="contained" color="primary" className={classes.button}> 
@@ -301,9 +313,9 @@ class Inicio extends Component {
                             <TableRow>
                                 <TablePagination
                                     colSpan={3}
-                                    count={rows.length}
+                                    count={data.length}
                                     rowsPerPage={rowsPerPage}
-                                    page={page}
+                                    page={pageT}
                                     onChangePage={(e, p) => this.handleChangePage(e, p)}
                                     onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
                                     ActionsComponent={TablePaginationActions}
@@ -318,9 +330,8 @@ class Inicio extends Component {
 
     socioeconomicoTable = (data, classes) => {
         const { rowsPerPage, page, searchSE, searchBySE } = this.state;
-        const rows = this.state.data
         const searchBy = searchBySE === 'Persona' ? 'DGCaso' : 'FMNumero'
-  
+        
         return (
             <div style={{paddingTop: "50px"}}>
                 <div style={{paddingLeft: "10px"}}>
@@ -342,6 +353,17 @@ class Inicio extends Component {
                     <Table className={classes.table} >
                         <TableHead>
                             <TableRow>
+                                <TablePagination
+                                    colSpan={3}
+                                    count={data.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onChangePage={(e, p) => this.handleChangePage(e, p)}
+                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </TableRow>
+                            <TableRow>
                                 <TableCell></TableCell>
                                 <TableCell>No.</TableCell>
                                 <TableCell>Caso</TableCell>
@@ -357,7 +379,7 @@ class Inicio extends Component {
                                     <TableCell style={{display: 'flex'}}>
                                         <Link to={{ 
                                             pathname: '/socioeconomico', 
-                                            user: data[i],
+                                            user: data[page * rowsPerPage + i],
                                             modifying: 1
                                         }}>
                                             <IconButton variant="contained" color="primary" className={classes.button}> 
@@ -366,7 +388,7 @@ class Inicio extends Component {
                                         </Link>
                                         <Link to={{ 
                                             pathname: '/socioeconomico', 
-                                            user: data[i],
+                                            user: data[page * rowsPerPage + i],
                                             modifying: 0
                                         }}>
                                             <IconButton variant="contained" color="primary" className={classes.button}> 
@@ -389,13 +411,13 @@ class Inicio extends Component {
                             <TableRow>
                                 <TablePagination
                                     colSpan={3}
-                                    count={rows.length}
+                                    count={data.length}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     onChangePage={(e, p) => this.handleChangePage(e, p)}
                                     onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
                                     ActionsComponent={TablePaginationActions}
-                                    />
+                                />
                             </TableRow>
                         </TableFooter>
                     </Table>
@@ -413,7 +435,7 @@ class Inicio extends Component {
         return (
             <div className={classes.root}>
                 <AppBar position="static">
-                    <Tabs value={value} onChange={this.handleTabChange}>
+                    <Tabs value={value} style={{backgroundColor: '#5c70d2'}} onChange={this.handleTabChange}>
                         <Tab label="Socioeconomico"></Tab>
                         <Tab label="Transporte"></Tab>
                     </Tabs>

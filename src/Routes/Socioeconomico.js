@@ -35,7 +35,10 @@ import {
     Estados,
     Decanatos,
     Municipios,
-    TipoI
+    TipoI,
+    Edad,
+    Donantes,
+    Meses
 } from '../Constants/Options';
 
 const styles = theme => ({
@@ -83,6 +86,7 @@ class Socioeconomico extends Component {
                 fcantidad: 0,
                 mcantidad: 0,
                 vcantidad: 0,
+                key: '',
                 CFObservaciones: 'Ninguna',
                 DEObservaciones: 'Ninguna',
                 ALObservaciones: 'Ninguna',
@@ -104,7 +108,7 @@ class Socioeconomico extends Component {
                 caso[Object.keys(user.val)[i]] = Object.keys(user.val).map(i => user.val[i])[i];
             }
 
-            this.setState({caso});
+            this.setState({caso: caso, key: user.key});
         }
     }
 
@@ -205,13 +209,16 @@ class Socioeconomico extends Component {
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">CANTIDAD AUTORIZADA</p><input style="margin-right: 10px" value="'+props.OTPresupuesto+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONATIVO HOSPITAL</p><input style="margin-right: 10px" value="'+(props.OTDHospital ? props.OTDHospital : '')+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO PROYECTO</p><input style="margin-right: 10px" value="'+(props.OTFProyecto ? props.OTFProyecto : '')+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO CABILDO</p><input style="margin-right: 10px" value="'+(props.OTFCabildo ? props.OTFCabildo : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONACION</p><input style="margin-right: 10px" value="'+(props.OTDonacion ? props.OTDonacion : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">MES APADRINAMIENTO</p><input style="margin-right: 10px" value="'+(props.OTMesA ? props.OTMesA : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">APORTACION BENEFICIADO</p><input style="margin-right: 10px" value="'+(props.OTABeneficiado ? props.OTABeneficiado : '')+'"/><br>'+
             '</div>'+
             '<div style="width: 50%; text-align: right">'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO ARZOBISPADO</p><input style="margin-right: 10px" value="'+(props.OTFArzobispado ? props.OTFArzobispado : '')+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO OLGA</p><input style="margin-right: 10px" value="'+(props.OTFOlga ? props.OTFOlga : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">FONDO CABILDO</p><input style="margin-right: 10px" value="'+(props.OTFCabildo ? props.OTFCabildo : '')+'"/><br>'+
                 '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">DONANTE</p><input style="margin-right: 10px" value="'+(props.OTDonante ? props.OTDonante : '')+'"/><br>'+
-                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">APORTACION BENEFICIADO</p><input style="margin-right: 10px" value="'+(props.OTABeneficiado ? props.OTABeneficiado : '')+'"/><br>'+
+                '<p style="display: inline-flex; margin-bottom: 8px; margin-right: 5px">AÑO APADRINAMIENTO</p><input style="margin-right: 10px" value="'+(props.OTAnoA ? props.OTAnoA : '')+'"/><br>'+
             '</div>'+
         '</div>'+
         '<p style="width: 50%">NOTAS DE SEGUIMIENTO </p><textarea rows="'+(props.OTNotasSE ? this.resizeTextArea(props.OTNotasSE, 2) : 1)+'" style="width: 100%; margin-top: -15px; overflow-y: hidden">'+(props.OTNotasSE ? props.OTNotasSE : '')+'</textarea>';
@@ -311,7 +318,7 @@ class Socioeconomico extends Component {
                 '<p style="width: 100px; display: inline">PARENTESCO </p><input style="width: 50%;" value="'+props.DGParentesco+'"/>'+
             '</div>'+
             '<div style="width: 50%; text-align:right">'+
-                '<p style="width: 100px; display: inline">EDAD</p><input style="width: 20%;" value="'+props.DGEdad+'"/><br>'+
+                '<p style="width: 100px; display: inline">EDAD</p><input style="width: 20%;" value="'+props.DGEdad+" "+props.DGTEdad+'"/><br>'+
                 '<p style="display: inline">CRUCE DE CALLES</p><textarea rows="'+this.resizeTextArea(props.DGCruce, 1)+'" style="width: 70%; overflow-y: hidden">'+props.DGCruce+'</textarea><br>'+
                 '<p style="width: 100px; display: inline">C.P. </p><input value="'+props.DGCP+'"/><br>'+
                 '<p style="width: 100px; display: inline">ESTADO </p><input value="'+props.DGEstado+'"/><br>'+
@@ -338,7 +345,7 @@ class Socioeconomico extends Component {
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">OTROS INGRESOS </p><input style="width: 20%;" value="'+props.DEIngresoO+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">TOTAL DE INGRESOS </p><input style="width: 20%;" value="'+ingresoT+'"/><br>'+
                 '<p style="width: 50%; display: inline-flex; margin-bottom: 8px">DIFERENCIA </p><input style="width: 20%;" value="'+diferencia+'"/><br>'+
-                '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.DEObservaciones, 2)+'" style="width: 95%; margin-top: -15px; overflow-y: hidden" >'+props.DEObservaciones+'</textarea>'+
+                '<p style="width: 50%">OBSERVACIONES </p><textarea rows="'+this.resizeTextArea(props.DEObservaciones, 1)+'" style="width: 95%; margin-top: -15px; overflow-y: hidden" >'+props.DEObservaciones+'</textarea>'+
             '</div>'+
             '<div style="width: 50%">'+
                 '<p style="width: 100%;text-align: center;">EGRESOS MENSUALES</p>'+
@@ -422,13 +429,14 @@ class Socioeconomico extends Component {
             return;
         }
 
-        var user = this.props.location.user;
+        /* var user = this.props.location.user; */
+        var user = this.state.key;
         var itemsRef = firebase.database().ref('casos');
         let casos = {};
 
         Object.keys(this.state.caso).map(i => casos[i] = i!=="message" && i!=="open" && this.state.caso[i])
 
-        itemsRef.child(user.key).update(casos);
+        itemsRef.child(user).update(casos);
         this.setState({ open: true, message: 'El caso ha sido modificado'});
     }
     
@@ -443,8 +451,8 @@ class Socioeconomico extends Component {
 
         Object.keys(this.state.caso).map(i => casos[i] = i!=="message" && i!=="open" && this.state.caso[i])
 
-        firebase.database().ref('casos').push(casos);
-        this.setState({ open: true, message: 'El caso ha sido guardado'});
+        var dataRef = firebase.database().ref('casos').push(casos);
+        this.setState({ key: dataRef.key, open: true, message: 'El caso ha sido guardado'});
     }
 
     nuevo = () => {
@@ -456,11 +464,14 @@ class Socioeconomico extends Component {
     resizeTextArea = (value, type) => {
         let n=1;
 
-        if(type === 1) {
-            var res = value.split(" ");
+        var rows = value.split("\n");
+        var arc = type === 1 ? 25 : 50;
 
-            if (value.length > 20){
-                n = n + parseInt(value.length / 25, 10);
+        rows.forEach(element => {
+            var res = element.split(" ");
+
+            if (element.length > 20){
+                n = n + parseInt(element.length / arc, 10);
             }
 
             for(var i=0; i < res.length; i++){
@@ -468,16 +479,13 @@ class Socioeconomico extends Component {
                     n = n + 1;
                 }
             }
-        }
-        else if(type === 2){
-            n = value.split("\n").length;
-        }
-
+        });
+        
         return n > 1 ? n + 1 : n;
     }
 
     checkFields = () => {
-        const Fields = ['DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 
+        const Fields = ['DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 'DGTEdad', 
             'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 'FMTImpresion',
             'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTPresupuesto', 'OTHistoriaS', 'OTPronostico', 'OTProveedor',
             'OTProcedencia' ];
@@ -745,13 +753,14 @@ class Socioeconomico extends Component {
                     {/* DATOS GENERALES */}
                     <h1 className={classes.title}>DATOS GENERALES</h1>
                     <div className={classes.container}>
-                        <TxtField nombre="Nombre del caso" id="DGCaso" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Edad" id="DGEdad" required onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Sexo" id="DGSexo" required options={Sexo} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Calle" id="DGCalle" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Cruce de calles" id="DGCruce" required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Colonia" id="DGColonia" required onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre="Codigo postal" id="DGCP" required onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Nombre del caso" id={"DGCaso"} required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Edad" id={"DGEdad"} required onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Tipo de Edad" id={"DGTEdad"} required options={Edad} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Sexo" id={"DGSexo"} required options={Sexo} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Calle" id={"DGCalle"} required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Cruce de calles" id={"DGCruce"} required multiline={true} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Colonia" id={"DGColonia"} required onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre="Codigo postal" id={"DGCP"} required onChange={this.handleChange} state={this.state.caso}/>
                         <Autocomplete nombre={"Municipio"} id={"DGMunicipio"} required options={Municipios} onChange={this.handleChange} state={this.state.caso}/>
                         <Autocomplete nombre={"Estado"} id={"DGEstado"} required options={Estados} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre="Telefono" id="DGTelefono" onChange={this.handleChange} state={this.state.caso}/>
@@ -921,7 +930,11 @@ class Socioeconomico extends Component {
                         <TxtField nombre={"Fondo Arzobispado"} id={"OTFArzobispado"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Fondo Cabildo"} id={"OTFCabildo"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Fondo Olga"} id={"OTFOlga"} onChange={this.handleChange} state={this.state.caso}/>
-                        <TxtField nombre={"Donante"} id={"OTDonante"} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre={"Donacion"} id={"OTDonacion"} onChange={this.handleChange} state={this.state.caso}/>
+                        {/* <TxtField nombre={"Donante"} id={"OTDonante"} onChange={this.handleChange} state={this.state.caso}/> */}
+                        <Autocomplete nombre={"Donante"} id={"OTDonante"} options={Donantes} onChange={this.handleChange} state={this.state.caso}/>
+                        <Autocomplete nombre={"Mes Apadrinamiento"} id={"OTMesA"} options={Meses} onChange={this.handleChange} state={this.state.caso}/>
+                        <TxtField nombre={"Año Apadrinamiento"} id={"OTAnoA"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Aportacion Beneficiado"} id={"OTABeneficiado"} onChange={this.handleChange} state={this.state.caso}/>
                         <TxtField nombre={"Notas de seguimiento y/o Evolucion"} id={"OTNotasSE"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso}/>
                     </div>
