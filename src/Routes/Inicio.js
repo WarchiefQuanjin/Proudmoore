@@ -17,8 +17,12 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
 import EditIcon from '@material-ui/icons/Edit'
+import DeleteIcon from '@material-ui/icons/Delete'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 import IconButton from '@material-ui/core/IconButton';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import TxtField from '../Components/TxtField';
 import TablePaginationActions from '../Components/TablePaginationActions.js'
 import { Search } from '../Constants/Options';
@@ -32,7 +36,9 @@ const styles = theme => ({
     },
     button: {
         margin: theme.spacing.unit,
-        marginLeft: '10px'
+        marginLeft: '10px',
+        width: '40px',
+        height: '40px'
     },
     table: {
       minWidth: 700
@@ -61,7 +67,8 @@ class Inicio extends Component {
             searchBySE: 'Persona',
             searchByT: 'Persona',
             searchT: '',
-            searchSE: ''
+            searchSE: '',
+            dialogOpen: false
         }
     }
 
@@ -212,6 +219,26 @@ class Inicio extends Component {
         XLSX.writeFile(wb, "BASE DE DATOS " + this.state.year + ".xlsx")
     }
 
+    delete = () => {
+        var casosRef = firebase.database().ref(this.state.type);
+        /* var casosRef = firebase.database().ref(type); */
+
+        /* casosRef.child(record.key).remove(); */
+        casosRef.child(this.state.deleteRecord).remove();
+
+        this.getSocioeconomicoData();
+        this.getTransporteData();
+        this.closeDeleteDialog();
+    }
+
+    openDeleteDialog = (record, type) => {
+        this.setState({ dialogOpen: true, deleteRecord: record.key, type: type });
+    }
+
+    closeDeleteDialog = () => {
+        this.setState({ dialogOpen: false });
+    };
+
     handleChange = (field, value, type) => {
         if(field === 'year' && (isNaN(value) || value.length >= 5))
             return
@@ -299,12 +326,16 @@ class Inicio extends Component {
                                                 <FileCopyIcon/>
                                             </IconButton>
                                         </Link>
+                                        <IconButton variant="contained" color="primary" className={classes.button} 
+                                            onClick={() => this.openDeleteDialog(data[pageT * rowsPerPage + i], 'transporte')}> 
+                                            <DeleteIcon/>
+                                        </IconButton>
                                     </TableCell>
                                     <TableCell>{row.val.FMNumero}</TableCell>
                                     <TableCell component="th" scope="row">
                                         {row.val.DGCaso}
                                     </TableCell>
-                                    <TableCell>{row.val.FMFecha}</TableCell>
+                                    <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
                                 </TableRow>
                                 );
                             })}
@@ -365,7 +396,7 @@ class Inicio extends Component {
                             </TableRow>
                             <TableRow>
                                 <TableCell></TableCell>
-                                <TableCell>No.</TableCell>
+                                <TableCell>No. Caso</TableCell>
                                 <TableCell>Caso</TableCell>
                                 <TableCell>Tipo</TableCell>
                                 <TableCell numeric>Celular</TableCell>
@@ -395,6 +426,10 @@ class Inicio extends Component {
                                                 <FileCopyIcon/>
                                             </IconButton>
                                         </Link>
+                                        <IconButton variant="contained" color="primary" className={classes.button} 
+                                            onClick={() => this.openDeleteDialog(data[page * rowsPerPage + i], 'casos')}> 
+                                            <DeleteIcon/>
+                                        </IconButton>
                                     </TableCell>
                                     <TableCell>{row.val.FMNumero}</TableCell>
                                     <TableCell component="th" scope="row">
@@ -402,7 +437,7 @@ class Inicio extends Component {
                                     </TableCell>
                                     <TableCell numeric>{row.val.FMTImpresion}</TableCell>
                                     <TableCell numeric>{row.val.DGCelular}</TableCell>
-                                    <TableCell >{row.val.FMFecha}</TableCell>
+                                    <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
                                 </TableRow>
                                 );
                             })}
@@ -441,8 +476,26 @@ class Inicio extends Component {
                     </Tabs>
                 </AppBar>
 
+                <Dialog
+                    open={this.state.dialogOpen}
+                    onClose={this.closeDeleteDialog}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    >
+                    <DialogTitle id="alert-dialog-title">{"Esta seguro de borrar esta registro?"}</DialogTitle>
+                    <DialogActions>
+                        <Button onClick={this.closeDeleteDialog} color="primary">
+                            Cancelar
+                        </Button>
+                        <Button onClick={() => this.props.checkToken( () => this.delete() )} color="primary" autoFocus>
+                            Eliminar
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
                 <div style={{marginTop: '20px', display: 'flex'}}>
-                    <Button variant="contained" color="primary" disabled={!this.state.admin} className={classes.button} onClick={() => this.props.checkToken( () => this.exportFile() )}> 
+                    <Button variant="contained" color="primary" disabled={!this.state.admin} style={{ marginLeft: '10px' }}
+                        onClick={() => this.props.checkToken( () => this.exportFile() )}> 
                         Exportar a excel
                     </Button>
                     <TextField
