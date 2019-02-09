@@ -464,6 +464,9 @@ class Socioeconomico extends Component {
     resizeTextArea = (value, type) => {
         let n=1;
 
+        if (value === undefined)
+            return n;
+
         var rows = value.split("\n");
         var arc = type === 1 ? 25 : 50;
 

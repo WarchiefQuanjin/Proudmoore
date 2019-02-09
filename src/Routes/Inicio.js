@@ -221,9 +221,6 @@ class Inicio extends Component {
 
     delete = () => {
         var casosRef = firebase.database().ref(this.state.type);
-        /* var casosRef = firebase.database().ref(type); */
-
-        /* casosRef.child(record.key).remove(); */
         casosRef.child(this.state.deleteRecord).remove();
 
         this.getSocioeconomicoData();
