@@ -44,7 +44,7 @@ class Graficas extends Component {
     }
 
     get defaultState() {
-        return {  
+        return {
             data: [],
             transporteData: [],
             year: new Date().getFullYear()
@@ -96,8 +96,8 @@ class Graficas extends Component {
 
     tablaCharts = (image) => {
         var fcantidad = ''
-        for(var i=0; i < image.length ; i++){
-            fcantidad += '<br/><hr/><br/><img id="ItemPreview" src="'+ image[i] +'" />'
+        for (var i = 0; i < image.length; i++) {
+            fcantidad += '<br/><hr/><br/><img id="ItemPreview" src="' + image[i] + '" />'
         }
 
         return fcantidad;
@@ -110,17 +110,17 @@ class Graficas extends Component {
         Object.keys(this.state).map(s => s.indexOf('chartWrapper') !== -1 && count++)
 
         const image = []
-        for(var i=0; i < count ; i++){
+        for (var i = 0; i < count; i++) {
             image[i] = this.state['chartWrapper' + (i + 1)].getChart().getImageURI();
         }
 
-        const gridName="Consulta nuestro aviso de privacidad en http://caritasgdl.org.mx en la seccion; Aviso de Privacidad";
+        const gridName = "Consulta nuestro aviso de privacidad en http://caritasgdl.org.mx en la seccion; Aviso de Privacidad";
 
-        const tableHeader = '<div style="display:flex">'+
-            '<img src="https://igx.4sqi.net/img/general/width960/82417073_V22Qrk5dPbOj3XmuXQi0gksLG4bHRXVJ-Y3JZNgNnXo.png" alt="W3Schools.com" style="width:100px;height:100px;">'+
-            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>GRAFICAS</h2>'+
-            '<h2 style="width:100px; height:100px;"></h2>'+
-        '</div>';
+        const tableHeader = '<div style="display:flex">' +
+            '<img src="https://igx.4sqi.net/img/general/width960/82417073_V22Qrk5dPbOj3XmuXQi0gksLG4bHRXVJ-Y3JZNgNnXo.png" alt="W3Schools.com" style="width:100px;height:100px;">' +
+            '<h2 style="width:600px; height:100px; text-align:center">CASOS EMERGENTES<br>GRAFICAS</h2>' +
+            '<h2 style="width:100px; height:100px;"></h2>' +
+            '</div>';
 
         const documentToPrint = window.open(gridName, 'Print', 'location=0,scrollbars=yes,height=900,width=800');
         documentToPrint.document
@@ -138,37 +138,37 @@ class Graficas extends Component {
         var color = '#';
 
         for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
+            color += letters[Math.floor(Math.random() * 16)];
         }
 
         return color;
     }
 
-    chartGenerator = (sortBy, chartType, title, type, id) =>  {
+    chartGenerator = (sortBy, chartType, title, type, id) => {
         var datas = this.state.transporteData.concat(this.state.data)
 
         if (datas.length <= 0)
             return
 
         const data = [];
-        datas.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(this.state.year, 10) )
-        .forEach((caso) => {
-            data.push([caso.val[sortBy], caso.val['OTPresupuesto'] !== undefined ? caso.val['OTPresupuesto'] : caso.val['APCantidad']])
-        })
+        datas.filter((caso) => new Date(caso.val.FMFecha).getFullYear() === parseInt(this.state.year, 10))
+            .forEach((caso) => {
+                data.push([caso.val[sortBy], caso.val['OTPresupuesto'] !== undefined ? caso.val['OTPresupuesto'] : caso.val['APCantidad']])
+            })
 
         var counts = {};
         for (var i = 0; i < data.length; i++) {
             type === 'Casos' ?
-            counts[data[i][0]] = 1 + (counts[data[i][0]] || 0) :
-            counts[data[i][0]] = parseInt(data[i][1], 10) + parseInt((counts[data[i][0]] || 0), 10);
+                counts[data[i][0]] = 1 + (counts[data[i][0]] || 0) :
+                counts[data[i][0]] = parseInt(data[i][1], 10) + parseInt((counts[data[i][0]] || 0), 10);
         }
 
         var result = Object.keys(counts).map((key) => {
-            return [chartType === 'Pie' ? String(key) + ', '+ counts[key] : String(key), counts[key], counts[key], this.getRandomColor()];
+            return [chartType === 'Pie' ? String(key) + ', ' + counts[key] : String(key), counts[key], counts[key], this.getRandomColor()];
         });
-        
-        result.sort((a,b) => { return a[0] > b[0] ? 1 : -1; })
-        result = [['Estados', 'Cantidad', { role: 'annotation'}, { role: "style" }]].concat(result)
+
+        result.sort((a, b) => { return a[0] > b[0] ? 1 : -1; })
+        result = [['Estados', 'Cantidad', { role: 'annotation' }, { role: "style" }]].concat(result)
 
         const pieOptions = {
             title: title,
@@ -188,35 +188,35 @@ class Graficas extends Component {
         return (
             result.length <= 1 ?
                 <div>
-                    <br/><hr/><br/>
+                    <br /><hr /><br />
                     <Typography component="h2" variant="headline" gutterBottom>
                         {title}
                     </Typography>
-                    <Typography style={{color: 'red'}} variant="title" gutterBottom>
+                    <Typography style={{ color: 'red' }} variant="title" gutterBottom>
                         No hay informacion disponible
                     </Typography>
                 </div>
-            :
-            <div>
-                <br/><hr/><br/>
-                <Chart
-                    chartType={chartType === 'Bar' ? "BarChart" : "PieChart"}
-                    data={result}
-                    options={pieOptions}
+                :
+                <div>
+                    <br /><hr /><br />
+                    <Chart
+                        chartType={chartType === 'Bar' ? "BarChart" : "PieChart"}
+                        data={result}
+                        options={pieOptions}
 
-                    width={"900px"}
-                    height={"400px"}
+                        width={"900px"}
+                        height={"400px"}
 
-                    getChartWrapper={chartWrapper => {
-                        this.setState({ ['chartWrapper' + id]: chartWrapper });
-                    }}
-                />
-            </div>
+                        getChartWrapper={chartWrapper => {
+                            this.setState({ ['chartWrapper' + id]: chartWrapper });
+                        }}
+                    />
+                </div>
         );
     };
 
     handleChange = debounce((value) => {
-        if(isNaN(value) || value.length >= 5)
+        if (isNaN(value) || value.length >= 5)
             return
 
         this.setState({
@@ -229,18 +229,18 @@ class Graficas extends Component {
 
         return (
             <div className={classes.root}>
-                <div style={{ marginTop: '40px'}}>
+                <div style={{ marginTop: '40px' }}>
                     <TextField
-                    required
-                    id="year"
-                    label="Año"
-                    defaultValue={this.state.year}
-                    className={classes.textField}
-                    margin="normal"
-                    onChange={(event) => this.handleChange(event.target.value)}
-                    />                    
+                        required
+                        id="year"
+                        label="Año"
+                        defaultValue={this.state.year}
+                        className={classes.textField}
+                        margin="normal"
+                        onChange={(event) => this.handleChange(event.target.value)}
+                    />
                 </div>
-                <div style={{marginBottom: '70px', marginTop: '40px'}}>
+                <div style={{ marginBottom: '70px', marginTop: '40px' }}>
                     {this.chartGenerator('DGEstado', 'Bar', 'Casos apoyados por estado', 'Casos', 1)}
                     {this.chartGenerator('DGEstado', 'Pie', 'Cantidad apoyada por estado', 'Cantidad', 2)}
                     {this.chartGenerator('DGVicaria', 'Bar', 'Casos apoyados por vicaria', 'Casos', 3)}
@@ -251,8 +251,8 @@ class Graficas extends Component {
                     {this.chartGenerator('DGSexo', 'Pie', 'Cantidad apoyada por sexo', 'Cantidad', 8)}
 
                     <Tooltip title="Imprimir" >
-                        <Button variant="fab" color="primary" className={classes.fixed} style={{bottom: '20px', right: '25px'}} 
-                            onClick={(event) => this.props.checkToken( () => this.print(event, this.state.caso) )}>
+                        <Button variant="fab" color="primary" className={classes.fixed} style={{ bottom: '20px', right: '25px' }}
+                            onClick={(event) => this.props.checkToken(() => this.print(event, this.state.caso))}>
                             <PrintIcon />
                         </Button>
                     </Tooltip>

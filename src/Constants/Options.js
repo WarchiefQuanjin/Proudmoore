@@ -593,7 +593,8 @@ const TipoI = [
 
 const Search = [
     { value: 'Persona' },
-    { value: 'No. Caso' }
+    { value: 'No. Caso' },
+    { value: 'Fecha' }
 ]
 
 const Edad = [

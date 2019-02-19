@@ -33,41 +33,41 @@ const background = 'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b
 
 const styles = theme => ({
   root: {
-      width: '100%',
-      height: '100%',
-      marginTop: 0,
-      zIndex: 1,
-      display: 'flex'
+    width: '100%',
+    height: '100%',
+    marginTop: 0,
+    zIndex: 1,
+    display: 'flex'
   },
   appFrame: {
-      position: 'absolute', 
-      overflowY: 'hidden', 
-      display: 'flex',
-      width: '100%',
-      height: '100%'
+    position: 'absolute',
+    overflowY: 'hidden',
+    display: 'flex',
+    width: '100%',
+    height: '100%'
   },
   appBar: {
-      backgroundColor: drawerColor,
-      marginLeft: drawerWidth,
-      [theme.breakpoints.up('md')]: {
-          width: `calc(100% - ${drawerWidth}px)`
-      }
+    backgroundColor: drawerColor,
+    marginLeft: drawerWidth,
+    [theme.breakpoints.up('md')]: {
+      width: `calc(100% - ${drawerWidth}px)`
+    }
   },
   navIconHide: {
-      [theme.breakpoints.up('md')]: {
-          display: 'none'
-      }
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
   },
   drawerHeader: theme.mixins.toolbar,
   drawerPaper: {
-      width: 250,
-      [theme.breakpoints.up('md')]: {
-          width: drawerWidth,
-          position: 'relative',
-          height: '100%'
-      },
-      borderRightStyle: 'none',
-      backgroundColor: drawerColor
+    width: 250,
+    [theme.breakpoints.up('md')]: {
+      width: drawerWidth,
+      position: 'relative',
+      height: '100%'
+    },
+    borderRightStyle: 'none',
+    backgroundColor: drawerColor
   },
   drawer: {
     position: 'relative',
@@ -81,39 +81,39 @@ const styles = theme => ({
     width: '100%'
   },
   routes: {
-      minHeight: 'calc(100% - 75px)'
+    minHeight: 'calc(100% - 75px)'
   },
   link: {
-      textDecoration: 'none',
-      color: '#FFFFFF'
+    textDecoration: 'none',
+    color: '#FFFFFF'
   },
   spacer: {
-      flex: '1 1 100%'
+    flex: '1 1 100%'
   },
   footer: {
-      padding: 16,
-      textAlign: 'center'
+    padding: 16,
+    textAlign: 'center'
   },
   componentsAlignToCenterStyle: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   bar: {},
   checked: {
-      color: '#FFFFFF',
-      '& + $bar': {
-          backgroundColor: '#FFFFFF',
-      },
+    color: '#FFFFFF',
+    '& + $bar': {
+      backgroundColor: '#FFFFFF',
+    },
   },
   button: {
-      margin: theme.spacing.unit,
-      color: 'black',
-      backgroundColor: 'white'
+    margin: theme.spacing.unit,
+    color: 'black',
+    backgroundColor: 'white'
   },
   loginComponent: {
-      width: '50%',
-      margin: '0 auto'
+    width: '50%',
+    margin: '0 auto'
   },
   outer: {
     display: 'table',
@@ -174,7 +174,7 @@ class App extends Component {
   login = (event) => {
     event.preventDefault();
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch((error) => {
-      this.setState({ open: true, message: error.message});
+      this.setState({ open: true, message: error.message });
     });
   }
 
@@ -192,13 +192,13 @@ class App extends Component {
     var message = '';
 
     firebase.auth().currentUser.getIdToken(true).then((idToken) => {
-      if (typeof callback === "function") 
+      if (typeof callback === "function")
         callback();
     }).catch((error) => {
-        console.log(error)
-        message = error.code === 'auth/user-token-expired' ? 'La sesión ha caducado, vuelva a ingresar' : 'Ha ocurrido un error';
+      console.log(error)
+      message = error.code === 'auth/user-token-expired' ? 'La sesión ha caducado, vuelva a ingresar' : 'Ha ocurrido un error';
 
-        this.setState({ open: true, message: message});
+      this.setState({ open: true, message: message });
     })
   }
 
@@ -221,8 +221,8 @@ class App extends Component {
 
   mediaQueryChanged() {
     this.setState({
-        mql: mql,
-        docked: mql.matches
+      mql: mql,
+      docked: mql.matches
     });
   }
 
@@ -232,7 +232,7 @@ class App extends Component {
 
   handleChange = (field, value) => {
     this.setState({
-        [field]: value
+      [field]: value
     })
   }
 
@@ -245,7 +245,7 @@ class App extends Component {
   loginComponent = (classes) => {
     return (
       <div>
-        <div style={{backgroundImage: "url(" + background + ")", position: 'absolute', opacity: '0.7', height: '100%', width: '100%'}}></div>
+        <div style={{ backgroundImage: "url(" + background + ")", position: 'absolute', opacity: '0.7', height: '100%', width: '100%' }}></div>
         <div className={classes.outer}>
           <div className={classes.middle}>
             <div className={classes.inner}>
@@ -256,9 +256,9 @@ class App extends Component {
                 ESTUDIOS SOCIOECONOMICOS
               </Typography>
               <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=fa2effcc-3778-409e-816a-e6dd4452ab2e'} alt="CÁRITAS DE GUADALAJARA" />
-              <br/>
-              <TxtField id={"email"} nombre={"Email"} width={70} term={"%"} onChange={this.handleChange} state={this.state}/>
-              <br/>
+              <br />
+              <TxtField id={"email"} nombre={"Email"} width={70} term={"%"} onChange={this.handleChange} state={this.state} />
+              <br />
               <TextField
                 id={'password'}
                 label={'Password'}
@@ -268,7 +268,7 @@ class App extends Component {
                 onChange={(event) => this.handleChange('password', event.target.value)}
                 onKeyPress={this.loginEnter}
                 value={this.state.password} />
-              <br/>
+              <br />
 
               <Button variant="contained" color="primary" aria-label='login' onClick={this.login} className={classes.loginButton}>
                 Ingresar
@@ -290,18 +290,18 @@ class App extends Component {
             <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=fa2effcc-3778-409e-816a-e6dd4452ab2e'} alt="CÁRITAS DE GUADALAJARA" />
           </div>
 
-          <List style={{backgroundColor: drawerColor, color: 'white'}}>
+          <List style={{ backgroundColor: drawerColor, color: 'white' }}>
             {
               Routes.map((route, index) =>
                 route.linkTo &&
                 <Link key={index} className={classes.link} to={route.linkTo}>
-                  <ListItem className={classes.linkButton} style={{backgroundColor: secondaryColor}} onClick={this.handleDrawerToggle}>
+                  <ListItem className={classes.linkButton} style={{ backgroundColor: secondaryColor }} onClick={this.handleDrawerToggle}>
                     <ListItemIcon>{route.icon}</ListItemIcon>
 
-                    <ListItemText primary={route.iconText} 
+                    <ListItemText primary={route.iconText}
                       classes={{
-                        primary: classes.listText }
-                      }
+                        primary: classes.listText
+                      }}
                     />
                   </ListItem>
                 </Link>
@@ -321,13 +321,13 @@ class App extends Component {
                 <IconButton color='default' aria-label='open drawer' onClick={this.handleDrawerToggle} className={classes.navIconHide}>
                   <MenuIcon />
                 </IconButton>
-                
+
                 {Routes.map((route, index) => (
                   <Route key={index} path={route.path} exact={route.exact} component={route.title} />
                 ))}
                 <div className={classes.spacer}></div>
                 <IconButton aria-label='logout' onClick={this.logout} className={classes.button}>
-                  <PowerSettingsNew/>
+                  <PowerSettingsNew />
                 </IconButton>
               </Toolbar>
             </AppBar>
@@ -340,8 +340,8 @@ class App extends Component {
                   {drawer}
                 </Drawer>
               </Hidden>
-              <Drawer 
-                variant='permanent' 
+              <Drawer
+                variant='permanent'
                 classes={{
                   paper: classes.drawerPaper,
                 }}
@@ -354,10 +354,10 @@ class App extends Component {
             <main className={classes.content}>
               <div className={classes.routes}>
                 <Switch>
-                  <Route path='/' exact={true} render={(props) => <Inicio {...props} checkToken={this.checkToken} user={this.state.user}/>} />
-                  <Route path='/socioeconomico' render={(props) => <Socioeconomico {...props} checkToken={this.checkToken} user={this.state.user}/>} />
-                  <Route path='/transporte' render={(props) => <Transporte {...props} checkToken={this.checkToken} user={this.state.user}/>} />
-                  <Route path='/graficas' render={(props) => <Graficas {...props} checkToken={this.checkToken} user={this.state.user}/>} />
+                  <Route path='/' exact={true} render={(props) => <Inicio {...props} checkToken={this.checkToken} user={this.state.user} />} />
+                  <Route path='/socioeconomico' render={(props) => <Socioeconomico {...props} checkToken={this.checkToken} user={this.state.user} />} />
+                  <Route path='/transporte' render={(props) => <Transporte {...props} checkToken={this.checkToken} user={this.state.user} />} />
+                  <Route path='/graficas' render={(props) => <Graficas {...props} checkToken={this.checkToken} user={this.state.user} />} />
                 </Switch>
               </div>
             </main>
@@ -381,11 +381,11 @@ class App extends Component {
           TransitionComponent={Fade}
           autoHideDuration={3000}
           ContentProps={{
-              'aria-describedby': 'message-id',
+            'aria-describedby': 'message-id',
           }}
           message={message}
         />
-        {this.state.user !== undefined ? this.state.user !== '' ? this.main(classes) : this.loginComponent(classes) : <div/>}
+        {this.state.user !== undefined ? this.state.user !== '' ? this.main(classes) : this.loginComponent(classes) : <div />}
       </div>
     )
   }

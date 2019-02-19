@@ -30,9 +30,9 @@ import * as moment from 'moment';
 
 const styles = theme => ({
     root: {
-      width: '100%',
-      marginTop: theme.spacing.unit * 3,
-      overflow: 'hidden',
+        width: '100%',
+        marginTop: theme.spacing.unit * 3,
+        overflow: 'hidden',
     },
     button: {
         margin: theme.spacing.unit,
@@ -41,7 +41,7 @@ const styles = theme => ({
         height: '40px'
     },
     table: {
-      minWidth: 700
+        minWidth: 700
     },
     textField: {
         marginLeft: '10px',
@@ -116,14 +116,14 @@ class Inicio extends Component {
         })
     }
 
-    checkAdmin(){
+    checkAdmin() {
         firebase.database().ref(`admins/`).orderByChild("Mail").equalTo(this.props.user.email).once("value", snapshot => {
             if (window.navigator.userAgent.indexOf("MSIE ") > 0 || window.navigator.userAgent.indexOf("Trident") > 0 || window.navigator.userAgent.indexOf("Edge") > 0) // If Internet Explorer, return version number
             {
-                var wmi = new global.ActiveXObject ("WbemScripting.SWbemLocator");
+                var wmi = new global.ActiveXObject("WbemScripting.SWbemLocator");
                 var service = wmi.ConnectServer(".");
                 var e = new global.Enumerator(service.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled = True"));
-                for(; !e.atEnd(); e.moveNext()) {
+                for (; !e.atEnd(); e.moveNext()) {
                     var s = e.item();
                     var macAddress = unescape(s.MACAddress);
                 }
@@ -143,27 +143,27 @@ class Inicio extends Component {
 
     exportFile() {
         const wb = XLSX.utils.book_new()
-        const months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 
+        const months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO',
             'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
 
         months.forEach((month, i) => {
             let data = JSON.parse(JSON.stringify(Excel))
             let id = 1;
 
-            this.state.data.filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').year() === parseInt(this.state.year, 10) )
-                .filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').month() === i )
+            this.state.data.filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').year() === parseInt(this.state.year, 10))
+                .filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').month() === i)
                 .forEach((caso) => {
                     const val = caso.val;
                     const clasificacion = val.DGEdad <= 17 ? "INFANTIL" :
                         val.DGEdad >= 60 ? "GERIATRICO" : "DIVERSO";
 
                     let apoyo = [];
-                    for(var i = 0; i < val.apcantidad; i++){
+                    for (var i = 0; i < val.apcantidad; i++) {
                         apoyo.push(val["FMApoyo" + i]);
                     }
-                    
-                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGCaso, val.DGCalle, val.DGColonia, 
-                        val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, val.DGParroquia, 
+
+                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGCaso, val.DGCalle, val.DGColonia,
+                        val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, val.DGParroquia,
                         val.DGDecanato, val.DGVicaria, apoyo.includes("ORIENTACION") ? 1 : '', apoyo.includes("DESPENSA") ? 1 : '',
                         apoyo.includes("ALIMENTO") ? 1 : '', apoyo.includes("LECHE") ? 1 : '', apoyo.includes("PAÑALES") ? 1 : '',
                         apoyo.includes("MEDICAMENTO") ? 1 : '', apoyo.includes("ESTUDIOS MEDICOS") ? 1 : '', apoyo.includes("IMPLEMENTOS MEDICOS") ? 1 : '',
@@ -184,35 +184,35 @@ class Inicio extends Component {
 
                     id++;
                     data.push(casosArray)
-            })
+                })
 
-            this.state.transporteData.filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').year() === parseInt(this.state.year, 10) )
-                .filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').month() === i )
+            this.state.transporteData.filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').year() === parseInt(this.state.year, 10))
+                .filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').month() === i)
                 .forEach((caso) => {
                     const val = caso.val;
                     const clasificacion = val.DGEdad <= 17 ? "INFANTIL" :
                         val.DGEdad >= 60 ? "GERIATRICO" : "DIVERSO";
 
                     let apoyo = [];
-                    for(var i = 0; i < val.apcantidad; i++){
+                    for (var i = 0; i < val.apcantidad; i++) {
                         apoyo.push(val["FMApoyo" + i]);
                     }
-                    
-                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGCaso, val.DGDomicilio, val.DGColonia, 
-                        val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, 'FORANEA', 
-                        'OTROS/FORANEO', 'ZONA FORÁNEA, OTRAS DIOCESIS', '', '', '', '', '', '', '', '', '', '', 
+
+                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGCaso, val.DGDomicilio, val.DGColonia,
+                        val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, 'FORANEA',
+                        'OTROS/FORANEO', 'ZONA FORÁNEA, OTRAS DIOCESIS', '', '', '', '', '', '', '', '', '', '',
                         '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, '', '', '', '',
-                        '', '', '', '', '', '', '', '', val.APCantidad, '', '', '', '', '', '', '', '', val.APAportacion, 
+                        '', '', '', '', '', '', '', '', val.APCantidad, '', '', '', '', '', '', '', '', val.APAportacion,
                         val.APProveedor, val.APProcedencia === 'OTROS' ? val.APProcedenciaOt : val.APProcedencia,
                         1, val.SLHemodialisis, '', val.FMTrabajadora
                     ]
 
                     id++;
                     data.push(casosArray)
-            })
+                })
 
             const wsAll = XLSX.utils.aoa_to_sheet(data)
-            
+
             XLSX.utils.book_append_sheet(wb, wsAll, month)
         })
 
@@ -237,156 +237,73 @@ class Inicio extends Component {
     };
 
     handleChange = (field, value, type) => {
-        if(field === 'year' && (isNaN(value) || value.length >= 5))
+        if (field === 'year' && (isNaN(value) || value.length >= 5))
             return
 
-        this.props.checkToken( ()=> this.setState({
+        if (field === 'searchBySE') {
+            this.setState({ searchSE: '' })
+        } else if (field === 'searchByT') {
+            this.setState({ searchT: '' })
+        }
+
+        this.props.checkToken(() => this.setState({
             [field]: value
         }))
     }
 
-    handleChangePage = (event, page) => {
-        this.props.checkToken( ()=> this.setState({ page }));
+    handleChangePage = (event, page, type) => {
+        this.props.checkToken(() => {
+            this.setState({ [type]: page })
+        });
     };
-    
+
     handleChangeRowsPerPage = event => {
-        this.props.checkToken( ()=> this.setState({ rowsPerPage: event.target.value }));
+        this.props.checkToken(() => this.setState({ rowsPerPage: event.target.value }));
     };
 
     handleTabChange = (event, value) => {
-        this.props.checkToken( ()=> this.setState({ value }));
+        this.props.checkToken(() => this.setState({ value }));
     };
-
-    transporteTable = (data, classes) => {
-        const { rowsPerPage, pageT, searchT, searchByT } = this.state;
-        const searchBy = searchByT === 'Persona' ? 'DGCaso' : 'FMNumero';
-
-        return (
-            <div style={{paddingTop: "50px"}}>
-                <div style={{paddingLeft: "10px"}}>
-                    <TextField 
-                        id={'Buscar'}
-                        label={'Buscar'}
-                        placeholder={'Buscar'}
-                        defaultValue={searchT}
-                        onChange={(event) => this.handleChange('searchT', event.target.value)} />
-                    <TxtField  
-                        id={"searchByT"} 
-                        nombre={"Buscar Por"} 
-                        width={100} 
-                        options={Search} 
-                        onChange={this.handleChange} 
-                        state={this.state}/>
-                </div>
-                <div style={{overflowX: 'scroll', height: '100%'}}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <TablePagination
-                                    colSpan={3}
-                                    count={data.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={pageT}
-                                    onChangePage={(e, p) => this.handleChangePage(e, p)}
-                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell>Numero</TableCell>
-                                <TableCell>Caso</TableCell>
-                                <TableCell>Fecha</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {data.filter(caso => caso.val[searchBy].indexOf(searchT) !== -1).slice(pageT * rowsPerPage, pageT * rowsPerPage + rowsPerPage).map((row, i) => {
-                                
-                                return (
-                                <TableRow key={row.key}>
-                                    <TableCell style={{display: 'flex'}}>
-                                        <Link to={{ 
-                                            pathname: '/transporte', 
-                                            user: data[pageT * rowsPerPage + i],
-                                            modifying: 1
-                                        }}>
-                                            <IconButton variant="contained" color="primary" className={classes.button}> 
-                                                <EditIcon/>
-                                            </IconButton >
-                                        </Link>
-                                        <Link to={{ 
-                                            pathname: '/transporte', 
-                                            user: data[pageT * rowsPerPage + i],
-                                            modifying: 0
-                                        }}>
-                                            <IconButton variant="contained" color="primary" className={classes.button}> 
-                                                <FileCopyIcon/>
-                                            </IconButton>
-                                        </Link>
-                                        <IconButton variant="contained" color="primary" className={classes.button} 
-                                            onClick={() => this.openDeleteDialog(data[pageT * rowsPerPage + i], 'transporte')}> 
-                                            <DeleteIcon/>
-                                        </IconButton>
-                                    </TableCell>
-                                    <TableCell>{row.val.FMNumero}</TableCell>
-                                    <TableCell component="th" scope="row">
-                                        {row.val.DGCaso}
-                                    </TableCell>
-                                    <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
-                                </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TablePagination
-                                    colSpan={3}
-                                    count={data.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={pageT}
-                                    onChangePage={(e, p) => this.handleChangePage(e, p)}
-                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
-                </div>
-            </div>
-        )
-    }
 
     socioeconomicoTable = (data, classes) => {
         const { rowsPerPage, page, searchSE, searchBySE } = this.state;
-        const searchBy = searchBySE === 'Persona' ? 'DGCaso' : 'FMNumero'
-        
+        const searchBy = searchBySE === 'Persona' ? 'DGCaso' :
+            searchBySE === 'Fecha' ? 'FMFecha' : 'FMNumero'
+
+        const filteredData = data.filter(caso => caso.val[searchBy]
+            .indexOf(searchSE) !== -1)
+
+        console.log('Warsong')
+        console.log(filteredData)
+
         return (
-            <div style={{paddingTop: "50px"}}>
-                <div style={{paddingLeft: "10px"}}>
-                    <TextField 
+            <div style={{ paddingTop: "50px" }}>
+                <div style={{ paddingLeft: "10px" }}>
+                    <TextField
                         id={'Buscar'}
-                        label={'Buscar'}
-                        placeholder={'Buscar'}
+                        label={searchBySE === 'Fecha' ? '' : 'Buscar'}
+                        placeholder={searchBySE === 'Fecha' ? '' : 'Buscar'}
+                        type={searchBySE === 'Fecha' ? 'date' : 'string'}
                         defaultValue={searchSE}
                         onChange={(event) => this.handleChange('searchSE', event.target.value)} />
-                    <TxtField 
-                        id={"searchBySE"} 
-                        nombre={"Buscar Por"} 
-                        width={100} 
-                        options={Search} 
-                        onChange={this.handleChange} 
-                        state={this.state}/>
+                    <TxtField
+                        id={"searchBySE"}
+                        nombre={"Buscar Por"}
+                        width={100}
+                        options={Search}
+                        onChange={this.handleChange}
+                        state={this.state} />
                 </div>
-                <div style={{overflowX: 'scroll', height: '100%'}}>
+                <div style={{ overflowX: 'scroll', height: '100%' }}>
                     <Table className={classes.table} >
                         <TableHead>
                             <TableRow>
                                 <TablePagination
                                     colSpan={3}
-                                    count={data.length}
+                                    count={filteredData.length}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
-                                    onChangePage={(e, p) => this.handleChangePage(e, p)}
+                                    onChangePage={(e, p) => this.handleChangePage(e, p, 'page')}
                                     onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
                                     ActionsComponent={TablePaginationActions}
                                 />
@@ -401,41 +318,41 @@ class Inicio extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.filter(caso => caso.val[searchBy].indexOf(searchSE) !== -1).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                            {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                                 return (
-                                <TableRow key={row.key}>
-                                    <TableCell style={{display: 'flex'}}>
-                                        <Link to={{ 
-                                            pathname: '/socioeconomico', 
-                                            user: data[page * rowsPerPage + i],
-                                            modifying: 1
-                                        }}>
-                                            <IconButton variant="contained" color="primary" className={classes.button}> 
-                                                <EditIcon/>
-                                            </IconButton >
-                                        </Link>
-                                        <Link to={{ 
-                                            pathname: '/socioeconomico', 
-                                            user: data[page * rowsPerPage + i],
-                                            modifying: 0
-                                        }}>
-                                            <IconButton variant="contained" color="primary" className={classes.button}> 
-                                                <FileCopyIcon/>
+                                    <TableRow key={row.key}>
+                                        <TableCell style={{ display: 'flex' }}>
+                                            <Link to={{
+                                                pathname: '/socioeconomico',
+                                                user: row,
+                                                modifying: 1
+                                            }}>
+                                                <IconButton variant="contained" color="primary" className={classes.button}>
+                                                    <EditIcon />
+                                                </IconButton >
+                                            </Link>
+                                            <Link to={{
+                                                pathname: '/socioeconomico',
+                                                user: row,
+                                                modifying: 0
+                                            }}>
+                                                <IconButton variant="contained" color="primary" className={classes.button}>
+                                                    <FileCopyIcon />
+                                                </IconButton>
+                                            </Link>
+                                            <IconButton variant="contained" color="primary" className={classes.button}
+                                                onClick={() => this.openDeleteDialog(data[page * rowsPerPage + i], 'casos')}>
+                                                <DeleteIcon />
                                             </IconButton>
-                                        </Link>
-                                        <IconButton variant="contained" color="primary" className={classes.button} 
-                                            onClick={() => this.openDeleteDialog(data[page * rowsPerPage + i], 'casos')}> 
-                                            <DeleteIcon/>
-                                        </IconButton>
-                                    </TableCell>
-                                    <TableCell>{row.val.FMNumero}</TableCell>
-                                    <TableCell component="th" scope="row">
-                                        {row.val.DGCaso}
-                                    </TableCell>
-                                    <TableCell numeric>{row.val.FMTImpresion}</TableCell>
-                                    <TableCell numeric>{row.val.DGCelular}</TableCell>
-                                    <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
-                                </TableRow>
+                                        </TableCell>
+                                        <TableCell>{row.val.FMNumero}</TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {row.val.DGCaso}
+                                        </TableCell>
+                                        <TableCell numeric>{row.val.FMTImpresion}</TableCell>
+                                        <TableCell numeric>{row.val.DGCelular}</TableCell>
+                                        <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
+                                    </TableRow>
                                 );
                             })}
                         </TableBody>
@@ -443,10 +360,114 @@ class Inicio extends Component {
                             <TableRow>
                                 <TablePagination
                                     colSpan={3}
-                                    count={data.length}
+                                    count={filteredData.length}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
-                                    onChangePage={(e, p) => this.handleChangePage(e, p)}
+                                    onChangePage={(e, p) => this.handleChangePage(e, p, 'page')}
+                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </div>
+            </div>
+        )
+    }
+
+    transporteTable = (data, classes) => {
+        const { rowsPerPage, pageT, searchT, searchByT } = this.state;
+        const searchBy = searchByT === 'Persona' ? 'DGCaso' :
+            searchByT === 'Fecha' ? 'FMFecha' : 'FMNumero'
+
+
+        const filteredData = data.filter(caso => caso.val[searchBy].indexOf(searchT) !== -1)
+
+        return (
+            <div style={{ paddingTop: "50px" }}>
+                <div style={{ paddingLeft: "10px" }}>
+                    <TextField
+                        id={'Buscar'}
+                        label={searchByT === 'Fecha' ? '' : 'Buscar'}
+                        placeholder={searchByT === 'Fecha' ? '' : 'Buscar'}
+                        type={searchByT === 'Fecha' ? 'date' : 'string'}
+                        defaultValue={searchT}
+                        onChange={(event) => this.handleChange('searchT', event.target.value)} />
+                    <TxtField
+                        id={"searchByT"}
+                        nombre={"Buscar Por"}
+                        width={100}
+                        options={Search}
+                        onChange={this.handleChange}
+                        state={this.state} />
+                </div>
+                <div style={{ overflowX: 'scroll', height: '100%' }}>
+                    <Table className={classes.table}>
+                        <TableHead>
+                            <TableRow>
+                                <TablePagination
+                                    colSpan={3}
+                                    count={filteredData.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={pageT}
+                                    onChangePage={(e, p) => this.handleChangePage(e, p, 'pageT')}
+                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </TableRow>
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell>Numero</TableCell>
+                                <TableCell>Caso</TableCell>
+                                <TableCell>Fecha</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {filteredData.slice(pageT * rowsPerPage, pageT * rowsPerPage + rowsPerPage).map((row, i) => {
+
+                                return (
+                                    <TableRow key={row.key}>
+                                        <TableCell style={{ display: 'flex' }}>
+                                            <Link to={{
+                                                pathname: '/transporte',
+                                                user: row,
+                                                modifying: 1
+                                            }}>
+                                                <IconButton variant="contained" color="primary" className={classes.button}>
+                                                    <EditIcon />
+                                                </IconButton >
+                                            </Link>
+                                            <Link to={{
+                                                pathname: '/transporte',
+                                                user: row,
+                                                modifying: 0
+                                            }}>
+                                                <IconButton variant="contained" color="primary" className={classes.button}>
+                                                    <FileCopyIcon />
+                                                </IconButton>
+                                            </Link>
+                                            <IconButton variant="contained" color="primary" className={classes.button}
+                                                onClick={() => this.openDeleteDialog(data[pageT * rowsPerPage + i], 'transporte')}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </TableCell>
+                                        <TableCell>{row.val.FMNumero}</TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {row.val.DGCaso}
+                                        </TableCell>
+                                        <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    colSpan={3}
+                                    count={filteredData.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={pageT}
+                                    onChangePage={(e, p) => this.handleChangePage(e, p, 'pageT')}
                                     onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
                                     ActionsComponent={TablePaginationActions}
                                 />
@@ -467,7 +488,7 @@ class Inicio extends Component {
         return (
             <div className={classes.root}>
                 <AppBar position="static">
-                    <Tabs value={value} style={{backgroundColor: '#5c70d2'}} onChange={this.handleTabChange}>
+                    <Tabs value={value} style={{ backgroundColor: '#5c70d2' }} onChange={this.handleTabChange}>
                         <Tab label="Socioeconomico"></Tab>
                         <Tab label="Transporte"></Tab>
                     </Tabs>
@@ -478,21 +499,21 @@ class Inicio extends Component {
                     onClose={this.closeDeleteDialog}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
-                    >
+                >
                     <DialogTitle id="alert-dialog-title">{"Esta seguro de borrar esta registro?"}</DialogTitle>
                     <DialogActions>
                         <Button onClick={this.closeDeleteDialog} color="primary">
                             Cancelar
                         </Button>
-                        <Button onClick={() => this.props.checkToken( () => this.delete() )} color="primary" autoFocus>
+                        <Button onClick={() => this.props.checkToken(() => this.delete())} color="primary" autoFocus>
                             Eliminar
                         </Button>
                     </DialogActions>
                 </Dialog>
 
-                <div style={{marginTop: '20px', display: 'flex'}}>
+                <div style={{ marginTop: '20px', display: 'flex' }}>
                     <Button variant="contained" color="primary" disabled={!this.state.admin} style={{ marginLeft: '10px' }}
-                        onClick={() => this.props.checkToken( () => this.exportFile() )}> 
+                        onClick={() => this.props.checkToken(() => this.exportFile())}>
                         Exportar a excel
                     </Button>
                     <TextField
