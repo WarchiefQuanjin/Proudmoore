@@ -27,6 +27,7 @@ import TxtField from '../Components/TxtField';
 import TablePaginationActions from '../Components/TablePaginationActions.js'
 import { Search } from '../Constants/Options';
 import * as moment from 'moment';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 const styles = theme => ({
     root: {
@@ -49,8 +50,22 @@ const styles = theme => ({
         marginTop: '2px',
         marginBottom: '2px',
         width: 200,
+    },
+    link: {
+        color: '#1a0dab',
+        textDecoration: 'none'
     }
 });
+
+const CustomTableCell = withStyles(theme => ({
+    head: {
+        backgroundColor: '#5c70d2',
+        color: 'white'
+    },
+    body: {
+        fontSize: 14
+    }
+}))(TableCell);
 
 class Inicio extends Component {
     constructor(props) {
@@ -147,8 +162,7 @@ class Inicio extends Component {
             'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
 
         months.forEach((month, i) => {
-            let data = JSON.parse(JSON.stringify(Excel))
-            let id = 1;
+            let data = []
 
             this.state.data.filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').year() === parseInt(this.state.year, 10))
                 .filter((caso) => moment(caso.val.FMFecha, 'YYYY/MM/DD').month() === i)
@@ -162,9 +176,9 @@ class Inicio extends Component {
                         apoyo.push(val["FMApoyo" + i]);
                     }
 
-                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGCaso, val.DGCalle, val.DGColonia,
-                        val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, val.DGParroquia,
-                        val.DGDecanato, val.DGVicaria, apoyo.includes("ORIENTACION") ? 1 : '', apoyo.includes("DESPENSA") ? 1 : '',
+                    let casosArray = [0, val.FMFecha, val.FMNumero, val.DGCaso, val.DGCalle, val.DGColonia, val.DGMunicipio, val.DGEstado,
+                        val.DGTEdad === 'DIAS' ? val.DGEdad : '', val.DGTEdad === 'MESES' ? val.DGEdad : '', val.DGTEdad === 'AÑOS' ? val.DGEdad : '',
+                        val.DGSexo, clasificacion, val.DGParroquia, val.DGDecanato, val.DGVicaria, apoyo.includes("ORIENTACION") ? 1 : '', apoyo.includes("DESPENSA") ? 1 : '',
                         apoyo.includes("ALIMENTO") ? 1 : '', apoyo.includes("LECHE") ? 1 : '', apoyo.includes("PAÑALES") ? 1 : '',
                         apoyo.includes("MEDICAMENTO") ? 1 : '', apoyo.includes("ESTUDIOS MEDICOS") ? 1 : '', apoyo.includes("IMPLEMENTOS MEDICOS") ? 1 : '',
                         apoyo.includes("T.M.OFTALMOLOGICO") ? 1 : '', apoyo.includes("T.M. ONCOLOGICO") ? 1 : '', apoyo.includes("T.M. DIALISIS") ? 1 : '',
@@ -182,7 +196,6 @@ class Inicio extends Component {
                         apoyo.length, val.SLHemodialisis, '', val.FMTrabajadora
                     ]
 
-                    id++;
                     data.push(casosArray)
                 })
 
@@ -198,18 +211,27 @@ class Inicio extends Component {
                         apoyo.push(val["FMApoyo" + i]);
                     }
 
-                    let casosArray = [id, val.FMFecha, val.FMNumero, val.DGCaso, val.DGDomicilio, val.DGColonia,
-                        val.DGMunicipio, val.DGEstado, val.DGEdad, val.DGSexo, clasificacion, 'FORANEA',
-                        'OTROS/FORANEO', 'ZONA FORÁNEA, OTRAS DIOCESIS', '', '', '', '', '', '', '', '', '', '',
+                    let casosArray = [0, val.FMFecha, val.FMNumero, val.DGCaso, val.DGDomicilio, val.DGColonia, val.DGMunicipio, val.DGEstado,
+                        val.DGTEdad === 'DIAS' ? val.DGEdad : '', val.DGTEdad === 'MESES' ? val.DGEdad : '', val.DGTEdad === 'AÑOS' ? val.DGEdad : '',
+                        val.DGSexo, clasificacion, 'FORANEA', 'OTROS/FORANEO', 'ZONA FORÁNEA, OTRAS DIOCESIS', '', '', '', '', '', '', '', '', '', '',
                         '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, '', '', '', '',
                         '', '', '', '', '', '', '', '', val.APCantidad, '', '', '', '', '', '', '', '', val.APAportacion,
                         val.APProveedor, val.APProcedencia === 'OTROS' ? val.APProcedenciaOt : val.APProcedencia,
                         1, val.SLHemodialisis, '', val.FMTrabajadora
                     ]
 
-                    id++;
                     data.push(casosArray)
                 })
+
+            data.sort((a, b) => {
+                return new Date(a[1]) - new Date(b[1]);
+            });
+
+            for (let i = 0; i < data.length; i++) {
+                data[i][0] = i + 1;
+            }
+
+            data.unshift(JSON.parse(JSON.stringify(Excel)));
 
             const wsAll = XLSX.utils.aoa_to_sheet(data)
 
@@ -241,14 +263,12 @@ class Inicio extends Component {
             return
 
         if (field === 'searchBySE') {
-            this.setState({ searchSE: '' })
+            this.setState({ searchSE: '', [field]: value })
         } else if (field === 'searchByT') {
-            this.setState({ searchT: '' })
+            this.setState({ searchT: '', [field]: value })
+        } else {
+            this.setState({ [field]: value })
         }
-
-        this.props.checkToken(() => this.setState({
-            [field]: value
-        }))
     }
 
     handleChangePage = (event, page, type) => {
@@ -258,7 +278,9 @@ class Inicio extends Component {
     };
 
     handleChangeRowsPerPage = event => {
-        this.props.checkToken(() => this.setState({ rowsPerPage: event.target.value }));
+        this.props.checkToken(() => {
+            this.setState({ rowsPerPage: event.target.value })
+        });
     };
 
     handleTabChange = (event, value) => {
@@ -275,13 +297,13 @@ class Inicio extends Component {
 
         return (
             <div style={{ paddingTop: "50px" }}>
-                <div style={{ paddingLeft: "10px" }}>
+                <div style={{ paddingLeft: "25px" }}>
                     <TextField
                         id={'Buscar'}
                         label={searchBySE === 'Fecha' ? '' : 'Buscar'}
                         placeholder={searchBySE === 'Fecha' ? '' : 'Buscar'}
                         type={searchBySE === 'Fecha' ? 'date' : 'string'}
-                        defaultValue={searchSE}
+                        value={searchSE}
                         onChange={(event) => this.handleChange('searchSE', event.target.value)} />
                     <TxtField
                         id={"searchBySE"}
@@ -291,48 +313,110 @@ class Inicio extends Component {
                         onChange={this.handleChange}
                         state={this.state} />
                 </div>
-                <div style={{ overflowX: 'scroll', height: '100%' }}>
+                <div>
+                    <TablePaginationActions
+                        count={filteredData.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={(e, p) => this.handleChangePage(e, p, 'page')}
+                        onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                    />
+                </div>
+                <div style={{ overflowX: 'scroll', height: '100%', paddingLeft: "25px" }}>
                     <Table className={classes.table} >
                         <TableHead>
                             <TableRow>
-                                <TablePagination
-                                    colSpan={3}
-                                    count={filteredData.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onChangePage={(e, p) => this.handleChangePage(e, p, 'page')}
-                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell>No. Caso</TableCell>
-                                <TableCell>Caso</TableCell>
-                                <TableCell>Tipo</TableCell>
-                                <TableCell numeric>Celular</TableCell>
-                                <TableCell>Fecha</TableCell>
+                                <CustomTableCell style={{ maxWidth: '85px', width: '85px', padding: '4px 0px 4px 0px', textAlign: 'center' }}>
+                                    No. Caso
+                                </CustomTableCell>
+                                <CustomTableCell style={{ maxWidth: '300px', width: '300px', padding: '4px 0px 4px 24px' }}>
+                                    Caso
+                                </CustomTableCell>
+                                <CustomTableCell style={{ maxWidth: '150px'}}>
+                                    Tipo
+                                </CustomTableCell>
+                                <CustomTableCell style={{ maxWidth: '150px'}}>
+                                    Celular
+                                </CustomTableCell>
+                                <CustomTableCell style={{ minWidth: '100px', padding: '4px 0px 4px 24px' }}>
+                                    Fecha
+                                </CustomTableCell>
+                                <CustomTableCell style={{ minWidth: '150px'}} />
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                                 return (
                                     <TableRow key={row.key}>
-                                        <TableCell style={{ display: 'flex' }}>
-                                            <Link to={{
-                                                pathname: '/socioeconomico',
-                                                user: row,
-                                                modifying: 1
-                                            }}>
+                                        <CustomTableCell
+                                            style={{
+                                                maxWidth: '85px',
+                                                width: '85px',
+                                                padding: '4px 0px 4px 0px',
+                                                textAlign: 'center'
+                                            }}
+                                            component="td"
+                                            scope="row"
+                                        >
+                                            {row.val.FMNumero}
+                                        </CustomTableCell>
+                                        <CustomTableCell
+                                            style={{
+                                                maxWidth: '300px',
+                                                padding: '4px 0px 4px 24px',
+                                                width: '300px'
+                                            }}
+                                            component="td"
+                                            scope="row"
+                                        >
+                                            <Link className={classes.link} to={{ pathname: '/socioeconomico', user: row, modifying: 1 }}>
+                                                {row.val.DGCaso}
+                                            </Link>
+                                        </CustomTableCell>
+                                        <CustomTableCell
+                                            style={{
+                                                maxWidth: '150px',
+                                                padding: '4px 0px 4px 5px',
+                                                width: '150px'
+                                            }}
+                                            component="td"
+                                            scope="row"
+                                        >
+                                            {row.val.FMTImpresion}
+                                        </CustomTableCell>
+                                        <CustomTableCell
+                                            style={{
+                                                maxWidth: '150px',
+                                                padding: '4px 0px 4px 10px',
+                                                width: '150px'
+                                            }}
+                                            component="td"
+                                            scope="row"
+                                        >
+                                            {row.val.DGCelular}
+                                        </CustomTableCell>
+                                        <CustomTableCell
+                                            style={{ minWidth: "100px", padding: '4px 0px 4px 24px' }}
+                                            component="td"
+                                            scope="row"
+                                        >
+                                            {moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}
+                                        </CustomTableCell>
+                                        <CustomTableCell 
+                                            style={{ 
+                                                minWidth: "150px",
+                                                display: 'flex', 
+                                                padding: '4px 0px 4px 10px' 
+                                            }}
+                                            component="td"
+                                            scope="row"
+                                        >
+                                            <Link to={{ pathname: '/socioeconomico', user: row, modifying: 1 }}>
                                                 <IconButton variant="contained" color="primary" className={classes.button}>
                                                     <EditIcon />
                                                 </IconButton >
                                             </Link>
-                                            <Link to={{
-                                                pathname: '/socioeconomico',
-                                                user: row,
-                                                modifying: 0
-                                            }}>
+                                            <Link to={{ pathname: '/socioeconomico', user: row, modifying: 0 }}>
                                                 <IconButton variant="contained" color="primary" className={classes.button}>
                                                     <FileCopyIcon />
                                                 </IconButton>
@@ -341,14 +425,7 @@ class Inicio extends Component {
                                                 onClick={() => this.openDeleteDialog(row, 'casos')}>
                                                 <DeleteIcon />
                                             </IconButton>
-                                        </TableCell>
-                                        <TableCell>{row.val.FMNumero}</TableCell>
-                                        <TableCell component="th" scope="row">
-                                            {row.val.DGCaso}
-                                        </TableCell>
-                                        <TableCell numeric>{row.val.FMTImpresion}</TableCell>
-                                        <TableCell numeric>{row.val.DGCelular}</TableCell>
-                                        <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
+                                        </CustomTableCell>
                                     </TableRow>
                                 );
                             })}
@@ -356,7 +433,7 @@ class Inicio extends Component {
                         <TableFooter>
                             <TableRow>
                                 <TablePagination
-                                    colSpan={3}
+                                    colSpan={2}
                                     count={filteredData.length}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
@@ -382,7 +459,7 @@ class Inicio extends Component {
 
         return (
             <div style={{ paddingTop: "50px" }}>
-                <div style={{ paddingLeft: "10px" }}>
+                <div style={{ paddingLeft: "25px" }}>
                     <TextField
                         id={'Buscar'}
                         label={searchByT === 'Fecha' ? '' : 'Buscar'}
@@ -398,31 +475,57 @@ class Inicio extends Component {
                         onChange={this.handleChange}
                         state={this.state} />
                 </div>
-                <div style={{ overflowX: 'scroll', height: '100%' }}>
+                <div>
+                    <TablePaginationActions
+                        count={filteredData.length}
+                        rowsPerPage={rowsPerPage}
+                        page={pageT}
+                        onChangePage={(e, p) => this.handleChangePage(e, p, 'pageT')}
+                        onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                    />
+                </div>
+                <div style={{ overflowX: 'scroll', height: '100%', paddingLeft: "25px" }}>
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TablePagination
-                                    colSpan={3}
-                                    count={filteredData.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={pageT}
-                                    onChangePage={(e, p) => this.handleChangePage(e, p, 'pageT')}
-                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell>Numero</TableCell>
-                                <TableCell>Caso</TableCell>
-                                <TableCell>Fecha</TableCell>
+                                <CustomTableCell style={{ maxWidth: '85px', width: '85px', padding: '4px 0px 4px 0px', textAlign: 'center' }}>
+                                    Numero
+                                </CustomTableCell>
+                                <CustomTableCell>
+                                    Caso
+                                </CustomTableCell>
+                                <CustomTableCell>
+                                    Fecha
+                                </CustomTableCell>
+                                <CustomTableCell/>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {filteredData.slice(pageT * rowsPerPage, pageT * rowsPerPage + rowsPerPage).map((row, i) => {
                                 return (
                                     <TableRow key={row.key}>
+                                        <CustomTableCell
+                                            style={{
+                                                maxWidth: '85px',
+                                                width: '85px',
+                                                padding: '4px 0px 4px 0px',
+                                                textAlign: 'center'
+                                            }}
+                                            component="th"
+                                            scope="row"
+                                        >
+                                            {row.val.FMNumero}
+                                        </CustomTableCell>
+                                        <TableCell component="th" scope="row">
+                                            <Link className={classes.link} to={{
+                                                pathname: '/transporte',
+                                                user: row,
+                                                modifying: 1
+                                            }}>
+                                                {row.val.DGCaso}
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
                                         <TableCell style={{ display: 'flex' }}>
                                             <Link to={{
                                                 pathname: '/transporte',
@@ -447,11 +550,6 @@ class Inicio extends Component {
                                                 <DeleteIcon />
                                             </IconButton>
                                         </TableCell>
-                                        <TableCell>{row.val.FMNumero}</TableCell>
-                                        <TableCell component="th" scope="row">
-                                            {row.val.DGCaso}
-                                        </TableCell>
-                                        <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -459,7 +557,7 @@ class Inicio extends Component {
                         <TableFooter>
                             <TableRow>
                                 <TablePagination
-                                    colSpan={3}
+                                    colSpan={2}
                                     count={filteredData.length}
                                     rowsPerPage={rowsPerPage}
                                     page={pageT}
@@ -507,13 +605,12 @@ class Inicio extends Component {
                     </DialogActions>
                 </Dialog>
 
-                <div style={{ marginTop: '20px', display: 'flex' }}>
+                <div style={{ marginTop: '20px', display: 'flex', paddingLeft: '15px' }}>
                     <Button variant="contained" color="primary" disabled={!this.state.admin} style={{ marginLeft: '10px' }}
                         onClick={() => this.props.checkToken(() => this.exportFile())}>
                         Exportar a excel
                     </Button>
                     <TextField
-                        required
                         id="standard-required"
                         label="Año"
                         value={this.state.year}

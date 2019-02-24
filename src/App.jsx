@@ -150,7 +150,6 @@ const styles = theme => ({
     color: 'white'
   },
   linkButton: {
-    /* backgroundColor: '#3f51b5', */
     borderRadius: '7px',
     margin: '0 auto',
     marginBottom: '5px',
@@ -245,7 +244,6 @@ class App extends Component {
   loginComponent = (classes) => {
     return (
       <div>
-        <div style={{ backgroundImage: "url(" + background + ")", position: 'absolute', opacity: '0.7', height: '100%', width: '100%' }}></div>
         <div className={classes.outer}>
           <div className={classes.middle}>
             <div className={classes.inner}>
@@ -287,7 +285,7 @@ class App extends Component {
       <div>
         <div>
           <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center', backgroundColor: secondaryColor }} >
-            <img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=fa2effcc-3778-409e-816a-e6dd4452ab2e'} alt="CÁRITAS DE GUADALAJARA" />
+            {<img className={classes.image} src={'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Logo.png?alt=media&token=fa2effcc-3778-409e-816a-e6dd4452ab2e'} alt="CÁRITAS DE GUADALAJARA" />}
           </div>
 
           <List style={{ backgroundColor: drawerColor, color: 'white' }}>

@@ -1,10 +1,14 @@
 
 const ECivil = [
     { value: 'CASADO' },
+    { value: 'CASADA' },
     { value: 'SOLTERO'},
+    { value: 'SOLTERA'},
     { value: 'UNION LIBRE' },
     { value: 'DIVORCIADO' },
-    { value: 'VIUDO' }
+    { value: 'DIVORCIADA' },
+    { value: 'VIUDO' },
+    { value: 'VIUDA' }
 ];
 
 const Empleo = [
@@ -119,8 +123,7 @@ const TrabajadoraS = [
     { value: 'DANIELA' },
     { value: 'ELIZABETH'},
     { value: 'GABRIELA' },
-    { value: 'ROSARIO' },
-    { value: 'OTRO' }
+    { value: 'ROSARIO' }
 ];
 
 const Apoyos = [
@@ -313,8 +316,8 @@ const Procedencia = [
     { value: 'DIF ZAPOTLANEJO' }
 ];
 
-const Excel = [[
-    "CONSECUTIVO", "FECHA", "NO. CASO", "NOMBRE", "DOMICILIO", "COLONIA", "MUNICIPIO", "ESTADO", "EDAD", "SEXO",
+const Excel = [
+    "CONSECUTIVO", "FECHA", "NO. CASO", "NOMBRE", "DOMICILIO", "COLONIA", "MUNICIPIO", "ESTADO", "DIAS", "MESES", "AÑOS", "SEXO",
     "CLASIFICACION", "PARROQUIA", "DECANATO", "VICARIA", "ORIENTACION", "DESPENSA", "ALIMENTO", "LECHE", 
     "PAÑALES", "MEDICAMENTO", "ESTUDIOS MEDICOS", "IMPLEMENTOS MEDICOS", "T.M.OFTALMOLOGICO", "T.M. ONCOLOGICO", 
     "T.M. DIALISIS", "T.M. HEMODIALISIS", "T.M. OXIGENO", "AUDITIVO", "PROTESIS EXTERNAS", "SILLAS DE RUEDAS", 
@@ -325,7 +328,7 @@ const Excel = [[
     "FONDO ARZOBISPADO", "FONDO CABILDO", "FONDO OLGA", "DONACION", "DONANTE", "MES DE APADRINAMIENTO", 
     "AÑO DE APADRINAMIENTO", "APORTACIÓN BENEFICIADO", "PROVEEDOR", "PROCEDENCIA", "SERVICIOS", 
     "CANTIDAD DE HEMODIALISIS", "GASTO DIARIO", "TRABAJADORA SOCIAL"
-]];
+];
 
 const Frecuencia = [
     { value: '1' },

@@ -144,10 +144,7 @@ class Transporte extends Component {
             for (var i = 0; i < props.gcantidad; i++) {
                 fcantidad += '<tr>' +
                     '<td>' + props['CFFam' + i + 'nom'] + '</td>' +
-                    /* '<td>'+props['CFFam'+i+'edad']+'</td>'+ */
-
                     '<td>' + props['CFFam' + i + 'edad'] + ' ' + props['CFFam' + i + 'tedad'] + '</td>' +
-
                     '<td>' + props['CFFam' + i + 'sexo'] + '</td>' +
                     '<td>' + props['CFFam' + i + 'ecivil'] + '</td>' +
                     '<td>' + props['CFFam' + i + 'ocupacion'] + '</td>' +
@@ -322,24 +319,33 @@ class Transporte extends Component {
             'IDOriginario', 'IDTiempo', 'IDHospeda', 'SDDestino', 'SDMotivo', 'APDestino', 'APProveedor', 'APProcedencia', 'APBoletos', 'APFolioC',
             'DGCaso', 'DGEdad', 'DGECivil', 'DGOcupacion', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGSexo'];
 
-        let missingFields = false;
+        let isMissingFields = false;
+        let missingFields = []
 
         for (var j = 0; j < Fields.length; j++) {
             if (!Object.keys(this.state.caso).includes(Fields[j]) || this.state.caso[Fields[j]] === undefined) {
-                missingFields = true;
-                console.log(Fields[j])
-                this.setState({ open: true, message: 'Todos los campos deben contener informacion' });
+                isMissingFields = true;
+                missingFields.push(Fields[j])
             };
         }
+
+        if  (isMissingFields){
+            this.setState({ missingFields: missingFields, open: true, message: 'Todos los campos deben contener informacion' });
+        }
+
         return missingFields;
     }
 
-    cProcedencia = () => (
-        <div>
-            <TxtField id={"APProcedencia"} nombre={"Procedencia"} required width={180} options={Procedencia} onChange={this.handleChange} state={this.state.caso} />
-            {this.state.caso["APProcedencia"] === 'OTROS' && <TxtField id={"APProcedenciaOt"} nombre={"Procedencia"} width={180} onChange={this.handleChange} state={this.state.caso} />}
-        </div>
-    )
+    cProcedencia = () => {
+        const { caso, missingFields } = this.state;
+
+        return (
+            <div>
+                <TxtField id={"APProcedencia"} nombre={"Procedencia"} required width={180} options={Procedencia} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                {this.state.caso["APProcedencia"] === 'OTROS' && <TxtField id={"APProcedenciaOt"} nombre={"Procedencia"} width={180} onChange={this.handleChange} state={caso} missingFields={missingFields} />}
+            </div>
+        )
+    }
 
     handleChange = (id, value, type) => {
         let caso = this.state.caso
@@ -451,18 +457,19 @@ class Transporte extends Component {
     }
 
     cGenerales = () => {
+        const { caso, missingFields } = this.state;
         var rows = [];
 
         for (var i = 0; i < this.state.caso.gcantidad; i++) {
             rows.push(
                 <div key={'familia' + i} >
-                    <TxtField id={"CFFam" + i + "nom"} nombre={"Nombre"} width={160} onChange={this.handleChange} state={this.state.caso} />
-                    <TxtField id={"CFFam" + i + "edad"} nombre={"Edad"} width={50} onChange={this.handleChange} type={'int'} state={this.state.caso} />
-                    <TxtField id={"CFFam" + i + "tedad"} nombre={"Tipo de Edad"} width={120} options={Edad} onChange={this.handleChange} state={this.state.caso} />
-                    <TxtField id={"CFFam" + i + "sexo"} nombre="Sexo" required width={120} options={Sexo} onChange={this.handleChange} state={this.state.caso} />
-                    <TxtField id={"CFFam" + i + "ecivil"} nombre={"Estado Civil"} width={120} options={ECivil} onChange={this.handleChange} state={this.state.caso} />
-                    <TxtField id={"CFFam" + i + "ocupacion"} nombre={"Ocupacion"} width={150} onChange={this.handleChange} state={this.state.caso} />
-                    <Autocomplete id={"CFFam" + i + "escolaridad"} nombre={"Escolaridad"} style={{ width: '150px' }} options={Escolaridad} onChange={this.handleChange} state={this.state.caso} />
+                    <TxtField id={"CFFam" + i + "nom"} nombre={"Nombre"} width={160} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                    <TxtField id={"CFFam" + i + "edad"} nombre={"Edad"} width={50} onChange={this.handleChange} type={'int'} state={caso} missingFields={missingFields} />
+                    <TxtField id={"CFFam" + i + "tedad"} nombre={"Tipo de Edad"} width={120} options={Edad} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                    <TxtField id={"CFFam" + i + "sexo"} nombre="Sexo" required width={120} options={Sexo} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                    <TxtField id={"CFFam" + i + "ecivil"} nombre={"Estado Civil"} width={120} options={ECivil} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                    <TxtField id={"CFFam" + i + "ocupacion"} nombre={"Ocupacion"} width={150} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                    <Autocomplete id={"CFFam" + i + "escolaridad"} nombre={"Escolaridad"} style={{ width: '150px' }} options={Escolaridad} onChange={this.handleChange} state={caso} missingFields={missingFields} />
 
                     <hr style={{ borderColor: 'black' }}></hr>
                 </div>
@@ -479,8 +486,8 @@ class Transporte extends Component {
         const { classes } = this.props;
         const modifying = this.props.location.modifying;
         const vertical = 'top', horizontal = 'center'
-        const { open, message } = this.state;
-
+        const { open, message, caso, missingFields } = this.state;
+        
         return (
             <div className={classes.root}>
                 <div style={{ marginBottom: '70px' }}>
@@ -499,37 +506,37 @@ class Transporte extends Component {
                     {/* FORMATO */}
                     <h1 className={classes.title}>FORMATO</h1>
                     <div className={classes.container}>
-                        <TxtField nombre="Fecha" id="FMFecha" required type={'date'} onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre="No. De Caso" id="FMNumero" required onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre="Derivado por" id="FMDerivado" required onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre="Frecuencia" id="FMFrecuencia" required options={Frecuencia} onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre="Trabajadora Social" id="FMTrabajadora" required options={TrabajadoraS} onChange={this.handleChange} state={this.state.caso} />
+                        <TxtField nombre="Fecha" id="FMFecha" required type={'date'} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <TxtField nombre="No. De Caso" id="FMNumero" required onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <TxtField nombre="Derivado por" id="FMDerivado" required onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <TxtField nombre="Frecuencia" id="FMFrecuencia" required options={Frecuencia} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <Autocomplete nombre="Trabajadora Social" id="FMTrabajadora" required options={TrabajadoraS} onChange={this.handleChange} state={caso} missingFields={missingFields} />
                     </div>
 
                     {/* DATOS GENERALES */}
                     <div className={classes.container}>
                         <h1 className={classes.title}>DATOS GENERALES</h1>
-                        <TxtField nombre={"Cantidad"} id={"gcantidad"} width={80} onChange={this.handleChange} type={'int'} state={this.state.caso} />
+                        <TxtField nombre={"Cantidad"} id={"gcantidad"} width={80} onChange={this.handleChange} type={'int'} state={caso} missingFields={missingFields} />
                         <div>
-                            <TxtField id={"DGCaso"} nombre={"Nombre"} width={160} required onChange={this.handleChange} state={this.state.caso} />
-                            <TxtField id={"DGEdad"} nombre={"Edad"} width={50} required onChange={this.handleChange} type={'int'} state={this.state.caso} />
-                            <TxtField id={"DGTEdad"} nombre="Tipo de Edad" required options={Edad} onChange={this.handleChange} state={this.state.caso} />
-                            <TxtField id={"DGSexo"} nombre="Sexo" required width={120} options={Sexo} onChange={this.handleChange} state={this.state.caso} />
-                            <TxtField id={"DGECivil"} nombre={"Estado Civil"} width={120} required options={ECivil} onChange={this.handleChange} state={this.state.caso} />
-                            <TxtField id={"DGOcupacion"} nombre={"Ocupacion"} width={150} required onChange={this.handleChange} state={this.state.caso} />
-                            <Autocomplete id={"DGEscolaridad"} nombre={"Escolaridad"} options={Escolaridad} onChange={this.handleChange} state={this.state.caso} />
+                            <TxtField id={"DGCaso"} nombre={"Nombre"} width={160} required onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <TxtField id={"DGEdad"} nombre={"Edad"} width={50} required onChange={this.handleChange} type={'int'} state={caso} missingFields={missingFields} />
+                            <TxtField id={"DGTEdad"} nombre="Tipo de Edad" required options={Edad} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <TxtField id={"DGSexo"} nombre="Sexo" required width={120} options={Sexo} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <TxtField id={"DGECivil"} nombre={"Estado Civil"} width={120} required options={ECivil} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <TxtField id={"DGOcupacion"} nombre={"Ocupacion"} width={150} required onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <Autocomplete id={"DGEscolaridad"} nombre={"Escolaridad"} options={Escolaridad} onChange={this.handleChange} state={caso} missingFields={missingFields} />
                             <hr style={{ borderColor: 'black' }}></hr>
                             {this.cGenerales()}
                         </div>
                         <div>
-                            <TxtField id={"DGDomicilio"} nombre={"Domicilio"} onChange={this.handleChange} state={this.state.caso} />
-                            <TxtField id={"DGColonia"} nombre={"Colonia"} onChange={this.handleChange} state={this.state.caso} />
-                            <Autocomplete nombre={"Municipio"} id={"DGMunicipio"} options={Municipios} onChange={this.handleChange} state={this.state.caso} />
-                            <Autocomplete nombre={"Estado"} id={"DGEstado"} options={Estados} onChange={this.handleChange} state={this.state.caso} />
-                            <TxtField id={"DGPais"} nombre={"Pais"} onChange={this.handleChange} state={this.state.caso} />
-                            <TxtField nombre={"Parroquia"} id={"DGParroquia"} required multiline={true} onChange={this.handleChange} state={this.state.caso} />
-                            <Autocomplete nombre={"Decanato"} id={"DGDecanato"} required multiline={true} options={Decanatos} onChange={this.handleChange} state={this.state.caso} />
-                            <TxtField nombre={"Vicaria"} id={"DGVicaria"} required multiline onChange={this.handleChange} state={this.state.caso} />
+                            <TxtField id={"DGDomicilio"} nombre={"Domicilio"} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <TxtField id={"DGColonia"} nombre={"Colonia"} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <Autocomplete nombre={"Municipio"} id={"DGMunicipio"} options={Municipios} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <Autocomplete nombre={"Estado"} id={"DGEstado"} options={Estados} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <TxtField id={"DGPais"} nombre={"Pais"} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <TxtField nombre={"Parroquia"} id={"DGParroquia"} required multiline={true} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <Autocomplete nombre={"Decanato"} id={"DGDecanato"} required multiline={true} options={Decanatos} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                            <TxtField nombre={"Vicaria"} id={"DGVicaria"} required multiline onChange={this.handleChange} state={caso} missingFields={missingFields} />
 
                         </div>
                     </div>
@@ -538,38 +545,38 @@ class Transporte extends Component {
                     {/* IDENTIFICACION */}
                     <h1 className={classes.title}>IDENTIFICACION</h1>
                     <div className={classes.container}>
-                        <TxtField nombre="Tipo de identificacion" id="IDTipo" required width={300} onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre="Originario de" id="IDOriginario" required width={300} onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre="Tiempo que tiene en la ciudad" id="IDTiempo" required width={300} onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre="Lugar donde se hospeda" id="IDHospeda" required width={300} onChange={this.handleChange} state={this.state.caso} />
+                        <TxtField nombre="Tipo de identificacion" id="IDTipo" required width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <TxtField nombre="Originario de" id="IDOriginario" required width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <TxtField nombre="Tiempo que tiene en la ciudad" id="IDTiempo" required width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <TxtField nombre="Lugar donde se hospeda" id="IDHospeda" required width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
                     </div>
                     <br />
 
                     {/* SOLICITUD */}
                     <h1 className={classes.title}>SOLICITUD</h1>
                     <div className={classes.container}>
-                        <TxtField nombre={"Destino"} id={"SDDestino"} required width={300} onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre={"Motivo"} id={"SDMotivo"} multiline={true} required width={80} term={"%"} onChange={this.handleChange} state={this.state.caso} />
+                        <TxtField nombre={"Destino"} id={"SDDestino"} required width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <TxtField nombre={"Motivo"} id={"SDMotivo"} multiline={true} required width={80} term={"%"} onChange={this.handleChange} state={caso} missingFields={missingFields} />
                     </div>
                     <br />
 
                     {/* APOYO */}
                     <h1 className={classes.title}>APOYO</h1>
                     <div className={classes.container}>
-                        <TxtField nombre={"Destino Autorizado"} id="APDestino" required width={300} onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre={"Numero de boletos"} id="APBoletos" options={Frecuencia} required width={300} onChange={this.handleChange} state={this.state.caso} />
-                        <TxtField nombre={"Cantidad Autorizada"} id="APCantidad" width={300} onChange={this.handleChange} type={'int'} state={this.state.caso} />
-                        <TxtField nombre={"Aportacion del solicitante"} id="APAportacion" width={300} onChange={this.handleChange} type={'int'} state={this.state.caso} />
-                        <TxtField nombre={"Proveedor"} id={"APProveedor"} required onChange={this.handleChange} state={this.state.caso} />
+                        <TxtField nombre={"Destino Autorizado"} id="APDestino" required width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <TxtField nombre={"Numero de boletos"} id="APBoletos" options={Frecuencia} required width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <TxtField nombre={"Cantidad Autorizada"} id="APCantidad" width={300} onChange={this.handleChange} type={'int'} state={caso} missingFields={missingFields} />
+                        <TxtField nombre={"Aportacion del solicitante"} id="APAportacion" width={300} onChange={this.handleChange} type={'int'} state={caso} missingFields={missingFields} />
+                        <TxtField nombre={"Proveedor"} id={"APProveedor"} required onChange={this.handleChange} state={caso} missingFields={missingFields} />
                         {this.cProcedencia()}
-                        <TxtField nombre={"Folio de caja"} id="APFolioC" width={300} onChange={this.handleChange} state={this.state.caso} />
+                        <TxtField nombre={"Folio de caja"} id="APFolioC" width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
                     </div>
                     <br />
 
                     {/* OBSERVACIONES */}
                     <h1 className={classes.title}>OBSERVACIONES</h1>
                     <div className={classes.container}>
-                        <TxtField nombre={"Observaciones"} id={"OBObservaciones"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={this.state.caso} />
+                        <TxtField nombre={"Observaciones"} id={"OBObservaciones"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={caso} missingFields={missingFields} />
                     </div>
                     <br />
 

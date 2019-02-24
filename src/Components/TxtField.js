@@ -11,6 +11,16 @@ const styles = theme => ({
         marginBottom: '2px',
         width: 200
     },
+    textFieldError: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        marginTop: '2px',
+        marginBottom: '2px',
+        width: 200,
+        borderStyle: 'dotted', 
+        borderColor: 'red',
+        borderBottomWidth: '2px'
+    },
     font: {
         fontSize: '14px',
         height: 'inherit',
@@ -23,39 +33,44 @@ const styles = theme => ({
 
 class TxtField extends Component {
     render() {
-        var props = this.props;
-        var term = props.term ? props.term : 'px';
-        var type = props.type ? props.type : 'string'
+        let { term, type, id, options, state, width, nombre, required, missingFields, classes, multiline, onChange } = this.props;
+        
+        type = type ? type : 'string'
+        term = term ? term : 'px';
 
         return (
             <TextField
-                id={props.id}
-                label={props.type === 'date' ? ' ' : props.nombre}
-                select={props.options !== undefined}
-                placeholder={props.nombre}
-                className={props.classes.textField}
+                id={id}
+                label={type === 'date' ? ' ' : nombre}
+                select={options !== undefined}
+                placeholder={nombre}
+                className={
+                    missingFields && missingFields.includes(id) 
+                        ? classes.textFieldError
+                        : classes.textField
+                }
                 margin={"normal"}
                 type={type}
-                multiline={props.multiline && props.multiline}
-                onChange={(event) => props.onChange(props.id, event.target.value, type)}
-                required={props.required}
+                multiline={multiline && multiline}
+                onChange={(event) => onChange(id, event.target.value, type)}
+                required={required}
                 InputProps={{
                     classes: {
-                        input: props.classes.font,
-                        /* hover: props.classes.selected */
+                        input: classes.font,
                     },
                 }}
-                value={props.state[props.id] ? props.state[props.id] : ''}
-                style={props.width && {width: props.width + term}}
+                value={state[id] ? state[id] : ''}
+                style={width && {width: width + term}}
             >
             {
-                props.options && props.options.map((option, i) => (
+                options && options.map((option, i) => (
                     <MenuItem key={i} value={option.value}>
                         {option.label ? option.label : option.value}
                     </MenuItem>
                 ))
             }
             </TextField>  
+            
         )
     }
 }
