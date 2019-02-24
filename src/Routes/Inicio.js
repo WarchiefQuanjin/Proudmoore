@@ -273,9 +273,6 @@ class Inicio extends Component {
         const filteredData = data.filter(caso => caso.val[searchBy]
             .indexOf(searchSE) !== -1)
 
-        console.log('Warsong')
-        console.log(filteredData)
-
         return (
             <div style={{ paddingTop: "50px" }}>
                 <div style={{ paddingLeft: "10px" }}>
@@ -314,7 +311,7 @@ class Inicio extends Component {
                                 <TableCell>Caso</TableCell>
                                 <TableCell>Tipo</TableCell>
                                 <TableCell numeric>Celular</TableCell>
-                                <TableCell >Fecha</TableCell>
+                                <TableCell>Fecha</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -341,7 +338,7 @@ class Inicio extends Component {
                                                 </IconButton>
                                             </Link>
                                             <IconButton variant="contained" color="primary" className={classes.button}
-                                                onClick={() => this.openDeleteDialog(data[page * rowsPerPage + i], 'casos')}>
+                                                onClick={() => this.openDeleteDialog(row, 'casos')}>
                                                 <DeleteIcon />
                                             </IconButton>
                                         </TableCell>
@@ -424,7 +421,6 @@ class Inicio extends Component {
                         </TableHead>
                         <TableBody>
                             {filteredData.slice(pageT * rowsPerPage, pageT * rowsPerPage + rowsPerPage).map((row, i) => {
-
                                 return (
                                     <TableRow key={row.key}>
                                         <TableCell style={{ display: 'flex' }}>
@@ -447,7 +443,7 @@ class Inicio extends Component {
                                                 </IconButton>
                                             </Link>
                                             <IconButton variant="contained" color="primary" className={classes.button}
-                                                onClick={() => this.openDeleteDialog(data[pageT * rowsPerPage + i], 'transporte')}>
+                                                onClick={() => this.openDeleteDialog(row, 'transporte')}>
                                                 <DeleteIcon />
                                             </IconButton>
                                         </TableCell>
