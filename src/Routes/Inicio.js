@@ -74,8 +74,11 @@ class Inicio extends Component {
             admin: false,
             address: false,
             data: [],
-            year: new Date().getFullYear(),
-            value: 0,
+            dialogOpen: false,
+            order: 'asc',
+            orderT: 'asc',
+            orderBy: 'FMNumero',
+            orderByT: 'FMNumero',
             page: 0,
             pageT: 0,
             rowsPerPage: 10,
@@ -83,7 +86,8 @@ class Inicio extends Component {
             searchByT: 'Persona',
             searchT: '',
             searchSE: '',
-            dialogOpen: false
+            value: 0,
+            year: new Date().getFullYear()
         }
     }
 
@@ -241,6 +245,54 @@ class Inicio extends Component {
         XLSX.writeFile(wb, "BASE DE DATOS " + this.state.year + ".xlsx")
     }
 
+    sortHandler = (property, type) => {
+        if (type === 'SE') {
+            const orderBy = property;
+            let order = 'asc';
+
+            if (this.state.orderBy === property && this.state.order === 'asc') {
+                order = 'desc';
+            }
+
+            this.setState({ order, orderBy });
+        } else {
+            const orderByT = property;
+            let orderT = 'asc';
+
+            if (this.state.orderByT === property && this.state.orderT === 'asc') {
+                orderT = 'desc';
+            }
+
+            this.setState({ orderT, orderByT });
+        }
+    }
+
+    sortData = (array, sorting) => {
+        const indexedArray = array.map((element, index) => [element, index]);
+
+        indexedArray.sort((a, b) => {
+            const order = sorting(a[0], b[0]);
+            if (order !== 0) return order;
+            return a[1] - b[1];
+        });
+
+        return indexedArray.map(el => el[0]);
+    }
+
+    getSorting = (order, orderBy) => {
+        return order === 'desc' ? (a, b) => this.sort(a, b, orderBy) : (a, b) => -this.sort(a, b, orderBy);
+    }
+
+    sort(a, b, orderBy) {
+        if (b.val[orderBy] < a.val[orderBy]) {
+            return -1;
+        }
+        if (b.val[orderBy] > a.val[orderBy]) {
+            return 1;
+        }
+        return 0;
+    }
+
     delete = () => {
         var casosRef = firebase.database().ref(this.state.type);
         casosRef.child(this.state.deleteRecord).remove();
@@ -272,23 +324,19 @@ class Inicio extends Component {
     }
 
     handleChangePage = (event, page, type) => {
-        this.props.checkToken(() => {
-            this.setState({ [type]: page })
-        });
+        this.setState({ [type]: page })
     };
 
     handleChangeRowsPerPage = event => {
-        this.props.checkToken(() => {
-            this.setState({ rowsPerPage: event.target.value })
-        });
+        this.setState({ rowsPerPage: event.target.value })
     };
 
     handleTabChange = (event, value) => {
-        this.props.checkToken(() => this.setState({ value }));
+        this.setState({ value })
     };
 
     socioeconomicoTable = (data, classes) => {
-        const { rowsPerPage, page, searchSE, searchBySE } = this.state;
+        const { rowsPerPage, page, searchSE, searchBySE, order, orderBy } = this.state;
         const searchBy = searchBySE === 'Persona' ? 'DGCaso' :
             searchBySE === 'Fecha' ? 'FMFecha' : 'FMNumero'
 
@@ -326,131 +374,153 @@ class Inicio extends Component {
                     <Table className={classes.table} >
                         <TableHead>
                             <TableRow>
-                                <CustomTableCell style={{ maxWidth: '85px', width: '85px', padding: '4px 0px 4px 0px', textAlign: 'center' }}>
-                                    No. Caso
+                                <CustomTableCell sortDirection={orderBy === 'FMNumero' ? order : false} style={{ maxWidth: '85px', width: '85px', padding: '4px 0px 4px 0px', textAlign: 'center' }}>
+                                    <TableSortLabel
+                                        active={orderBy === 'FMNumero'}
+                                        direction={order}
+                                        onClick={() => this.sortHandler('FMNumero', 'SE')}
+                                    >
+                                        No. Caso
+                                    </TableSortLabel>
                                 </CustomTableCell>
-                                <CustomTableCell style={{ maxWidth: '300px', width: '300px', padding: '4px 0px 4px 24px' }}>
-                                    Caso
+                                <CustomTableCell sortDirection={orderBy === 'DGCaso' ? order : false} style={{ maxWidth: '300px', width: '300px', padding: '4px 0px 4px 24px' }}>
+                                    <TableSortLabel
+                                        active={orderBy === 'DGCaso'}
+                                        direction={order}
+                                        onClick={() => this.sortHandler('DGCaso', 'SE')}
+                                    >
+                                        Caso
+                                    </TableSortLabel>
                                 </CustomTableCell>
-                                <CustomTableCell style={{ maxWidth: '150px'}}>
-                                    Tipo
+                                <CustomTableCell sortDirection={orderBy === 'FMTImpresion' ? order : false} style={{ maxWidth: '150px' }}>
+                                    <TableSortLabel
+                                        active={orderBy === 'FMTImpresion'}
+                                        direction={order}
+                                        onClick={() => this.sortHandler('FMTImpresion', 'SE')}
+                                    >
+                                        Tipo
+                                    </TableSortLabel>
                                 </CustomTableCell>
-                                <CustomTableCell style={{ maxWidth: '150px'}}>
+                                <CustomTableCell style={{ maxWidth: '150px' }}>
                                     Celular
                                 </CustomTableCell>
-                                <CustomTableCell style={{ minWidth: '100px', padding: '4px 0px 4px 24px' }}>
-                                    Fecha
+                                <CustomTableCell sortDirection={orderBy === 'FMFecha' ? order : false} style={{ minWidth: '100px', padding: '4px 0px 4px 24px' }}>
+                                    <TableSortLabel
+                                        active={orderBy === 'FMFecha'}
+                                        direction={order}
+                                        onClick={() => this.sortHandler('FMFecha', 'SE')}
+                                    >
+                                        Fecha
+                                    </TableSortLabel>
                                 </CustomTableCell>
-                                <CustomTableCell style={{ minWidth: '150px'}} />
+                                <CustomTableCell style={{ minWidth: '150px' }} />
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                                return (
-                                    <TableRow key={row.key}>
-                                        <CustomTableCell
-                                            style={{
-                                                maxWidth: '85px',
-                                                width: '85px',
-                                                padding: '4px 0px 4px 0px',
-                                                textAlign: 'center'
-                                            }}
-                                            component="td"
-                                            scope="row"
-                                        >
-                                            {row.val.FMNumero}
-                                        </CustomTableCell>
-                                        <CustomTableCell
-                                            style={{
-                                                maxWidth: '300px',
-                                                padding: '4px 0px 4px 24px',
-                                                width: '300px'
-                                            }}
-                                            component="td"
-                                            scope="row"
-                                        >
-                                            <Link className={classes.link} to={{ pathname: '/socioeconomico', user: row, modifying: 1 }}>
-                                                {row.val.DGCaso}
-                                            </Link>
-                                        </CustomTableCell>
-                                        <CustomTableCell
-                                            style={{
-                                                maxWidth: '150px',
-                                                padding: '4px 0px 4px 5px',
-                                                width: '150px'
-                                            }}
-                                            component="td"
-                                            scope="row"
-                                        >
-                                            {row.val.FMTImpresion}
-                                        </CustomTableCell>
-                                        <CustomTableCell
-                                            style={{
-                                                maxWidth: '150px',
-                                                padding: '4px 0px 4px 10px',
-                                                width: '150px'
-                                            }}
-                                            component="td"
-                                            scope="row"
-                                        >
-                                            {row.val.DGCelular}
-                                        </CustomTableCell>
-                                        <CustomTableCell
-                                            style={{ minWidth: "100px", padding: '4px 0px 4px 24px' }}
-                                            component="td"
-                                            scope="row"
-                                        >
-                                            {moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}
-                                        </CustomTableCell>
-                                        <CustomTableCell 
-                                            style={{ 
-                                                minWidth: "150px",
-                                                display: 'flex', 
-                                                padding: '4px 0px 4px 10px' 
-                                            }}
-                                            component="td"
-                                            scope="row"
-                                        >
-                                            <Link to={{ pathname: '/socioeconomico', user: row, modifying: 1 }}>
-                                                <IconButton variant="contained" color="primary" className={classes.button}>
-                                                    <EditIcon />
-                                                </IconButton >
-                                            </Link>
-                                            <Link to={{ pathname: '/socioeconomico', user: row, modifying: 0 }}>
-                                                <IconButton variant="contained" color="primary" className={classes.button}>
-                                                    <FileCopyIcon />
+                            {this.sortData(filteredData, this.getSorting(order, orderBy))
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((row, i) => {
+                                    return (
+                                        <TableRow key={row.key}>
+                                            <CustomTableCell
+                                                style={{
+                                                    maxWidth: '85px',
+                                                    width: '85px',
+                                                    padding: '4px 0px 4px 0px',
+                                                    textAlign: 'center'
+                                                }}
+                                                component="td"
+                                                scope="row"
+                                            >
+                                                {row.val.FMNumero}
+                                            </CustomTableCell>
+                                            <CustomTableCell
+                                                style={{
+                                                    maxWidth: '300px',
+                                                    padding: '4px 0px 4px 24px',
+                                                    width: '300px'
+                                                }}
+                                                component="td"
+                                                scope="row"
+                                            >
+                                                <Link className={classes.link} to={{ pathname: '/socioeconomico', user: row, modifying: 1 }}>
+                                                    {row.val.DGCaso}
+                                                </Link>
+                                            </CustomTableCell>
+                                            <CustomTableCell
+                                                style={{
+                                                    maxWidth: '150px',
+                                                    padding: '4px 0px 4px 5px',
+                                                    width: '150px'
+                                                }}
+                                                component="td"
+                                                scope="row"
+                                            >
+                                                {row.val.FMTImpresion}
+                                            </CustomTableCell>
+                                            <CustomTableCell
+                                                style={{
+                                                    maxWidth: '150px',
+                                                    padding: '4px 0px 4px 10px',
+                                                    width: '150px'
+                                                }}
+                                                component="td"
+                                                scope="row"
+                                            >
+                                                {row.val.DGCelular}
+                                            </CustomTableCell>
+                                            <CustomTableCell
+                                                style={{ minWidth: "100px", padding: '4px 0px 4px 24px' }}
+                                                component="td"
+                                                scope="row"
+                                            >
+                                                {moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}
+                                            </CustomTableCell>
+                                            <CustomTableCell
+                                                style={{
+                                                    minWidth: "150px",
+                                                    display: 'flex',
+                                                    padding: '4px 0px 4px 10px'
+                                                }}
+                                                component="td"
+                                                scope="row"
+                                            >
+                                                <Link to={{ pathname: '/socioeconomico', user: row, modifying: 1 }}>
+                                                    <IconButton variant="contained" color="primary" className={classes.button}>
+                                                        <EditIcon />
+                                                    </IconButton >
+                                                </Link>
+                                                <Link to={{ pathname: '/socioeconomico', user: row, modifying: 0 }}>
+                                                    <IconButton variant="contained" color="primary" className={classes.button}>
+                                                        <FileCopyIcon />
+                                                    </IconButton>
+                                                </Link>
+                                                <IconButton variant="contained" color="primary" className={classes.button}
+                                                    onClick={() => this.openDeleteDialog(row, 'casos')}>
+                                                    <DeleteIcon />
                                                 </IconButton>
-                                            </Link>
-                                            <IconButton variant="contained" color="primary" className={classes.button}
-                                                onClick={() => this.openDeleteDialog(row, 'casos')}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </CustomTableCell>
-                                    </TableRow>
-                                );
-                            })}
+                                            </CustomTableCell>
+                                        </TableRow>
+                                    );
+                                })}
                         </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TablePagination
-                                    colSpan={2}
-                                    count={filteredData.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onChangePage={(e, p) => this.handleChangePage(e, p, 'page')}
-                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                        </TableFooter>
                     </Table>
+                </div>
+                <div>
+                    <TablePaginationActions
+                        count={filteredData.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={(e, p) => this.handleChangePage(e, p, 'page')}
+                        onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                    />
                 </div>
             </div>
         )
     }
 
     transporteTable = (data, classes) => {
-        const { rowsPerPage, pageT, searchT, searchByT } = this.state;
+        const { rowsPerPage, pageT, searchT, searchByT, orderByT, orderT } = this.state;
         const searchBy = searchByT === 'Persona' ? 'DGCaso' :
             searchByT === 'Fecha' ? 'FMFecha' : 'FMNumero'
 
@@ -488,86 +558,102 @@ class Inicio extends Component {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <CustomTableCell style={{ maxWidth: '85px', width: '85px', padding: '4px 0px 4px 0px', textAlign: 'center' }}>
-                                    Numero
+                                <CustomTableCell sortDirection={orderByT === 'FMNumero' ? orderT : false} style={{ maxWidth: '85px', width: '85px', padding: '4px 0px 4px 0px', textAlign: 'center' }}>
+                                    <TableSortLabel
+                                        active={orderByT === 'FMNumero'}
+                                        direction={orderT}
+                                        onClick={() => this.sortHandler('FMNumero', 'T')}
+                                    >
+                                        No. Caso
+                                    </TableSortLabel>
                                 </CustomTableCell>
-                                <CustomTableCell>
-                                    Caso
+                                <CustomTableCell sortDirection={orderByT === 'DGCaso' ? orderT : false}>
+                                    <TableSortLabel
+                                        active={orderByT === 'DGCaso'}
+                                        direction={orderT}
+                                        onClick={() => this.sortHandler('DGCaso', 'T')}
+                                    >
+                                        Caso
+                                    </TableSortLabel>
                                 </CustomTableCell>
-                                <CustomTableCell>
-                                    Fecha
+                                <CustomTableCell sortDirection={orderByT === 'FMFecha' ? orderT : false}>
+                                    <TableSortLabel
+                                        active={orderByT === 'FMFecha'}
+                                        direction={orderT}
+                                        onClick={() => this.sortHandler('FMFecha', 'T')}
+                                    >
+                                        Fecha
+                                    </TableSortLabel>
                                 </CustomTableCell>
-                                <CustomTableCell/>
+                                <CustomTableCell />
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredData.slice(pageT * rowsPerPage, pageT * rowsPerPage + rowsPerPage).map((row, i) => {
-                                return (
-                                    <TableRow key={row.key}>
-                                        <CustomTableCell
-                                            style={{
-                                                maxWidth: '85px',
-                                                width: '85px',
-                                                padding: '4px 0px 4px 0px',
-                                                textAlign: 'center'
-                                            }}
-                                            component="th"
-                                            scope="row"
-                                        >
-                                            {row.val.FMNumero}
-                                        </CustomTableCell>
-                                        <TableCell component="th" scope="row">
-                                            <Link className={classes.link} to={{
-                                                pathname: '/transporte',
-                                                user: row,
-                                                modifying: 1
-                                            }}>
-                                                {row.val.DGCaso}
-                                            </Link>
-                                        </TableCell>
-                                        <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
-                                        <TableCell style={{ display: 'flex' }}>
-                                            <Link to={{
-                                                pathname: '/transporte',
-                                                user: row,
-                                                modifying: 1
-                                            }}>
-                                                <IconButton variant="contained" color="primary" className={classes.button}>
-                                                    <EditIcon />
-                                                </IconButton >
-                                            </Link>
-                                            <Link to={{
-                                                pathname: '/transporte',
-                                                user: row,
-                                                modifying: 0
-                                            }}>
-                                                <IconButton variant="contained" color="primary" className={classes.button}>
-                                                    <FileCopyIcon />
+                            {this.sortData(filteredData, this.getSorting(orderT, orderByT))
+                                .slice(pageT * rowsPerPage, pageT * rowsPerPage + rowsPerPage)
+                                .map((row, i) => {
+                                    return (
+                                        <TableRow key={row.key}>
+                                            <CustomTableCell
+                                                style={{
+                                                    maxWidth: '85px',
+                                                    width: '85px',
+                                                    padding: '4px 0px 4px 0px',
+                                                    textAlign: 'center'
+                                                }}
+                                                component="th"
+                                                scope="row"
+                                            >
+                                                {row.val.FMNumero}
+                                            </CustomTableCell>
+                                            <TableCell component="th" scope="row">
+                                                <Link className={classes.link} to={{
+                                                    pathname: '/transporte',
+                                                    user: row,
+                                                    modifying: 1
+                                                }}>
+                                                    {row.val.DGCaso}
+                                                </Link>
+                                            </TableCell>
+                                            <TableCell>{moment(row.val.FMFecha, 'YYYY-MM-DD').format('DD-MM-YYYY')}</TableCell>
+                                            <TableCell style={{ display: 'flex' }}>
+                                                <Link to={{
+                                                    pathname: '/transporte',
+                                                    user: row,
+                                                    modifying: 1
+                                                }}>
+                                                    <IconButton variant="contained" color="primary" className={classes.button}>
+                                                        <EditIcon />
+                                                    </IconButton >
+                                                </Link>
+                                                <Link to={{
+                                                    pathname: '/transporte',
+                                                    user: row,
+                                                    modifying: 0
+                                                }}>
+                                                    <IconButton variant="contained" color="primary" className={classes.button}>
+                                                        <FileCopyIcon />
+                                                    </IconButton>
+                                                </Link>
+                                                <IconButton variant="contained" color="primary" className={classes.button}
+                                                    onClick={() => this.openDeleteDialog(row, 'transporte')}>
+                                                    <DeleteIcon />
                                                 </IconButton>
-                                            </Link>
-                                            <IconButton variant="contained" color="primary" className={classes.button}
-                                                onClick={() => this.openDeleteDialog(row, 'transporte')}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
                         </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TablePagination
-                                    colSpan={2}
-                                    count={filteredData.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={pageT}
-                                    onChangePage={(e, p) => this.handleChangePage(e, p, 'pageT')}
-                                    onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                        </TableFooter>
                     </Table>
+                </div>
+                <div>
+                    <TablePaginationActions
+                        count={filteredData.length}
+                        rowsPerPage={rowsPerPage}
+                        page={pageT}
+                        onChangePage={(e, p) => this.handleChangePage(e, p, 'pageT')}
+                        onChangeRowsPerPage={(e) => this.handleChangeRowsPerPage(e)}
+                    />
                 </div>
             </div>
         )
