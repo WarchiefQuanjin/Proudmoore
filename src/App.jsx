@@ -29,7 +29,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 const drawerWidth = 240;
 const drawerColor = '#e28ebb';
 const secondaryColor = '#5c70d2';
-const background = 'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Background2.jpg?alt=media&token=95e6122e-220c-44f2-bd9a-dd197e532de4';
+// const background = 'https://firebasestorage.googleapis.com/v0/b/proudmoore-e544b.appspot.com/o/Background2.jpg?alt=media&token=95e6122e-220c-44f2-bd9a-dd197e532de4';
 
 const styles = theme => ({
   root: {

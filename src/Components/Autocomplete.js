@@ -16,6 +16,16 @@ const styles = theme => ({
         marginTop: '2px',
         marginBottom: '2px',
     },
+    rootError: {
+        display: 'inline-flex',
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        marginTop: '2px',
+        marginBottom: '2px',
+        borderBottomStyle: 'dotted', 
+        borderColor: 'red',
+        borderBottomWidth: '2px'
+    },
     container: {
         position: 'flex',
     },
@@ -149,11 +159,15 @@ class Autocomplete extends Component {
             renderSuggestion,
         };
 
-        const props = this.props;
-        const label = props.required ? props.nombre + '*' : props.nombre;
+        const props = this.props
+        const label = props.required ? props.nombre + '*' : props.nombre
 
         return (
-            <div className={classes.root}>
+            <div className={
+                props.missingFields && props.missingFields.includes(props.id) 
+                        ? classes.rootError
+                        : classes.root
+            }>
                 <Autosuggest
                     {...autosuggestProps}
                     inputProps={{

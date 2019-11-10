@@ -166,7 +166,8 @@ const Apoyos = [
     { value: 'SEGUIMIENTO' },
     { value: 'RENOVO CANALIZACION' },
     { value: 'DERIVACION' },
-    { value: 'OTROS' }
+    { value: 'OTROS' },
+    { value: 'FERULA' }
 ];
 
 const Procedencia = [
@@ -323,11 +324,11 @@ const Excel = [
     "T.M. DIALISIS", "T.M. HEMODIALISIS", "T.M. OXIGENO", "AUDITIVO", "PROTESIS EXTERNAS", "SILLAS DE RUEDAS", 
     "ANDADERAS", "MULETAS", "CAMA DE HOSPITAL", "COLCHON ORTOPEDICO", "AUXILIAR DE BAÑO", "ASPIRADOR DE SECRECIONES", 
     "BASTON", "CORSET", "I. ORTOPEDICO", "ENSERES DOMESTICOS", "RENTA", "TRANSPORTE", "PEQUEÑO COMERCIO", 
-    "DOCUMENTOS DE EMPLEO", "FUNERAL", "ROPA", "ZAPATOS O TENIS", "KIT DE LIMPIEZA", "COBIJAS", "CENAS NAVIDEÑAS", 
+    "DOCUMENTOS DE EMPLEO", "FUNERAL", "ROPA", "ZAPATOS O TENIS", "KIT DE LIMPIEZA", "FERULAS", "COBIJAS", "CENAS NAVIDEÑAS", 
     "SEGUIMIENTO", "RENOVO CANALIZACION", "DERIVACION", "OTROS", "CANTIDAD AUTORIZADA", "DONATIVO HOSPITAL", 
     "FONDO ARZOBISPADO", "FONDO CABILDO", "FONDO OLGA", "DONACION", "DONANTE", "MES DE APADRINAMIENTO", 
     "AÑO DE APADRINAMIENTO", "APORTACIÓN BENEFICIADO", "PROVEEDOR", "PROCEDENCIA", "SERVICIOS", 
-    "CANTIDAD DE HEMODIALISIS", "GASTO DIARIO", "TRABAJADORA SOCIAL"
+    "CANTIDAD DE HEMODIALISIS", "GASTO DIARIO", "TRABAJADORA SOCIAL", "DIAGNOSTICO", "ESPECIALIDAD MEDICA"
 ];
 
 const Frecuencia = [
@@ -625,6 +626,22 @@ const Meses = [
     { value: 'DICIEMBRE' },
 ];
 
+const Especialidad = [
+    { value: 'NEFROLOGIA' },
+    { value: 'ANGIOLOGIA Y CIRUGIA VASCULAR' },
+    { value: 'DERMATOLOGIA MEDICO-QUIRURGICA Y VENEROLOGIA' },
+    { value: 'GINECOLOGIA Y OBSTETRICIA O TOCOLOGIA' },
+    { value: 'OFTALMOLOGIA' },
+    { value: 'OTORRINOLARINGOLOGIA' },
+    { value: 'UROLOGIA' },
+    { value: 'TRAUMATOLOGIA' },
+    { value: 'ONCOLOGIA' },
+    { value: 'NEFROLOGIA' },
+    { value: 'BARIATRIA' },
+    { value: 'ORTOPEDIA' },
+    { value: 'CARDIOLOGIA' }
+]
+
 export { 
     ECivil, 
     Empleo, 
@@ -655,5 +672,6 @@ export {
     Search,
     Edad,
     Donantes,
-    Meses
+    Meses,
+    Especialidad
 };

@@ -209,6 +209,7 @@ class Transporte extends Component {
 
     print = (event, props) => {
         if (this.checkFields()) {
+            console.log('Umbrella Academy')
             return;
         }
 
@@ -317,7 +318,7 @@ class Transporte extends Component {
     checkFields = () => {
         const Fields = ['FMFecha', 'FMNumero', 'FMDerivado', 'FMFrecuencia', 'FMTrabajadora', 'IDTipo',
             'IDOriginario', 'IDTiempo', 'IDHospeda', 'SDDestino', 'SDMotivo', 'APDestino', 'APProveedor', 'APProcedencia', 'APBoletos', 'APFolioC',
-            'DGCaso', 'DGEdad', 'DGECivil', 'DGOcupacion', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGSexo'];
+            'DGCaso', 'DGEdad', 'DGTEdad','DGECivil', 'DGOcupacion', 'DGParroquia', 'DGDecanato', 'DGVicaria', 'DGParroquia', 'DGVicaria', 'DGSexo'];
 
         let isMissingFields = false;
         let missingFields = []
@@ -331,9 +332,11 @@ class Transporte extends Component {
 
         if  (isMissingFields){
             this.setState({ missingFields: missingFields, open: true, message: 'Todos los campos deben contener informacion' });
+        } else {
+            this.setState({ missingFields: missingFields })
         }
 
-        return missingFields;
+        return isMissingFields;
     }
 
     cProcedencia = () => {

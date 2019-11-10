@@ -6,8 +6,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
 import XLSX from 'xlsx'
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
@@ -193,11 +191,11 @@ class Inicio extends Component {
                         apoyo.includes("CORSET") ? 1 : '', apoyo.includes("I. ORTOPEDICO") ? 1 : '', apoyo.includes("ENSERES DOMESTICOS") ? 1 : '',
                         apoyo.includes("RENTA") ? 1 : '', apoyo.includes("TRANSPORTE") ? 1 : '', apoyo.includes("PEQUEÑO COMERCIO") ? 1 : '',
                         apoyo.includes("DOCUMENTOS DE EMPLEO") ? 1 : '', apoyo.includes("FUNERAL") ? 1 : '', apoyo.includes("ROPA") ? 1 : '',
-                        apoyo.includes("ZAPATOS O TENIS") ? 1 : '', apoyo.includes("KIT DE LIMPIEZA") ? 1 : '', apoyo.includes("COBIJAS") ? 1 : '',
+                        apoyo.includes("ZAPATOS O TENIS") ? 1 : '', apoyo.includes("KIT DE LIMPIEZA") ? 1 : '', apoyo.includes("FERULAS") ? 1 : '', apoyo.includes("COBIJAS") ? 1 : '',
                         apoyo.includes("CENAS NAVIDEÑAS") ? 1 : '', apoyo.includes("SEGUIMIENTO") ? 1 : '', apoyo.includes("RENOVO CANALIZACION") ? 1 : '',
                         apoyo.includes("DERIVACION") ? 1 : '', apoyo.includes("OTROS") ? 1 : '', val.OTPresupuesto, val.OTDHospital, val.OTFArzobispado,
                         val.OTFCabildo, val.OTFOlga, val.OTDonacion, val.OTDonante, val.OTMesA, val.OTAnoA, val.OTABeneficiado, val.OTProveedor, val.OTProcedencia === 'OTROS' ? val.OTProcedenciaOt : val.OTProcedencia,
-                        apoyo.length, val.SLHemodialisis, '', val.FMTrabajadora
+                        apoyo.length, val.SLHemodialisis, '', val.FMTrabajadora, val.SLDiagnostico, val.SLEspecialidad
                     ]
 
                     data.push(casosArray)
@@ -221,7 +219,7 @@ class Inicio extends Component {
                         '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, '', '', '', '',
                         '', '', '', '', '', '', '', '', val.APCantidad, '', '', '', '', '', '', '', '', val.APAportacion,
                         val.APProveedor, val.APProcedencia === 'OTROS' ? val.APProcedenciaOt : val.APProcedencia,
-                        1, val.SLHemodialisis, '', val.FMTrabajadora
+                        1, val.SLHemodialisis, '', val.FMTrabajadora, '', ''
                     ]
 
                     data.push(casosArray)

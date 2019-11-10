@@ -38,7 +38,8 @@ import {
     TipoI,
     Edad,
     Donantes,
-    Meses
+    Meses,
+    Especialidad
 } from '../Constants/Options';
 
 const styles = theme => ({
@@ -51,7 +52,8 @@ const styles = theme => ({
         margin: theme.spacing.unit,
     },
     container: {
-        flexWrap: 'wrap',
+        display: 'flex',
+        flexWrap: 'wrap'
     },
     textField: {
         marginLeft: theme.spacing.unit,
@@ -99,12 +101,14 @@ class Socioeconomico extends Component {
     }
 
     componentDidMount() {
-        var user = this.props.location.user;
+        const { location, checkToken } = this.props;
+        var user = location.user;
 
-        this.props.checkToken()
+        checkToken()
 
         if (user !== undefined) {
-            var caso = {};
+            let caso = {};
+
             for (var i = 0; i < Object.keys(user.val).length; i++) {
                 caso[Object.keys(user.val)[i]] = Object.keys(user.val).map(i => user.val[i])[i];
             }
@@ -260,9 +264,15 @@ class Socioeconomico extends Component {
             mcantidad += '</tr>';
         }
 
+        const hemodialisis = props.SLHemodialisis ? props.SLHemodialisis : ''
+        const diagnostico = props.SLDiagnostico ? props.SLDiagnostico : ''
+        const especialidad = props.SLEspecialidad ? props.SLEspecialidad : ''
+
         mcantidad += '</table>' +
-            '<p style="width: 170px; display: inline-flex">CANTIDAD DE HEMODIALISIS</p><input style="width: 50px;" value="' + props.SLHemodialisis + '"/><br>' +
+            '<p style="width: 170px; display: inline-flex">CANTIDAD DE HEMODIALISIS</p><input style="width: 50px;" value="' + hemodialisis + '"/><br>' +
             '<p style="width: 50%">OBSERVACIONES </p><textarea rows="' + this.resizeTextArea(props.SLObservaciones, 2) + '" style="width: 100%; margin-top: -15px; overflow-y: hidden">' + props.SLObservaciones + '</textarea>' +
+            '<p style="width: 50%">DIAGNOSTICO </p><textarea rows="' + this.resizeTextArea(diagnostico, 2) + '" style="width: 100%; margin-top: -15px; overflow-y: hidden">' + diagnostico + '</textarea>' +
+            '<p style="width: 50%">ESPECIALIDAD </p><textarea rows="' + this.resizeTextArea(especialidad, 2) + '" style="width: 100%; margin-top: -15px; overflow-y: hidden">' + especialidad + '</textarea>' +
             '<p style="width: 100%;text-align: center;background-color: #4a76c5;color: white;margin-top: 30px;">ESTADO ACTUAL DE SALUD</p>' +
             '<p style="width: 50%">CASO </p><textarea rows="' + this.resizeTextArea(props.SLCaso, 2) + '" style="width: 100%; margin-top: -15px; overflow-y: hidden" >' + props.SLCaso + '</textarea>' +
             '<p style="width: 50%">FAMILIA </p><textarea rows="' + this.resizeTextArea(props.SLFamilia, 2) + '" style="width: 100%; margin-top: -15px; overflow-y: hidden" >' + props.SLFamilia + '</textarea>';
@@ -281,7 +291,7 @@ class Socioeconomico extends Component {
         var fcantidad = '<div style="display: flex">' +
             '<div style="width: 50%; text-align:right">' +
             '<p style="width: 100px; display: inline">FECHA DE APLICACION </p><input value="' + props.FMFecha + '"/><br>' +
-            '<p style="width: 100px; display: inline">Trabajadora Social </p><input value="' + props.FMTrabajadora + '"/>' +
+            '<p style="width: 100px; display: inline">TRABAJADORA SOCIAL </p><input value="' + props.FMTrabajadora + '"/>' +
             '</div>' +
             '<div style="width: 50%; text-align:right">' +
             '<p style="width: 100px; display: inline">NO. DE CASO </p><input value="' + props.FMNumero + '"/><br>' +
@@ -292,7 +302,7 @@ class Socioeconomico extends Component {
     }
 
     print = (event, props) => {
-        if (this.checkFields()) 
+        if (this.checkFields())
             return;
 
         const gridName = "Consulta nuestro aviso de privacidad en http://caritasgdl.org.mx en la seccion; Aviso de Privacidad";
@@ -425,7 +435,7 @@ class Socioeconomico extends Component {
     }
 
     modify = (event) => {
-        if (this.checkFields()) 
+        if (this.checkFields())
             return;
 
         var user = this.state.key;
@@ -439,21 +449,26 @@ class Socioeconomico extends Component {
     }
 
     save = (event) => {
+        const { location } = this.props;
+        const { caso } = this.state;
+
         let casos = {};
 
-        if (this.checkFields()) 
+        if (this.checkFields())
             return;
 
-        this.props.location.modifying = 1
+        location.modifying = 1
 
-        Object.keys(this.state.caso).map(i => casos[i] = i !== "message" && i !== "open" && this.state.caso[i])
+        Object.keys(caso).map(i => casos[i] = i !== "message" && i !== "open" && caso[i])
 
         var dataRef = firebase.database().ref('casos').push(casos);
         this.setState({ key: dataRef.key, open: true, message: 'El caso ha sido guardado' });
     }
 
     nuevo = () => {
-        this.props.location.modifying = 0
+        const { location } = this.props;
+
+        location.modifying = 0
 
         this.setState(this.defaultState)
     }
@@ -490,7 +505,7 @@ class Socioeconomico extends Component {
         const Fields = ['DGCP', 'DGCalle', 'DGCaso', 'DGSexo', 'DGColonia', 'DGCruce', 'DGDecanato', 'DGECivil', 'DGEdad', 'DGTEdad',
             'DGEstado', 'DGMunicipio', 'DGOcupacion', 'DGParentesco', 'DGParroquia', 'DGPersona', 'FMTImpresion',
             'DGVicaria', 'FMFecha', 'FMNumero', 'FMTrabajadora', 'OTPresupuesto', 'OTHistoriaS', 'OTPronostico', 'OTProveedor',
-            'OTProcedencia'];
+            'OTProcedencia', 'SLDiagnostico', 'SLEspecialidad'];
 
         let isMissingFields = false;
         let missingFields = []
@@ -502,8 +517,10 @@ class Socioeconomico extends Component {
             };
         }
 
-        if  (isMissingFields){
+        if (isMissingFields) {
             this.setState({ missingFields: missingFields, open: true, message: 'Todos los campos deben contener informacion' });
+        } else {
+            this.setState({ missingFields: missingFields })
         }
 
         return isMissingFields;
@@ -685,15 +702,18 @@ class Socioeconomico extends Component {
 
     cApoyo = () => {
         const { caso, missingFields } = this.state;
-        var rows = [];
+        let rows = [];
 
-        for (var i = 0; i < this.state.caso.apcantidad; i++) {
+        const sortedApoyos = Apoyos.sort((a, b) => a.value > b.value ? 1 : b.value > a.value ? -1 : 0);
+
+        for (var i = 0; i < caso.apcantidad; i++) {
             rows.push(
                 <div key={'apoyo' + i}>
-                    <TxtField id={"FMApoyo" + i} nombre={"Apoyo"} options={Apoyos} width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                    <TxtField id={"FMApoyo" + i} nombre={"Apoyo"} options={sortedApoyos} width={300} onChange={this.handleChange} state={caso} missingFields={missingFields} />
                 </div>
             );
         }
+
         return rows;
     }
 
@@ -702,18 +722,19 @@ class Socioeconomico extends Component {
     };
 
     render() {
-        const { classes } = this.props;
-        const modifying = this.props.location.modifying;
-        const vertical = 'top', horizontal = 'center'
         const { open, message, caso, missingFields } = this.state;
+        const { classes } = this.props;
 
-        const ingresoTotal = parseFloat(this.state.caso['DEIngresoO'] ? this.state.caso['DEIngresoO'] : 0) + parseFloat(this.state.caso['DEIngresoF'] ? this.state.caso['DEIngresoF'] : 0);
-        const egresoTotal = parseFloat(this.state.caso['DEAlimentacion'] ? this.state.caso['DEAlimentacion'] : 0) +
-            parseFloat(this.state.caso['DEVivienda'] ? this.state.caso['DEVivienda'] : 0) + parseFloat(this.state.caso['DEServicios'] ? this.state.caso['DEServicios'] : 0) +
-            parseFloat(this.state.caso['DETelefono'] ? this.state.caso['DETelefono'] : 0) + parseFloat(this.state.caso['DETransporte'] ? this.state.caso['DETransporte'] : 0) +
-            parseFloat(this.state.caso['DEEducacion'] ? this.state.caso['DEEducacion'] : 0) + parseFloat(this.state.caso['DESalud'] ? this.state.caso['DESalud'] : 0) +
-            parseFloat(this.state.caso['DEVestido'] ? this.state.caso['DEVestido'] : 0) + parseFloat(this.state.caso['DERecreacion'] ? this.state.caso['DERecreacion'] : 0) +
-            parseFloat(this.state.caso['DEDeudas'] ? this.state.caso['DEDeudas'] : 0) + parseFloat(this.state.caso['DEOtros'] ? this.state.caso['DEOtros'] : 0);
+        const modifying = this.props.location.modifying;
+        const vertical = 'top', horizontal = 'center';
+
+        const ingresoTotal = parseFloat(caso['DEIngresoO'] ? caso['DEIngresoO'] : 0) + parseFloat(caso['DEIngresoF'] ? caso['DEIngresoF'] : 0);
+        const egresoTotal = parseFloat(caso['DEAlimentacion'] ? caso['DEAlimentacion'] : 0) +
+            parseFloat(caso['DEVivienda'] ? caso['DEVivienda'] : 0) + parseFloat(caso['DEServicios'] ? caso['DEServicios'] : 0) +
+            parseFloat(caso['DETelefono'] ? caso['DETelefono'] : 0) + parseFloat(caso['DETransporte'] ? caso['DETransporte'] : 0) +
+            parseFloat(caso['DEEducacion'] ? caso['DEEducacion'] : 0) + parseFloat(caso['DESalud'] ? caso['DESalud'] : 0) +
+            parseFloat(caso['DEVestido'] ? caso['DEVestido'] : 0) + parseFloat(caso['DERecreacion'] ? caso['DERecreacion'] : 0) +
+            parseFloat(caso['DEDeudas'] ? caso['DEDeudas'] : 0) + parseFloat(caso['DEOtros'] ? caso['DEOtros'] : 0);
         const diferencia = ingresoTotal - egresoTotal;
 
         return (
@@ -923,6 +944,10 @@ class Socioeconomico extends Component {
                             <hr style={{ height: '2px', backgroundColor: '#172fdc' }} />
                         </div>
                         <TxtField id={"SLHemodialisis"} nombre={"Cantidad de hemodialisis"} onChange={this.handleChange} type={'int'} state={caso} missingFields={missingFields} />
+
+                        <TxtField nombre={"Diagnostico"} id={"SLDiagnostico"} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+                        <Autocomplete nombre={"Especialidad"} id={"SLEspecialidad"} options={Especialidad} onChange={this.handleChange} state={caso} missingFields={missingFields} />
+
                         <TxtField id={"SLObservaciones"} nombre={"Observaciones"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={caso} missingFields={missingFields} />
                         <h3 style={{ backgroundColor: '#acb8f3', color: 'white' }}>ESTADO ACTUAL DE SALUD</h3>
                         <TxtField id={"SLCaso"} nombre={"Caso"} multiline={true} width={80} term={"%"} onChange={this.handleChange} state={caso} missingFields={missingFields} />
